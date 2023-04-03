@@ -4,76 +4,142 @@
 	<meta charset="UTF-8">
 	<title>Thymeleaf 게시판 만들기</title>
 	<link th:href="@{/css/main.css}" rel="stylesheet" />
+	
+	<!-- Toast Grid -->
+	<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+	<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 </head>
 <body>
-<section class="notice">
-  <div class="page-title">
-        <div class="container">
-            <h3>게시판 리스트</h3>
-        </div>
-    </div>
-
-    <!-- board seach area -->
-    <div id="board-search">
-        <div class="container">
-            <div class="search-window">
-                <form action="./selectBoardList">
-                    <div class="search-wrap">
-                        <label for="search" class="blind">공지사항 내용 검색</label>
-                        <input id="search" type="search" name="" placeholder="검색어를 입력해주세요." value="">
-                        <button type="submit" class="btn btn-dark">검색</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-   
-  <!-- board list area -->
-    <div id="board-list">
-        <div class="container">
-            <table class="board-table">
-                <thead>
-	                <tr>
-	                    <th scope="col" class="th-num">번호</th>
-	                    <th scope="col" class="th-title">제목</th>
-	                    <th scope="col" class="th-date">등록일</th>
-	                </tr>
-                </thead>
-                <tbody>
-                
-                <tr th:each="List : ${selectboardList}">
-                	<td th:text="${List.idx}">idx</td>
-                	<th th:text="${List.title}">title</th>
-                	<td th:text="${List.content}">content</td>
-                </tr>
-                
-                 
-	                <tr>
-	                    <td>3</td>
-	                    <th>
-	                      <a href="#!">[공지사항] 개인정보 처리방침 변경안내처리방침</a>
-	                      <p>테스트</p>
-	                    </th>
-	                    <td>2017.07.13</td>
-	                </tr>
+	<section class="notice">
+	  	<div class="page-title">
+	        <div class="container">
+	            <h3>게시판 리스트</h3>
+	            <div class="search-wrap">
+	        		<button type="button" class="btn btn-dark" style="float:right;">입력</button>
+	        	</div>
+	        </div>    
+	    </div>
 	
-	                <tr>
-	                    <td>2</td>
-	                    <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
-	                    <td>2017.06.15</td>
-	                </tr>
-	
-	                <tr>
-	                    <td>1</td>
-	                    <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
-	                    <td>2017.06.15</td>
-	                </tr>
-                 
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</section>
+	    <!-- board seach area -->
+	    <div id="board-search">
+	        <div class="container">
+	            <div class="search-window">
+	                <!-- <form action="./selectBoardList"> -->
+	                    <div class="search-wrap">
+	                        <label for="search" class="blind">공지사항 내용 검색</label>
+	                        <input id="keyword" type="search" name="keyword" placeholder="검색어를 입력해주세요." value="">
+	                        <button type="button" class="btn btn-dark" onclick="selectList();">검색</button>
+	                    </div>
+	                <!-- </form> -->
+	            </div>
+	        </div>
+	    </div>
+	    
+	    <div id="grid"></div>
+	    
+	    <!-- board list area -->
+	    <!-- 
+	    <div id="board-list">
+	        <div class="container">
+	            <table class="board-table">
+	                <thead>
+		                <tr>
+		                    <th scope="col" class="th-num">번호</th>
+		                    <th scope="col" class="th-title">제목</th>
+		                    <th scope="col" class="th-date">등록일</th>
+		                </tr>
+	                </thead>
+	                <tbody>             
+		                <tr th:each="List : ${selectboardList}">
+		                	<td th:text="${List.idx}">idx</td>
+		                	<th a:href="#${List.idx}" th:text="${List.title}">title</th>
+		                	<td th:text="${List.content}">content</td>
+		                </tr>
+		                <tr>
+		                    <td>3</td>
+		                    <th>
+		                      <a href="#!">[공지사항] 개인정보 처리방침 변경안내처리방침</a>
+		                      <p>테스트</p>
+		                    </th>
+		                    <td>2017.07.13</td>
+		                </tr>	
+		                <tr>
+		                    <td>2</td>
+		                    <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
+		                    <td>2017.06.15</td>
+		                </tr>	
+		                <tr>
+		                    <td>1</td>
+		                    <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
+		                    <td>2017.06.15</td>
+		                </tr>               
+	                </tbody>
+	            </table>
+	        </div>
+	    </div>
+	    -->
+	</section>
 </body>
+<script th:inline="javascript">
+var grid;
+
+$(function(){
+	grid = new tui.Grid({
+	    el: document.getElementById('grid'),
+	    scrollX: false,
+	    scrollY: false,
+	    rowHeight:30,
+	    columns: [
+	      {
+	          header: '순번',
+	          name: 'idx',
+	          width: 250,
+	          align:'center'
+	      },
+	      {
+	    	  header: '제목',
+	          name: 'title',
+	          align:'center',
+	          width: 500
+	      },
+	      {
+	          header: '내용',
+	          name: 'content',
+	          align:'center'
+	      }
+	    ]
+	});
+	
+	selectList(grid);
+});
+
+function selectList(grid){
+	$.ajax({
+	    url: '/board/selectBoardList',
+	    async: true,
+	    type: 'GET',
+	    data: {
+	    	keyword: $("#keyword").val(),
+	    },
+	    dataType: 'json',
+	    beforeSend: function(jqXHR) {
+	    	
+	    },
+	    success: function(data) {
+	    	grid.resetData(data);
+	    },
+	    error: function(jqXHR) {
+	    	console.log("error"); 
+	    	console.log(jqXHR);
+	    },
+	    complete: function(jqXHR) {
+	    	console.log("complete"); 
+	    	console.log(jqXHR);
+	    }
+	});
+};
+
+</script>
+
 </html>

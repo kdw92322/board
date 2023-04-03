@@ -3,6 +3,16 @@
 
 <mapper namespace="com.web.app.board.service.BoardMapper">
 	<select id="selectboardList" resultType="map">
-		select * from simpleboard
+		select idx,
+			   title,
+			   content	  
+		  from simpleboard
+		 where 1=1
+		 <if test="keyword != '' and keyword != null">
+		   and(
+		       title like concat_ws(#{keyword},'%','%') or		
+		       content like concat_ws(#{keyword},'%','%')
+		   )
+		 </if>    
 	</select>
 </mapper>
