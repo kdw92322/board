@@ -1,26 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<title>Thymeleaf 게시판 만들기</title>
-	<link th:href="@{/css/main.css}" rel="stylesheet" />
-	
-	<!-- Toast Grid -->
-	<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-	<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-	<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+	<th:block th:replace="fragments/commonHeader"></th:block>
 </head>
 <body>
 	<section class="notice">
 	  	<div class="page-title">
 	        <div class="container">
-	            <h3>게시판 리스트</h3>
+	            <h3>게시판</h3>
 	            <div class="search-wrap">
-	        		<button type="button" class="btn btn-dark" style="float:right;">입력</button>
+	        		<button type="button" class="btn btn-dark" style="float:right;width:108px;height:40px;" onclick="boardPopup();">입력</button>
 	        	</div>
 	        </div>    
 	    </div>
-	
+
 	    <!-- board seach area -->
 	    <div id="board-search">
 	        <div class="container">
@@ -36,7 +29,7 @@
 	        </div>
 	    </div>
 	    
-	    <div id="grid"></div>
+	    <div id="grid" style="width:1350px; height:800px; margin:0 auto;"></div>
 	    
 	    <!-- board list area -->
 	    <!-- 
@@ -90,18 +83,21 @@ $(function(){
 	    scrollX: false,
 	    scrollY: false,
 	    rowHeight:30,
+	    columnOptions: {
+	        minWidth: 180
+	    },
 	    columns: [
 	      {
 	          header: '순번',
 	          name: 'idx',
-	          width: 250,
+	          width: 'auto',
 	          align:'center'
 	      },
 	      {
 	    	  header: '제목',
 	          name: 'title',
 	          align:'center',
-	          width: 500
+	          width: 'auto'
 	      },
 	      {
 	          header: '내용',
@@ -112,6 +108,15 @@ $(function(){
 	});
 	
 	selectList(grid);
+	
+	grid.on('click', (evt) => {
+		//console.log("evt",evt);
+		var rowData = evt.instance.store.data.rawData[0];
+		//console.log("rowData",rowData);
+		if(evt.columnName == "title"){
+			boardPopup(rowData["idx"]);	
+		}
+	});
 });
 
 function selectList(grid){
@@ -131,15 +136,32 @@ function selectList(grid){
 	    },
 	    error: function(jqXHR) {
 	    	console.log("error"); 
-	    	console.log(jqXHR);
 	    },
 	    complete: function(jqXHR) {
 	    	console.log("complete"); 
-	    	console.log(jqXHR);
 	    }
 	});
 };
 
+function boardPopup(idx){
+	var popupWidth = 700;
+	var popupHeight = 850;
+	
+	var popupX = (window.screen.width / 2) - (popupWidth / 2);
+	// 만들 팝업창 width 크기의 1/2 만큼 보정값으로 빼주었음
+
+	var popupY= (window.screen.height / 2) - (popupHeight / 2);
+	// 만들 팝업창 height 크기의 1/2 만큼 보정값으로 빼주었음
+	
+	var url = "/board/boardModal";
+	if(idx != undefined){
+		url += "?idx=" + idx;
+	}
+	
+	
+	var popupConfig = 'status=no, height=' + popupHeight + ',width=' + popupWidth + ',left=' + popupX + ',top=' + popupY;
+	var win = window.open(url, "신규 POPUP", popupConfig);
+}
 </script>
 
 </html>
