@@ -3,53 +3,113 @@
 <head>
 	<th:block th:replace="fragments/commonHeader"></th:block>
 </head>
+<style>
+h3 {
+  display: block;
+  font-size: 2em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+</style>
 <body>
+	<input type="hidden" id="idx" th:value="${idx}"/>
 	<form class="form-horizontal">
-	    <div class="form-group">
-	        <div class="col-sm-12">
-	            <h3 id="pop-title"></h3>
-	        </div>
+	    <div class="input-group">
+	        <h3 id="pop-title"></h3>
 	    </div>
 	    <div class="form-group">
-	        <label for="inputEmail3" class="col-sm-2 control-label">제목</label>
 	        <div class="col-sm-12">
+	        	<label for="lab-title" class="col-sm-2 control-label">제목</label>
 	            <input type="text" class="form-control" id="title" placeholder="제목을 입력하세요.">
 	        </div>
-	    </div>
-	    <div class="form-group">
-	        <label for="inputPassword3" class="col-sm-2 control-label">내용</label>
 	        <div class="col-sm-12">
-		    	<textarea class="form-control" id="content" rows="5"></textarea>
+	        	<label for="lab-content" class="col-sm-2 control-label">내용</label>
+		    	<textarea class="form-control" id="content" rows="5" placeholder="내용을 입력하세요."></textarea>
 	        </div>
 	    </div>
 	    <div class="form-group">
 	        <div class="col-sm-offset-2 col-sm-10">
-	            <button type="button" id="btn_update" class="btn btn-info">수정</button>
+	            <button type="button" id="btn_save" class="btn btn-info">수정</button>
 	            <button type="button" id="btn_close" class="btn btn-light">닫기</button>
 	        </div>
 	    </div>
 	</form>
 </body>
 <script type="text/javascript">
+var idx;
 $(function(){
-	const urlParams = new URL(location.href).searchParams;
-	const idx = urlParams.get('idx');
-	console.log(idx);
-	
+	idx = $("#idx").val();
 	if(idx != null && idx != "" && idx != undefined){
 		$("#pop-title").text("게시물 수정");
+		$("#btn_save").text("수정");
+		selectBoardInfo(idx);
 	}else{
 		$("#pop-title").text("게시물 등록");
+		$("#btn_save").text("저장");
 	}
 });
 
-$("#btn_update").click(function(){
+$("#btn_save").click(function(){
+	var url = "";
+	var saveObj = new Object();
+	saveObj["title"] = $("#title").val();
+	saveObj["content"] = $("#content").val();
 	
+	if(idx != null && idx != "" && idx != undefined){
+		url = "/board/updateBoardList";
+		saveObj["idx"] = $("#idx").val(); //key
+	}else{
+		url = "/board/insertBoardList";
+	}
+	
+	$.ajax({
+	    url: url,
+	    async: true,
+	    type: 'POST',
+	    data: JSON.stringify(saveObj),
+	    dataType: 'json',
+	    contentType: 'application/json',
+	    success: function(res) {
+	    	swAlert("저장", res + "건 저장 되었습니다.", "S", "OK");
+	    },
+	    error: function(jqXHR) {
+	    	console.log("error"); 
+	    },
+	    complete: function(jqXHR) {
+	    	console.log("complete"); 
+	    }
+	});
 });
 
 $("#btn_close").click(function(){
 	window.close();
 });
+
+function selectBoardInfo(idx){
+	$.ajax({
+	    url: '/board/selectBoardList',
+	    async: true,
+	    type: 'GET',
+	    data: {
+	    	idx: $("#idx").val(),
+	    },
+	    dataType: 'json',
+	    success: function(data) {
+	    	$("#idx").val(data[0]["idx"]);
+	    	$("#title").val(data[0]["title"]);
+	    	$("#content").val(data[0]["content"]);
+	    },
+	    error: function(jqXHR) {
+	    	console.log("error"); 
+	    },
+	    complete: function(jqXHR) {
+	    	console.log("complete"); 
+	    }
+	});
+}
 
 </script>
 </html>

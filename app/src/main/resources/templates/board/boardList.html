@@ -30,52 +30,11 @@
 	    </div>
 	    
 	    <div id="grid" style="width:1350px; height:800px; margin:0 auto;"></div>
-	    
-	    <!-- board list area -->
-	    <!-- 
-	    <div id="board-list">
-	        <div class="container">
-	            <table class="board-table">
-	                <thead>
-		                <tr>
-		                    <th scope="col" class="th-num">번호</th>
-		                    <th scope="col" class="th-title">제목</th>
-		                    <th scope="col" class="th-date">등록일</th>
-		                </tr>
-	                </thead>
-	                <tbody>             
-		                <tr th:each="List : ${selectboardList}">
-		                	<td th:text="${List.idx}">idx</td>
-		                	<th a:href="#${List.idx}" th:text="${List.title}">title</th>
-		                	<td th:text="${List.content}">content</td>
-		                </tr>
-		                <tr>
-		                    <td>3</td>
-		                    <th>
-		                      <a href="#!">[공지사항] 개인정보 처리방침 변경안내처리방침</a>
-		                      <p>테스트</p>
-		                    </th>
-		                    <td>2017.07.13</td>
-		                </tr>	
-		                <tr>
-		                    <td>2</td>
-		                    <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
-		                    <td>2017.06.15</td>
-		                </tr>	
-		                <tr>
-		                    <td>1</td>
-		                    <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
-		                    <td>2017.06.15</td>
-		                </tr>               
-	                </tbody>
-	            </table>
-	        </div>
-	    </div>
-	    -->
 	</section>
 </body>
 <script th:inline="javascript">
 var grid;
+var data;
 
 $(function(){
 	grid = new tui.Grid({
@@ -107,19 +66,22 @@ $(function(){
 	    ]
 	});
 	
-	selectList(grid);
+	//selectList(grid);
+	
 	
 	grid.on('click', (evt) => {
-		//console.log("evt",evt);
-		var rowData = evt.instance.store.data.rawData[0];
-		//console.log("rowData",rowData);
+		var rowKey = evt["rowKey"];
+		var rowObj = evt.instance.store.viewport.rows[rowKey].valueMap;
+		var idx = rowObj["idx"]["value"];
+		
 		if(evt.columnName == "title"){
-			boardPopup(rowData["idx"]);	
+			boardPopup(idx);	
 		}
 	});
+	
 });
 
-function selectList(grid){
+function selectList(){
 	$.ajax({
 	    url: '/board/selectBoardList',
 	    async: true,
@@ -128,11 +90,12 @@ function selectList(grid){
 	    	keyword: $("#keyword").val(),
 	    },
 	    dataType: 'json',
-	    beforeSend: function(jqXHR) {
-	    	
-	    },
 	    success: function(data) {
 	    	grid.resetData(data);
+	    	setTimeout(
+	    		grid.refreshLayout(), 
+	    	1000);
+	    	
 	    },
 	    error: function(jqXHR) {
 	    	console.log("error"); 

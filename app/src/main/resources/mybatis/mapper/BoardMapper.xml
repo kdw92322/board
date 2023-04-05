@@ -8,11 +8,34 @@
 			   content	  
 		  from simpleboard
 		 where 1=1
+		 <if test="idx != '' and idx != null">
+		 	 and idx = #{idx}
+		 </if>
 		 <if test="keyword != '' and keyword != null">
-		   and(
-		       title like concat_ws(#{keyword},'%','%') or		
-		       content like concat_ws(#{keyword},'%','%')
-		   )
+		     and(
+		         title like concat_ws(#{keyword},'%','%') or		
+		         content like concat_ws(#{keyword},'%','%')
+		     )
 		 </if>    
 	</select>
+	
+	<insert id="insertBoardList" parameterType="map">
+		insert simpleboard
+		(
+			title,
+			content
+		)
+		values
+		(
+			#{title},
+			#{content}
+		)
+	</insert>
+	
+	<update id="updateBoardList" parameterType="map">
+		update simpleboard
+		   set title = #{title},
+			   content = #{content}
+		 where idx = #{idx}   
+	</update>
 </mapper>

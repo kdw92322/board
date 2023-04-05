@@ -8,4 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface BoardMapper {
 	List<Map<String,Object>> selectboardList(Map<String,Object> paramMap);
+
+	int insertBoardList(Map<String, Object> paramMap);
+
+	int updateBoardList(Map<String, Object> paramMap);
 }

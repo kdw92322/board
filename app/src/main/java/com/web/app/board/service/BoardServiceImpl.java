@@ -16,4 +16,14 @@ public class BoardServiceImpl implements BoardService{
 	public List<Map<String,Object>> selectboardList(Map<String,Object> paramMap) {
 		return boardmapper.selectboardList(paramMap);
 	}
+
+	@Override
+	public int insertBoardList(Map<String, Object> paramMap) throws Exception {
+		return boardmapper.insertBoardList(paramMap);
+	}
+
+	@Override
+	public int updateBoardList(Map<String, Object> paramMap) throws Exception {
+		return boardmapper.updateBoardList(paramMap);
+	}
 }

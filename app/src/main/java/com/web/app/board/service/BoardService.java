@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface BoardService {
-	public List<Map<String,Object>> selectboardList(Map<String,Object> paramMap) throws Exception; 
+	public List<Map<String,Object>> selectboardList(Map<String,Object> paramMap) throws Exception;
+	public int insertBoardList(Map<String,Object> paramMap) throws Exception;
+	public int updateBoardList(Map<String,Object> paramMap) throws Exception;
 	
 }
