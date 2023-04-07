@@ -34,10 +34,10 @@ public class BoardController {
 		return selectboardList;
 	}
 	
-	@GetMapping("/boardModal")
+	@GetMapping("/boardPopup")
 	public String boardModal(@RequestParam Map<String, Object> paramMap, Model model) {
 		model.addAttribute("idx", paramMap.get("idx"));
-		return "board/boardModal";
+		return "board/boardPopup";
 	}
 	
 	@PostMapping("/insertBoardList")
@@ -50,7 +50,13 @@ public class BoardController {
 	@PostMapping("/updateBoardList")
 	@ResponseBody
 	public int updateBoardList(@RequestBody Map<String, Object> paramMap) throws Exception {
-		int insertBoardList = boardservice.updateBoardList(paramMap);
-		return insertBoardList;
+		int updateBoardList = boardservice.updateBoardList(paramMap);
+		return updateBoardList;
+	}
+	@PostMapping("/deleteBoardList")
+	@ResponseBody
+	public int deleteBoardList(@RequestBody Map<String, Object> paramMap) throws Exception {
+		int deleteBoardList = boardservice.deleteBoardList(paramMap);
+		return deleteBoardList;
 	}
 }

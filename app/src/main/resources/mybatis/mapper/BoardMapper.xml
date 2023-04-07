@@ -20,13 +20,10 @@
 	</select>
 	
 	<insert id="insertBoardList" parameterType="map">
-		insert simpleboard
-		(
+		insert simpleboard(
 			title,
 			content
-		)
-		values
-		(
+		) values (
 			#{title},
 			#{content}
 		)
@@ -38,4 +35,10 @@
 			   content = #{content}
 		 where idx = #{idx}   
 	</update>
+	
+	<delete id="deleteBoardList" parameterType="map">
+		delete 
+		  from simpleboard
+		 where idx = #{idx}   
+	</delete>
 </mapper>

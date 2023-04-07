@@ -12,4 +12,6 @@ public interface BoardMapper {
 	int insertBoardList(Map<String, Object> paramMap);
 
 	int updateBoardList(Map<String, Object> paramMap);
+	
+	int deleteBoardList(Map<String, Object> paramMap);
 }

@@ -21,7 +21,7 @@
 	                <!-- <form action="./selectBoardList"> -->
 	                    <div class="search-wrap">
 	                        <label for="search" class="blind">공지사항 내용 검색</label>
-	                        <input id="keyword" type="search" name="keyword" placeholder="검색어를 입력해주세요." value="">
+	                        <input id="keyword" type="search" name="keyword" placeholder="검색어를 입력해주세요." value="" onKeypress="javascript:if(event.keyCode==13) {selectList()}">
 	                        <button type="button" class="btn btn-dark" onclick="selectList();">검색</button>
 	                    </div>
 	                <!-- </form> -->
@@ -116,7 +116,7 @@ function boardPopup(idx){
 	var popupY= (window.screen.height / 2) - (popupHeight / 2);
 	// 만들 팝업창 height 크기의 1/2 만큼 보정값으로 빼주었음
 	
-	var url = "/board/boardModal";
+	var url = "/board/boardPopup";
 	if(idx != undefined){
 		url += "?idx=" + idx;
 	}

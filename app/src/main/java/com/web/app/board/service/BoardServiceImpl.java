@@ -26,4 +26,9 @@ public class BoardServiceImpl implements BoardService{
 	public int updateBoardList(Map<String, Object> paramMap) throws Exception {
 		return boardmapper.updateBoardList(paramMap);
 	}
+
+	@Override
+	public int deleteBoardList(Map<String, Object> paramMap) throws Exception {
+		return boardmapper.deleteBoardList(paramMap);
+	}
 }

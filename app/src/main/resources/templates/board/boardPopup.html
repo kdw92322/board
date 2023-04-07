@@ -17,7 +17,7 @@ h3 {
 <body>
 	<input type="hidden" id="idx" th:value="${idx}"/>
 	<form class="form-horizontal">
-	    <div class="input-group">
+	    <div class="page-title">
 	        <h3 id="pop-title"></h3>
 	    </div>
 	    <div class="form-group">
@@ -33,6 +33,7 @@ h3 {
 	    <div class="form-group">
 	        <div class="col-sm-offset-2 col-sm-10">
 	            <button type="button" id="btn_save" class="btn btn-info">수정</button>
+	            <button type="button" id="btn_delete" class="btn btn-danger">삭제</button>
 	            <button type="button" id="btn_close" class="btn btn-light">닫기</button>
 	        </div>
 	    </div>
@@ -49,45 +50,28 @@ $(function(){
 	}else{
 		$("#pop-title").text("게시물 등록");
 		$("#btn_save").text("저장");
+		$("#btn_delete").hide();
 	}
 });
 
 $("#btn_save").click(function(){
-	var url = "";
-	var saveObj = new Object();
-	saveObj["title"] = $("#title").val();
-	saveObj["content"] = $("#content").val();
-	
 	if(idx != null && idx != "" && idx != undefined){
-		url = "/board/updateBoardList";
-		saveObj["idx"] = $("#idx").val(); //key
+		saveBoardInfo("U");
 	}else{
-		url = "/board/insertBoardList";
+		saveBoardInfo("I");
 	}
-	
-	$.ajax({
-	    url: url,
-	    async: true,
-	    type: 'POST',
-	    data: JSON.stringify(saveObj),
-	    dataType: 'json',
-	    contentType: 'application/json',
-	    success: function(res) {
-	    	swAlert("저장", res + "건 저장 되었습니다.", "S", "OK");
-	    },
-	    error: function(jqXHR) {
-	    	console.log("error"); 
-	    },
-	    complete: function(jqXHR) {
-	    	console.log("complete"); 
-	    }
-	});
 });
+
+$("#btn_delete").click(function(){
+	saveBoardInfo("D");
+});
+
 
 $("#btn_close").click(function(){
-	window.close();
+	pop_close();
 });
 
+//조회 function
 function selectBoardInfo(idx){
 	$.ajax({
 	    url: '/board/selectBoardList',
@@ -109,6 +93,61 @@ function selectBoardInfo(idx){
 	    	console.log("complete"); 
 	    }
 	});
+}
+
+//저장 function(저장, 수정, 삭제)
+function saveBoardInfo(type){
+	var url = "";
+	var saveObj = new Object();
+	saveObj["title"] = $("#title").val();
+	saveObj["content"] = $("#content").val();
+	saveObj["idx"] = $("#idx").val();
+	
+	if(type == "I"){
+		url = "/board/insertBoardList";
+	}else if(type == "U"){
+		url = "/board/updateBoardList";
+	}else if(type == "D"){
+		url = "/board/deleteBoardList";
+	}
+	
+	if(url != ""){
+		$.ajax({
+		    url: url,
+		    async: true,
+		    type: 'POST',
+		    data: JSON.stringify(saveObj),
+		    dataType: 'json',
+		    contentType: 'application/json',
+		    success: function(res) {
+		    	var restxt = "";
+		    	if(type == "I"){
+		    		restxt = "저장 되었습니다.";
+		    	}else if(type == "U"){
+		    		restxt = "수정 되었습니다.";
+		    	}else if(type == "D"){
+		    		restxt = "삭제 되었습니다.";
+		    	}
+		    	
+		    	swAlert(restxt, res + " 건 " + restxt, "S", "OK");
+		    },
+		    error: function(jqXHR) {
+		    	console.log("error"); 
+		    },
+		    complete: function(jqXHR) {
+		    	console.log("complete");
+		    	pop_close();
+		    }
+		});
+	};
+}
+
+function pop_close(){
+	window.opener.selectList();
+	setTimeout(function(){
+		window.close();
+	}, 1500);
+
 }
 
 </script>
