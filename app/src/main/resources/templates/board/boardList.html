@@ -2,8 +2,31 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<th:block th:replace="fragments/commonHeader"></th:block>
+	<style>
+    .t_grid {
+        width:80%; 
+        height:100%;
+        margin:0 auto;
+    }
+     a:link, a:visited {
+	     background-color: 	#E6E6FA;
+	     color: #000000;
+	     padding: 5px 15px;
+	     text-align: center;
+	     text-decoration: none;
+	     display: inline-block;
+	}
+	 a:hover, a:active {
+	     background-color: 	#D8BFD8;
+	}
+  </style>	
 </head>
 <body>
+	<div class="container">
+		<p><span id="userId" th:text="${id}" style="font-weight:bold"></span> 님이 로그인 하셨습니다.
+		<a href="http://localhost:9000/user/logout" >로그아웃</a>
+		</p>
+	</div>
 	<section class="notice">
 	  	<div class="page-title">
 	        <div class="container">
@@ -28,8 +51,7 @@
 	            </div>
 	        </div>
 	    </div>
-	    
-	    <div id="grid" style="width:1350px; height:800px; margin:0 auto;"></div>
+	    <div id="grid" class="t_grid"></div>
 	</section>
 </body>
 <script th:inline="javascript">
@@ -47,8 +69,8 @@ $(function(){
 	    },
 	    columns: [
 	      {
-	          header: '순번',
-	          name: 'idx',
+	          header: '게시글번호',
+	          name: 'boardNo',
 	          width: 'auto',
 	          align:'center'
 	      },
@@ -62,7 +84,31 @@ $(function(){
 	          header: '내용',
 	          name: 'content',
 	          align:'center'
-	      }
+	      },
+	      {
+	          header: '작성자',
+	          name: 'writer',
+	          width: 'auto',
+	          align:'center'
+	      },
+	      {
+	          header: '작성일',
+	          name: 'regDate',
+	          width: 'auto',
+	          align:'center'
+	      },
+	      {
+	          header: '수정일',
+	          name: 'uptDate',
+	          width: 'auto',
+	          align:'center'
+	      },
+	      {
+	          header: 'index',
+	          name: 'idx',
+	          align:'center',
+	          hidden: 1	  
+	      },
 	    ]
 	});
 	
@@ -74,7 +120,7 @@ $(function(){
 		var rowObj = evt.instance.store.viewport.rows[rowKey].valueMap;
 		var idx = rowObj["idx"]["value"];
 		
-		if(evt.columnName == "title"){
+		if(evt.columnName == "boardNo" || evt.columnName == "title"){
 			boardPopup(idx);	
 		}
 	});
@@ -125,6 +171,7 @@ function boardPopup(idx){
 	var popupConfig = 'status=no, height=' + popupHeight + ',width=' + popupWidth + ',left=' + popupX + ',top=' + popupY;
 	var win = window.open(url, "신규 POPUP", popupConfig);
 }
+
 </script>
 
 </html>

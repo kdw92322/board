@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>회원가입</title>
+	<th:block th:replace="fragments/commonHeader"></th:block>
+	<style>
+		.req {
+		    color: red;
+		}
+	</style>
+</head>
+<body>
+	<div class="container" style="width:30%; position: absolute; top:30%; left:50%; transform: translate(-50%, -50%);">
+		<div class="my-3 border-bottom">
+	        <div>
+	            <h1>회원가입</h1>
+	        </div>
+	    </div>
+	    <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
+	        <!-- <div th:replace="~{form_errors :: formErrorsFragment}"></div> -->
+	        <div class="mb-3" style="padding-top:8px;">
+	            <label for="username" class="form-label"><span class="req">*</span>사용자ID</label>
+	            <input type="text" th:field="*{username}" class="form-control" required>
+	        </div>
+	        <div class="mb-3" style="padding-top:8px;">
+	            <label for="password1" class="form-label"><span class="req">*</span>비밀번호</label>
+	            <input type="password" th:field="*{password1}" class="form-control" required>
+	        </div>
+	        <div class="mb-3" style="padding-top:8px;">
+	            <label for="password2" class="form-label"><span class="req">*</span>비밀번호 확인</label>
+	            <input type="password" th:field="*{password2}" class="form-control" required>
+	        </div>
+	        <div class="mb-3" style="padding-top:8px;">
+	            <label for="email" class="form-label"><span class="req">*</span>이메일</label>
+	            <input type="email" th:field="*{email}" class="form-control" required>
+	        </div>
+	        <button type="submit" class="btn btn-primary" style="margin-top: 8px;">계정등록</button>
+	        <button type="button" class="btn btn-primary" style="margin-top: 8px;" th:onclick="location.href='http://localhost:9000/user/login'">로그인 이동</button>
+	    </form>
+    </div>
+</body>
+</html>

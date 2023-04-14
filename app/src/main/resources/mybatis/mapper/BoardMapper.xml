@@ -3,36 +3,52 @@
 
 <mapper namespace="com.web.app.board.service.BoardMapper">
 	<select id="selectboardList" resultType="map">
-		select idx,
-			   title,
-			   content	  
+		select idx      as idx,
+			   title    as title,
+			   content  as content,
+               board_no as boardNo,
+               writer   as writer,
+               reg_date as regDate,
+               upt_date as uptDate
 		  from simpleboard
 		 where 1=1
 		 <if test="idx != '' and idx != null">
-		 	 and idx = #{idx}
+		   and idx = #{idx}
 		 </if>
 		 <if test="keyword != '' and keyword != null">
-		     and(
-		         title like concat_ws(#{keyword},'%','%') or		
-		         content like concat_ws(#{keyword},'%','%')
-		     )
+		   and(
+		       title like concat_ws(#{keyword},'%','%') or		
+		       content like concat_ws(#{keyword},'%','%')
+		   )
 		 </if>    
 	</select>
 	
 	<insert id="insertBoardList" parameterType="map">
+		<selectKey resultType="string" keyProperty="boardNo" order="BEFORE">
+	        select concat('B',lpad(ifnull(max(idx),1),4,'0'))  as boardNo
+  			  from simpleboard       
+	    </selectKey> 
 		insert simpleboard(
 			title,
-			content
+			content,
+			board_no,
+            writer,
+            reg_date
 		) values (
 			#{title},
-			#{content}
+			#{content},
+			#{boardNo},
+            #{writer},
+            sysdate()
 		)
 	</insert>
 	
 	<update id="updateBoardList" parameterType="map">
 		update simpleboard
 		   set title = #{title},
-			   content = #{content}
+			   content = #{content},
+           	   writer = #{writer},
+           	   upt_date = sysdate()
 		 where idx = #{idx}   
 	</update>
 	

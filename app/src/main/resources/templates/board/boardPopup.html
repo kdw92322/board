@@ -21,6 +21,26 @@ h3 {
 	        <h3 id="pop-title"></h3>
 	    </div>
 	    <div class="form-group">
+	    	<div class="container">
+	    		<div class="mb-3">
+			        <label for="title" class="form-label">제목</label>
+			        <input type="text" id="title" name="title" class="form-control">
+			    </div>
+			    <div class="mb-3">
+			        <label for="content" class="form-label">내용</label>
+			        <textarea class="form-control" id="content" rows="5" placeholder="내용을 입력하세요."></textarea>
+			    </div>
+			    <div class="mb-3">
+			    	<label for="writer" class="form-label">작성자</label>
+			        <input type="text" id="writer" name="writer" class="form-control" disabled>
+			    </div>
+			    <div class="mb-3">
+				    <button type="button" id="btn_save" class="btn btn-info">수정</button>
+		            <button type="button" id="btn_delete" class="btn btn-danger">삭제</button>
+		            <button type="button" id="btn_close" class="btn btn-light">닫기</button>
+	            </div>
+	    	</div>
+	    	<!-- 
 	        <div class="col-sm-12">
 	        	<label for="lab-title" class="col-sm-2 control-label">제목</label>
 	            <input type="text" class="form-control" id="title" placeholder="제목을 입력하세요.">
@@ -29,19 +49,14 @@ h3 {
 	        	<label for="lab-content" class="col-sm-2 control-label">내용</label>
 		    	<textarea class="form-control" id="content" rows="5" placeholder="내용을 입력하세요."></textarea>
 	        </div>
-	    </div>
-	    <div class="form-group">
-	        <div class="col-sm-offset-2 col-sm-10">
-	            <button type="button" id="btn_save" class="btn btn-info">수정</button>
-	            <button type="button" id="btn_delete" class="btn btn-danger">삭제</button>
-	            <button type="button" id="btn_close" class="btn btn-light">닫기</button>
-	        </div>
+	         -->
 	    </div>
 	</form>
 </body>
 <script type="text/javascript">
 var idx;
 $(function(){
+	$("#writer").val($("#userId", opener.document).text());
 	idx = $("#idx").val();
 	if(idx != null && idx != "" && idx != undefined){
 		$("#pop-title").text("게시물 수정");
@@ -101,6 +116,7 @@ function saveBoardInfo(type){
 	var saveObj = new Object();
 	saveObj["title"] = $("#title").val();
 	saveObj["content"] = $("#content").val();
+	saveObj["writer"] = $("#writer").val();
 	saveObj["idx"] = $("#idx").val();
 	
 	if(type == "I"){
