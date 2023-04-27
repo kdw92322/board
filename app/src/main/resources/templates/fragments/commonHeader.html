@@ -1,20 +1,41 @@
-<meta charset="UTF-8">
-<link th:href="@{/css/main.css}" rel="stylesheet" />
-	 
-<!-- Toast Grid -->
-<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="commonHeader">
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" th:href=@{/}>
+        <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/logo_white.png" width="30" height="30" alt="logo">
+        BootstrapSite 
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-list" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-list">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href=@{/}>Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">Modal/Popup</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href=@{/test}>Sample</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<script type="text/javascript">
+/* $(function () {
+    // actvie 활성화 
+    $('.nav-link').click(function () {
+        $('.nav-link').removeClass('active');
 	
-<!-- JQuery -->
-<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />	
+        // 클릭한 위치 active 적용 
+        $(this).addClass('active');
+        
+    });
+}); */
+</script> 
+ 
+</th:block>
+</html>
 
-<!-- Bootstrap -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-
-<!-- SweetAlert -->
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script type="text/javascript" th:src="@{/js/swalert.js}"></script>

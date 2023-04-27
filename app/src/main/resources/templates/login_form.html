@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
+	<th:block th:replace="fragments/config"></th:block>
 	<title>로그인</title>
-	<th:block th:replace="fragments/commonHeader"></th:block>
 	<style>
 		.req {
 		    color: red;
@@ -18,7 +19,7 @@
 		            <h1>로그인</h1>
 		        </div>
 		    </div>
-		    <form th:action="@{/user/login}" method="post">
+		    <form th:action="@{/user/loginProcess}" method="post">
 		        <div th:if="${param.error}">
 		            <div class="alert alert-danger">
 		                사용자ID 또는 비밀번호를 확인해 주세요.

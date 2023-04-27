@@ -1,42 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
 <head>
-	<th:block th:replace="fragments/commonHeader"></th:block>
+	<meta charset="UTF-8">
+	<title>공지사항</title>
 	<style>
-    .t_grid {
-        width:80%; 
-        height:100%;
-        margin:0 auto;
-    }
-     a:link, a:visited {
-	     background-color: 	#E6E6FA;
-	     color: #000000;
-	     padding: 5px 15px;
-	     text-align: center;
-	     text-decoration: none;
-	     display: inline-block;
-	}
-	 a:hover, a:active {
-	     background-color: 	#D8BFD8;
-	}
-  </style>	
+	    .t_grid {
+	        width:80%; 
+	        height:100%;
+	        margin:0 auto;
+	    }
+    </style>	
 </head>
 <body>
-	<div class="container">
-		<p><span id="userId" th:text="${id}" style="font-weight:bold"></span> 님이 로그인 하셨습니다.
-		<a href="http://localhost:9000/user/logout" >로그아웃</a>
-		</p>
-	</div>
 	<section class="notice">
 	  	<div class="page-title">
+		  	<div style="float:left; margin:10px;">
+			    <div class="arr">
+			    	<span></span>
+			  	</div>
+		  	</div>
 	        <div class="container">
-	            <h3>게시판</h3>
-	            <div class="search-wrap">
-	        		<button type="button" class="btn btn-dark" style="float:right;width:108px;height:40px;" onclick="boardPopup();">입력</button>
+	        	<div style="width:100%; height:100px; display : flex; justify-content : center; align-items : center;">
+	            	<h2>HOME</h2>
+	            </div>
+	            <div class="search-wrap" style="margin-top:10px; margin-bottom:10px;">
+	        		<button type="button" class="btn btn-primary" style="float:right; margin-left:5px;" onclick="boardPopup();">Popup</button>
+					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="float:right;">Modal</button>
+	        		<button type="button" class="btn btn-primary" onclick="testPage();">SAMPLE</button>
 	        	</div>
 	        </div>    
 	    </div>
-
+	
 	    <!-- board seach area -->
 	    <div id="board-search">
 	        <div class="container">
@@ -45,7 +43,7 @@
 	                    <div class="search-wrap">
 	                        <label for="search" class="blind">공지사항 내용 검색</label>
 	                        <input id="keyword" type="search" name="keyword" placeholder="검색어를 입력해주세요." value="" onKeypress="javascript:if(event.keyCode==13) {selectList()}">
-	                        <button type="button" class="btn btn-dark" onclick="selectList();">검색</button>
+	                        <button type="button" class="btn btn-info" onclick="selectList();" style="margin:5px;">검색</button>
 	                    </div>
 	                <!-- </form> -->
 	            </div>
@@ -54,124 +52,128 @@
 	    <div id="grid" class="t_grid"></div>
 	</section>
 </body>
-<script th:inline="javascript">
-var grid;
-var data;
-
-$(function(){
-	grid = new tui.Grid({
-	    el: document.getElementById('grid'),
-	    scrollX: false,
-	    scrollY: false,
-	    rowHeight:30,
-	    columnOptions: {
-	        minWidth: 180
-	    },
-	    columns: [
-	      {
-	          header: '게시글번호',
-	          name: 'boardNo',
-	          width: 'auto',
-	          align:'center'
-	      },
-	      {
-	    	  header: '제목',
-	          name: 'title',
-	          align:'center',
-	          width: 'auto'
-	      },
-	      {
-	          header: '내용',
-	          name: 'content',
-	          align:'center'
-	      },
-	      {
-	          header: '작성자',
-	          name: 'writer',
-	          width: 'auto',
-	          align:'center'
-	      },
-	      {
-	          header: '작성일',
-	          name: 'regDate',
-	          width: 'auto',
-	          align:'center'
-	      },
-	      {
-	          header: '수정일',
-	          name: 'uptDate',
-	          width: 'auto',
-	          align:'center'
-	      },
-	      {
-	          header: 'index',
-	          name: 'idx',
-	          align:'center',
-	          hidden: 1	  
-	      },
-	    ]
-	});
+<script type="text/javascript">
+	var grid;
+	var data;
 	
-	//selectList(grid);
-	
-	
-	grid.on('click', (evt) => {
-		var rowKey = evt["rowKey"];
-		var rowObj = evt.instance.store.viewport.rows[rowKey].valueMap;
-		var idx = rowObj["idx"]["value"];
+	$(function(){
+		grid = new tui.Grid({
+		    el: document.getElementById('grid'),
+		    scrollX: false,
+		    scrollY: false,
+		    bodyHeight:300,
+		    rowHeight:30,
+		    columnOptions: {
+		        minWidth: 180
+		    },
+		    columns: [
+		      {
+		          header: '게시글번호',
+		          name: 'boardNo',
+		          width: 'auto',
+		          align:'center'
+		      },
+		      {
+		    	  header: '제목',
+		          name: 'title',
+		          align:'center',
+		          width: 'auto'
+		      },
+		      {
+		          header: '내용',
+		          name: 'content',
+		          align:'center'
+		      },
+		      {
+		          header: '작성자',
+		          name: 'writer',
+		          width: 'auto',
+		          align:'center'
+		      },
+		      {
+		          header: '작성일',
+		          name: 'regDate',
+		          width: 'auto',
+		          align:'center'
+		      },
+		      {
+		          header: '수정일',
+		          name: 'uptDate',
+		          width: 'auto',
+		          align:'center'
+		      },
+		      {
+		          header: 'index',
+		          name: 'idx',
+		          align:'center',
+		          hidden: 1	  
+		      },
+		    ]
+		});
 		
-		if(evt.columnName == "boardNo" || evt.columnName == "title"){
-			boardPopup(idx);	
+		tui.Grid.applyTheme('striped');
+		
+		grid.on('click', (evt) => {
+			var rowKey = evt["rowKey"];
+			var rowObj = evt.instance.store.viewport.rows[rowKey].valueMap;
+			var idx = rowObj["idx"]["value"];
+			
+			if(evt.columnName == "boardNo" || evt.columnName == "title"){
+				boardPopup(idx);	
+			}
+		});
+		
+	});
+	
+	function selectList(){
+		$.ajax({
+		    url: '/board/selectBoardList',
+		    async: true,
+		    type: 'GET',
+		    data: {
+		    	keyword: $("#keyword").val(),
+		    },
+		    dataType: 'json',
+		    success: function(data) {
+		    	grid.resetData(data);
+		    	setTimeout(
+		    		grid.refreshLayout(), 
+		    	1000);
+		    },
+		    error: function(jqXHR) {
+		    	console.log("error"); 
+		    },
+		    complete: function(jqXHR) {
+		    	console.log("complete"); 
+		    }
+		});
+	};
+	
+	function boardPopup(idx){
+		var popupWidth = 700;
+		var popupHeight = 850;
+		
+		var popupX = (window.screen.width / 2) - (popupWidth / 2);
+		// 만들 팝업창 width 크기의 1/2 만큼 보정값으로 빼주었음
+	
+		var popupY= (window.screen.height / 2) - (popupHeight / 2);
+		// 만들 팝업창 height 크기의 1/2 만큼 보정값으로 빼주었음
+		
+		var url = "/board/boardPopup";
+		if(idx != undefined){
+			url += "?idx=" + idx;
 		}
-	});
+		var popupConfig = 'status=no, height=' + popupHeight + ',width=' + popupWidth + ',left=' + popupX + ',top=' + popupY;
+		var win = window.open(url, "신규 POPUP", popupConfig);
+	};
 	
-});
-
-function selectList(){
-	$.ajax({
-	    url: '/board/selectBoardList',
-	    async: true,
-	    type: 'GET',
-	    data: {
-	    	keyword: $("#keyword").val(),
-	    },
-	    dataType: 'json',
-	    success: function(data) {
-	    	grid.resetData(data);
-	    	setTimeout(
-	    		grid.refreshLayout(), 
-	    	1000);
-	    	
-	    },
-	    error: function(jqXHR) {
-	    	console.log("error"); 
-	    },
-	    complete: function(jqXHR) {
-	    	console.log("complete"); 
-	    }
-	});
-};
-
-function boardPopup(idx){
-	var popupWidth = 700;
-	var popupHeight = 850;
-	
-	var popupX = (window.screen.width / 2) - (popupWidth / 2);
-	// 만들 팝업창 width 크기의 1/2 만큼 보정값으로 빼주었음
-
-	var popupY= (window.screen.height / 2) - (popupHeight / 2);
-	// 만들 팝업창 height 크기의 1/2 만큼 보정값으로 빼주었음
-	
-	var url = "/board/boardPopup";
-	if(idx != undefined){
-		url += "?idx=" + idx;
+	function boardModal(){
+		
 	}
 	
-	
-	var popupConfig = 'status=no, height=' + popupHeight + ',width=' + popupWidth + ',left=' + popupX + ',top=' + popupY;
-	var win = window.open(url, "신규 POPUP", popupConfig);
-}
-
+	function testPage(){
+		window.location.href = "/test";
+	};
 </script>
-
+</th:block>
 </html>

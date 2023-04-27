@@ -7,8 +7,15 @@ section.notice {
 }
 
 .page-title {
-  margin-bottom: 60px;
+  margin-bottom: 0px;
 }
+
+.page-title h2 {
+  color: #333333;
+  font-weight: 400;
+  text-align: center;
+}
+
 .page-title h3 {
   font-size: 28px;
   color: #333333;

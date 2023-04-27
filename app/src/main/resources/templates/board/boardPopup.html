@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<th:block th:replace="fragments/commonHeader"></th:block>
+	<th:block th:replace="fragments/config"></th:block>
 </head>
 <style>
-h3 {
-  display: block;
-  font-size: 2em;
-  margin-top: 0.67em;
-  margin-bottom: 0.67em;
-  margin-left: 0;
-  margin-right: 0;
-  font-weight: bold;
-}
+	h3 {
+	  display: block;
+	  font-size: 2em;
+	  margin-top: 0.67em;
+	  margin-bottom: 0.67em;
+	  margin-left: 0;
+	  margin-right: 0;
+	  font-weight: bold;
+	}
 </style>
 <body>
 	<input type="hidden" id="idx" th:value="${idx}"/>
@@ -40,16 +40,6 @@ h3 {
 		            <button type="button" id="btn_close" class="btn btn-light">닫기</button>
 	            </div>
 	    	</div>
-	    	<!-- 
-	        <div class="col-sm-12">
-	        	<label for="lab-title" class="col-sm-2 control-label">제목</label>
-	            <input type="text" class="form-control" id="title" placeholder="제목을 입력하세요.">
-	        </div>
-	        <div class="col-sm-12">
-	        	<label for="lab-content" class="col-sm-2 control-label">내용</label>
-		    	<textarea class="form-control" id="content" rows="5" placeholder="내용을 입력하세요."></textarea>
-	        </div>
-	         -->
 	    </div>
 	</form>
 </body>
@@ -83,7 +73,7 @@ $("#btn_delete").click(function(){
 
 
 $("#btn_close").click(function(){
-	pop_close();
+	pop_close("C");
 });
 
 //조회 function
@@ -100,6 +90,7 @@ function selectBoardInfo(idx){
 	    	$("#idx").val(data[0]["idx"]);
 	    	$("#title").val(data[0]["title"]);
 	    	$("#content").val(data[0]["content"]);
+	    	$("#writer").val(data[0]["writer"]);
 	    },
 	    error: function(jqXHR) {
 	    	console.log("error"); 
@@ -113,6 +104,7 @@ function selectBoardInfo(idx){
 //저장 function(저장, 수정, 삭제)
 function saveBoardInfo(type){
 	var url = "";
+	var mappingType = "";
 	var saveObj = new Object();
 	saveObj["title"] = $("#title").val();
 	saveObj["content"] = $("#content").val();
@@ -120,10 +112,13 @@ function saveBoardInfo(type){
 	saveObj["idx"] = $("#idx").val();
 	
 	if(type == "I"){
+		mappingType = "POST";
 		url = "/board/insertBoardList";
 	}else if(type == "U"){
+		mappingType = "PUT";
 		url = "/board/updateBoardList";
 	}else if(type == "D"){
+		mappingType = "DELETE";
 		url = "/board/deleteBoardList";
 	}
 	
@@ -131,7 +126,7 @@ function saveBoardInfo(type){
 		$.ajax({
 		    url: url,
 		    async: true,
-		    type: 'POST',
+		    type: mappingType,
 		    data: JSON.stringify(saveObj),
 		    dataType: 'json',
 		    contentType: 'application/json',
@@ -152,18 +147,21 @@ function saveBoardInfo(type){
 		    },
 		    complete: function(jqXHR) {
 		    	console.log("complete");
-		    	pop_close();
+		    	pop_close("S");
 		    }
 		});
 	};
 }
 
-function pop_close(){
-	window.opener.selectList();
-	setTimeout(function(){
+function pop_close(type){
+	if(type == "S"){
+		window.opener.selectList();
+		setTimeout(function(){
+			window.close();
+		}, 1500);
+	}else{
 		window.close();
-	}, 1500);
-
+	}
 }
 
 </script>

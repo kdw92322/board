@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<meta charset="UTF-8">
+	<title>layout</title>
+	<th:block th:replace="fragments/config::config"></th:block>
+	<th:block th:replace="fragments/commonModal::commonModal"></th:block>
+</head>
+<body>
+	<th:block th:replace="fragments/commonHeader::commonHeader"></th:block>
+	<th:block layout:fragment="content"></th:block>
+	<th:block th:replace="fragments/commonFooter::commonFooter"></th:block>
+</body>
+<!-- <script>  
+	$(document).ready(function() {  
+	  $('.nav-link-collapse').on('click', function() {  
+	    $('.nav-link-collapse').not(this).removeClass('nav-link-show');  
+	    $(this).toggleClass('nav-link-show');  
+	  });  
+	});  
+</script> -->
+</html>

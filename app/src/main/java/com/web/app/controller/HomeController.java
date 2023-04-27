@@ -22,6 +22,8 @@ public class HomeController {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("/board/boardList");
 		//System.out.println("principal : " + principal);
+		mv.setViewName("login_form");
+
 		if(principal == null) {
 			mv.setViewName("login_form");
 		}else {
@@ -29,6 +31,12 @@ public class HomeController {
 			//System.out.println("Name : " + principal.getName());
 			mv.addObject("id", principal.getName());
 		}
+		
 		return mv;
+	}
+	
+	@GetMapping("/test")
+	public String test() {
+		return "test/test";
 	}
 }
