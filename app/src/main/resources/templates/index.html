@@ -4,6 +4,180 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
 	  layout:decorate="~{layout/layout}">
 <th:block layout:fragment="content">
-	<h1>HELLO~~~~~~~</h1>
+<head>
+	<meta charset="UTF-8">
+	<title>Index</title>
+	<style>
+		.wrap-box {
+		  width: 100%;
+		  height:100%;
+		  text-align:center;
+		}
+		.calendar-box {
+		    position: relative;
+		    border: none;
+		    display: inline-block;
+		    padding: 15px 30px;
+		    border-radius: 15px;
+		    font-family: "paybooc-Light", sans-serif;
+		    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+		    font-weight: 600;
+		}
+		.w-btn {
+		    /* position: relative; */
+		    border: none;
+		    display: inline-block;
+		    padding: 15px 30px;
+		    border-radius: 15px;
+		    font-family: "paybooc-Light", sans-serif;
+		    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+		    text-decoration: none;
+		    font-weight: 600;
+		    transition: 0.25s;
+		}
+		.w-btn-indigo {
+		    background-color: #2EFEF7;
+		    color: #FFFFFF;
+		    width:50%;
+		    margin:10px;
+		}
+		.w-btn:hover {
+		    letter-spacing: 2px;
+		    transform: scale(1.02);
+		    cursor: pointer;
+		}
+		.w-btn:active {
+		    transform: scale(1.03);
+		}
+	</style>	
+</head>
+<body>
+	<div class='wrap-box'>
+		<div class="w-btn w-btn-indigo" style="background-color: #F7D358">
+			<div>
+				<h1 style="font-weight: bold;">Day</h1>
+				&nbsp;
+				<h3 id="today" style="font-weight: bold;"></h3>
+			</div>
+		</div>
+		<div class="w-btn w-btn-indigo" style="background-color: #FFE4C4">
+			<div>
+				<h1 style="font-weight: bold;">Time</h1>
+				&nbsp;
+				<h3 id="now" style="font-weight: bold;"></h3>
+			</div>
+		</div>
+		<div class="w-btn w-btn-indigo">
+			<h1 style="font-weight: bold;">Weather</h1>
+			&nbsp;
+			<div style="text-align:center;">
+	        	<h3 id="localName" style="font-weight: bold;"></h3>
+	        </div>
+	        <div style="text-align:center;">
+		        <span id="icon"></span>
+		        <span id="temp"></span>
+	        </div>
+	        <div style="text-align:center;">
+	        	<span id="pressure"></span>
+	        </div>
+	        <div style="text-align:center;">
+	        	<span id="humidity"></span>
+	        </div>
+	        <div style="text-align:center;">
+	        	<span id="windinfo"></span>
+	        </div>
+	    </div>
+	</div>
+</body>
+<script type="text/javascript">
+$(function(){
+	initToday();//오늘일자 Init
+	initTimer();//현재시간 Init
+	
+	//날씨정보 setUp
+	let apiurl = "https://api.openweathermap.org/data/2.5/weather?lat=35.2281&lon=128.6811&units=metric&cnt=5&appid=076b2699669346332a018f57695532e9";
+	//GET방식
+	fetch(apiurl)
+	  .then((response) =>  response.json())
+	  .then((data) => initWeatherInfo(data))
+});
+
+var initWeatherInfo = function(info){
+	//지역
+	$("#localName").text(info["name"] + ", " + info.sys["country"]);
+	
+	//날씨 icon
+	var icon_image =  "<img src=https://openweathermap.org/img/wn/" + info["weather"][0]["icon"] + ".png " + "width=80 " + "height=80" + ">";
+	$("#icon").append(icon_image);
+
+	//기온
+	var temp = "<h4 style='font-weight: bold;'>" + Math.round(info["main"]["temp"]) + "℃</h4>";
+	$("#temp").append(temp);
+	
+	//대기압
+	var pressure = "<h6 style='font-weight: bold;'>" + "대기압 : " +info["main"]["pressure"] + "hPa</h6>";
+	$("#pressure").append(pressure); 
+	
+	//습도
+	var humidity = "<h6 style='font-weight: bold;'>" + "습도 : " + info["main"]["humidity"] + "%</h6>";
+	$("#humidity").append(humidity);
+	
+	//wind
+	var windinfo = "풍속 : " + info["wind"]["speed"] + "m/s, 풍향 : " + info["wind"]["deg"] + "도, 돌풍 : " + info["wind"]["gust"] + "m/s"
+	var wind = "<h7 style='font-weight: bold;'>" + windinfo + "</h7>";
+	$("#windinfo").append(wind);
+}
+
+//Today 일자 표시
+var initToday = function(){
+	const now = new Date();
+    var year = now.getFullYear();
+    var month = ("0" + (1 + now.getMonth())).slice(-2);
+    var day = ("0" + now.getDate()).slice(-2);
+	
+    const week = ['일', '월', '화', '수', '목', '금', '토'];
+    var weekDay = week[now.getDay()];
+    
+    var today =  year + "년 " + month + "월 " + day + "일, " + weekDay + "요일";
+    //initCalendar(year + "-" + month + "-" + day);
+    $("#today").text(today);
+}
+
+//현재시간 표시
+var initTimer = function(){
+	setInterval(function(){
+		const now = new Date();
+		var hour = now.getHours();
+	    var minutes = now.getMinutes();
+	    minutes = (minutes < 10) ? ('0' + minutes) : minutes;
+	    var seconds = now.getSeconds();
+	    seconds = (seconds < 10) ? ('0' + seconds) : seconds;
+	    
+	    var nowTime = hour + "시 " + minutes + "분 " + seconds + "초";
+	    $("#now").text(nowTime);
+	}, 1000);
+}
+
+/* var initCalendar = function(today){
+	var calendarEl = $('#calendar')[0];
+	var calendar = new FullCalendar.Calendar(calendarEl, {
+	    initialView: 'dayGridMonth',
+	    initialDate: today,
+	    height:500,
+	    contentHeight: 600,
+	    headerToolbar: {
+	      left: 'prev,next today',
+	      center: 'title',
+	      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+	    },
+	    events: [
+	      
+	    ]
+	  });
+
+	  calendar.render();
+} */
+
+</script>
 </th:block>
 </html>

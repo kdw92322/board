@@ -1,23 +1,30 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" 
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>layout</title>
 	<th:block th:replace="fragments/config::config"></th:block>
 	<th:block th:replace="fragments/commonModal::commonModal"></th:block>
 </head>
 <body>
-	<th:block th:replace="fragments/commonHeader::commonHeader"></th:block>
-	<th:block layout:fragment="content"></th:block>
-	<th:block th:replace="fragments/commonFooter::commonFooter"></th:block>
+	<div class="layout_header">
+		<th:block th:replace="fragments/commonHeader::commonHeader"></th:block>
+	</div>
+	<div class="layout_common">
+		<th:block layout:fragment="content"></th:block>
+	</div>
+	<div class="layout_footer">
+		<th:block th:replace="fragments/commonFooter::commonFooter"></th:block>
+	</div>
 </body>
-<!-- <script>  
+<script>  
 	$(document).ready(function() {  
-	  $('.nav-link-collapse').on('click', function() {  
-	    $('.nav-link-collapse').not(this).removeClass('nav-link-show');  
-	    $(this).toggleClass('nav-link-show');  
+	  $('.navbar-toggler').on('click', function() {  
+	      console.log(1234);
+		  //$('.nav-link-collapse').not(this).removeClass('nav-link-show');  
+	      //$(this).toggleClass('nav-link-show');  
 	  });  
 	});  
-</script> -->
+</script>
 </html>

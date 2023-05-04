@@ -27,7 +27,7 @@ public class HomeController {
 		if(principal == null) {
 			mv.setViewName("login_form");
 		}else {
-			mv.setViewName("/board/boardList");
+			mv.setViewName("/index");
 			//System.out.println("Name : " + principal.getName());
 			mv.addObject("id", principal.getName());
 		}

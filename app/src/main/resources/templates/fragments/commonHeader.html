@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="commonHeader">
-<nav class="navbar navbar-dark bg-dark">
+<nav class="navbar navbar-dark bg-dark" style="height:100%">
     <a class="navbar-brand" th:href=@{/}>
         <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/logo_white.png" width="30" height="30" alt="logo">
         BootstrapSite 
@@ -12,7 +12,7 @@
     <div class="collapse navbar-collapse" id="navbar-list">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" th:href=@{/}>Home</a>
+                <a class="nav-link" th:href=@{/board/boardList}>Board</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link">Modal/Popup</a>
@@ -23,19 +23,6 @@
         </ul>
     </div>
 </nav>
-<script type="text/javascript">
-/* $(function () {
-    // actvie 활성화 
-    $('.nav-link').click(function () {
-        $('.nav-link').removeClass('active');
-	
-        // 클릭한 위치 active 적용 
-        $(this).addClass('active');
-        
-    });
-}); */
-</script> 
- 
 </th:block>
 </html>
 

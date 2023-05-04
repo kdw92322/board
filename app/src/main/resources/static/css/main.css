@@ -3,7 +3,7 @@ table {
   border-spacing: 0;
 }
 section.notice {
-  padding: 40px 0;
+  padding: 0px 0;
 }
 
 .page-title {
@@ -189,5 +189,25 @@ section.notice {
   background-color: #f44336; /* Red */
   color: white;
   margin-bottom: 15px;
+}
+
+/* layout html css */ 
+.layout_header{
+	width: 100%;
+}
+.layout_common{
+	width: 100%;	
+    height : 80vh;
+}
+.layout_footer{
+	width: 100%;
+    height: 8vh; 
+    position: absolute;
+    background-color: #E6E6E6;
+    bottom: 0;
+    left: 0;
+    display : flex;
+	justify-content: center;
+	align-items : center;
 }
 
