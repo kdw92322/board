@@ -194,16 +194,29 @@ section.notice {
 /* layout html css */ 
 .layout_header{
 	width: 100%;
+	height : 5vh;
+	background: linear-gradient(#FFFFFF, #A9F5F2);
+	/* display:inline-block; */
+}
+.layout_sidebar{
+	width: 10%;
+	height : 85vh;
+	background: linear-gradient(#81F7F3, #2E9AFE);
+	display:inline-block;
 }
 .layout_common{
-	width: 100%;	
-    height : 80vh;
+	min-width: 90%;	
+    max-height : 85vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    float:right;
+    background: linear-gradient(#FFFFFF, #F2F2F2);
 }
 .layout_footer{
 	width: 100%;
-    height: 8vh; 
+    height: 10vh; 
     position: absolute;
-    background-color: #E6E6E6;
+    background: linear-gradient(#E6E6E6, #A4A4A4);
     bottom: 0;
     left: 0;
     display : flex;
@@ -211,3 +224,29 @@ section.notice {
 	align-items : center;
 }
 
+/* home Button CSS */
+
+.homeButton {
+	box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	background:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
+	background-color:#3d94f6;
+	border-radius:2px;
+	border:1px solid #337fed;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #1570cd;
+}
+.homeButton:hover {
+	background:linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
+	background-color:#1e62d0;
+}
+.homeButton:active {
+	position:relative;
+	top:1px;
+}

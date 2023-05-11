@@ -10,13 +10,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class HomeController {
-	/*
-	@GetMapping("/")
-	public RedirectView home() {
-		return new RedirectView("/board/boardList");
-	}
-	*/
-	
+
 	@GetMapping("/")
 	public ModelAndView index(Principal principal) {
 		ModelAndView mv = new ModelAndView();
@@ -28,7 +22,7 @@ public class HomeController {
 			mv.setViewName("login_form");
 		}else {
 			mv.setViewName("/index");
-			//System.out.println("Name : " + principal.getName());
+			/* System.out.println("Name : " + principal.getName()); */
 			mv.addObject("id", principal.getName());
 		}
 		

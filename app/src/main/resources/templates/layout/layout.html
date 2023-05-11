@@ -11,6 +11,9 @@
 	<div class="layout_header">
 		<th:block th:replace="fragments/commonHeader::commonHeader"></th:block>
 	</div>
+	<div class="layout_sidebar">
+		<th:block th:replace="fragments/commonSidebar::commonSidebar"></th:block>
+	</div>
 	<div class="layout_common">
 		<th:block layout:fragment="content"></th:block>
 	</div>
@@ -20,11 +23,7 @@
 </body>
 <script>  
 	$(document).ready(function() {  
-	  $('.navbar-toggler').on('click', function() {  
-	      console.log(1234);
-		  //$('.nav-link-collapse').not(this).removeClass('nav-link-show');  
-	      //$(this).toggleClass('nav-link-show');  
-	  });  
+
 	});  
 </script>
 </html>

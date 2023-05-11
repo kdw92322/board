@@ -6,11 +6,12 @@
 <th:block layout:fragment="content">
 <head>
 	<meta charset="UTF-8">
-	<title>Index</title>
+	<title>Home</title>
 	<style>
 		.wrap-box {
 		  width: 100%;
-		  height:100%;
+		  height:85vh;
+		  background-color:#EFFBFB;
 		  text-align:center;
 		}
 		.calendar-box {
@@ -36,10 +37,11 @@
 		    transition: 0.25s;
 		}
 		.w-btn-indigo {
-		    background-color: #2EFEF7;
+		    background-color: #58D3F7;
 		    color: #FFFFFF;
-		    width:50%;
+		    width:47.5%;
 		    margin:10px;
+		    text-align:center;
 		}
 		.w-btn:hover {
 		    letter-spacing: 2px;
@@ -52,42 +54,60 @@
 	</style>	
 </head>
 <body>
-	<div class='wrap-box'>
-		<div class="w-btn w-btn-indigo" style="background-color: #F7D358">
-			<div>
-				<h1 style="font-weight: bold;">Day</h1>
-				&nbsp;
-				<h3 id="today" style="font-weight: bold;"></h3>
+	<div class="container-fluid">
+	  <div class="row">
+	    <div class="col-md-12" style="text-align: center;">
+	        <div class="w-btn w-btn-indigo" style="background-color: #A9E2F3;">
+				<div>
+					<h1 style="font-weight: bold;">Day</h1>
+					&nbsp;
+					<h3 id="today" style="font-weight: bold;"></h3>
+				</div>
 			</div>
-		</div>
-		<div class="w-btn w-btn-indigo" style="background-color: #FFE4C4">
-			<div>
-				<h1 style="font-weight: bold;">Time</h1>
-				&nbsp;
-				<h3 id="now" style="font-weight: bold;"></h3>
+			<div class="w-btn w-btn-indigo" style="background-color: #81DAF5;">
+				<div>
+					<h1 style="font-weight: bold;">Time</h1>
+					&nbsp;
+					<h3 id="now" style="font-weight: bold;"></h3>
+				</div>
 			</div>
-		</div>
-		<div class="w-btn w-btn-indigo">
-			<h1 style="font-weight: bold;">Weather</h1>
-			&nbsp;
-			<div style="text-align:center;">
-	        	<h3 id="localName" style="font-weight: bold;"></h3>
-	        </div>
-	        <div style="text-align:center;">
-		        <span id="icon"></span>
-		        <span id="temp"></span>
-	        </div>
-	        <div style="text-align:center;">
-	        	<span id="pressure"></span>
-	        </div>
-	        <div style="text-align:center;">
-	        	<span id="humidity"></span>
-	        </div>
-	        <div style="text-align:center;">
-	        	<span id="windinfo"></span>
-	        </div>
 	    </div>
+	    <div class="col-md-12" style="text-align: center;">
+	        <div class="w-btn w-btn-indigo" style="width:97%;">
+				<h1 style="font-weight: bold;">Weather</h1>
+				&nbsp;
+				<div style="text-align:center;">
+		        	<h3 id="localName" style="font-weight: bold;"></h3>
+		        </div>
+		        <div style="text-align:center;">
+			        <span id="icon"></span>
+			        <span id="temp"></span>
+		        </div>
+		        <div style="text-align:center;">
+		        	<span id="pressure"></span>
+		        </div>
+		        <div style="text-align:center;">
+		        	<span id="humidity"></span>
+		        </div>
+		        <div style="text-align:center;">
+		        	<span id="windinfo"></span>
+		        </div>
+		    </div> 
+	    </div>
+	    <div class="col-md-6">
+	    
+	    </div>
+	    <div class="col-md-6">
+	    
+	    </div>
+	  </div>
 	</div>
+	
+	<!-- 
+	<div class='wrap-box'>
+
+	</div> 
+	-->
 </body>
 <script type="text/javascript">
 $(function(){

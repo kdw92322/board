@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="commonSidebar">
+<div style="width:100%;">
+	<ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" style="font-weight: bolder; color:#424242" th:href=@{/board/boardList}>
+            	<i class="fa fa-solid fa-chevron-right"></i> Board 
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" style="font-weight: bolder; color:#424242" th:href=@{#}>
+            	<i class="fa fa-solid fa-chevron-right"></i> Modal/Popup
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" style="font-weight: bolder; color:#424242" th:href=@{/test}>
+            	<i class="fa fa-solid fa-chevron-right"></i> TestPage
+            </a>
+        </li>
+        <li class="nav-item dropdown">
+		  <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+		  <div class="dropdown-menu">
+		    <a class="dropdown-item" href="#">Action</a>
+		    <a class="dropdown-item" href="#">Another action</a>
+		    <a class="dropdown-item" href="#">Something else here</a>
+		    <div class="dropdown-divider"></div>
+		    <a class="dropdown-item" href="#">Separated link</a>
+		  </div>
+		</li>
+    </ul>
+</div>
+</th:block>
+</html>
