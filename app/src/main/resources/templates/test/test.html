@@ -4,6 +4,21 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
 	  layout:decorate="~{layout/layout}">
 <th:block layout:fragment="content">
-	<div style="text-align:center;">화면 템플릿 Sample 입니다.</div>
+	<head>
+        <title>Welcome to Spring Security Thymeleaf tutorial</title>
+    </head>
+    <body>
+        <h2>Welcome</h2>
+        <p>Spring Security Thymeleaf tutorial</p>
+        <div sec:authorize="hasRole('USER')"><strong>hasRole('USER') : Text visible to user.</strong></div>
+        <div sec:authorize="hasRole('ADMIN')"><strong>Text visible to admin.</strong></div>
+        <div sec:authorize="isAuthenticated()">
+            <strong>Text visible only to authenticated users.</strong>
+        </div>
+        Authenticated username:
+        <strong><div sec:authentication="name"></div></strong>
+        Authenticated user roles:
+        <strong><div sec:authentication="principal.authorities"></div></strong>
+    </body>
 </th:block>
 </html>

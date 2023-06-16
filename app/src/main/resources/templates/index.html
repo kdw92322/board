@@ -39,77 +39,83 @@
 		.w-btn-indigo {
 		    background-color: #58D3F7;
 		    color: #FFFFFF;
-		    width:47.5%;
-		    margin:10px;
-		    text-align:center;
+		    width:100%;
+		    height:200px;
+		    margin:5px;
+		    /* text-align:center; */
 		}
 		.w-btn:hover {
 		    letter-spacing: 2px;
-		    transform: scale(1.02);
+		    transform: scale(1.01);
 		    cursor: pointer;
 		}
 		.w-btn:active {
-		    transform: scale(1.03);
+		    transform: scale(1.01);
+		}
+		a {
+			text-decoration-line : initial;
 		}
 	</style>	
 </head>
 <body>
-	<div class="container-fluid">
-	  <div class="row">
-	    <div class="col-md-12" style="text-align: center;">
-	        <div class="w-btn w-btn-indigo" style="background-color: #A9E2F3;">
-				<div>
-					<h1 style="font-weight: bold;">Day</h1>
-					&nbsp;
-					<h3 id="today" style="font-weight: bold;"></h3>
-				</div>
-			</div>
-			<div class="w-btn w-btn-indigo" style="background-color: #81DAF5;">
-				<div>
-					<h1 style="font-weight: bold;">Time</h1>
-					&nbsp;
-					<h3 id="now" style="font-weight: bold;"></h3>
-				</div>
-			</div>
-	    </div>
-	    <div class="col-md-12" style="text-align: center;">
-	        <div class="w-btn w-btn-indigo" style="width:97%;">
-				<h1 style="font-weight: bold;">Weather</h1>
-				&nbsp;
-				<div style="text-align:center;">
-		        	<h3 id="localName" style="font-weight: bold;"></h3>
-		        </div>
-		        <div style="text-align:center;">
-			        <span id="icon"></span>
-			        <span id="temp"></span>
-		        </div>
-		        <div style="text-align:center;">
-		        	<span id="pressure"></span>
-		        </div>
-		        <div style="text-align:center;">
-		        	<span id="humidity"></span>
-		        </div>
-		        <div style="text-align:center;">
-		        	<span id="windinfo"></span>
-		        </div>
-		    </div> 
-	    </div>
-	    <div class="col-md-6">
-	    
-	    </div>
-	    <div class="col-md-6">
-	    
-	    </div>
-	  </div>
-	</div>
-	
-	<!-- 
-	<div class='wrap-box'>
-
-	</div> 
-	-->
+<div class="container-fluid">
+    <div class="row" style="margin-top:10px;">
+    	<h4 style="font-weight: bold;"><i class="fab fa-staylinked"></i>&nbsp;Daily</h4>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+          <div class="w-btn w-btn-indigo" style="background-color: #A9E2F3;">
+  			<div>
+  				<h1 style="font-weight: bold;">Day</h1>
+  				&nbsp;
+  				<h3 id="today" style="font-weight: bold;"></h3>
+  			</div>
+  		</div>
+  	</div>
+  	<div class="col-md-4">
+  		<div class="w-btn w-btn-indigo" style="background-color: #81DAF5;">
+  			<div>
+  				<h1 style="font-weight: bold;">Time</h1>
+  				&nbsp;
+  				<h3 id="now" style="font-weight: bold;"></h3>
+  			</div>
+  		</div>
+  	</div>
+  	<div class="col-md-4">
+  		<div class="w-btn w-btn-indigo" style="display:inline-block;">
+  			<div>
+  				<span id="icon"></span>
+  	        </div>
+  	        <div style="display:inline-block;">
+  		        <h4 id="localName" style="font-weight: bold; "></h4>
+  		        <span id="temp" style="display:inline-block;vertical-align: middle;"></span>
+  		        <span id="pressure" style="display:inline-block;vertical-align: middle;"></span>
+  		        <span id="humidity" style="display:inline-block;vertical-align: middle;"></span>
+  		        <span id="windinfo" style="display:inline-block;vertical-align: middle;"></span>
+  	        </div>
+  	    </div>
+  	</div>
+  	<th:block th:replace="/fragments/_modals :: modal('dayInfoModal')">modal</th:block>
+    </div>
+    <div class="row" style="margin-top:30px;">
+    	 <h4 style="font-weight: bold;"><i class="far fa-calendar-alt"></i>&nbsp;Calendar</h4>
+    </div>
+    <div class="row">
+    	 <div id="calendar" style="padding:3px;"></div>
+    </div>
+    <div class="row" style="margin-top:30px;">
+    	 <h4 style="font-weight: bold;"><i class="fa-solid fa-chart-simple"></i>&nbsp;Chart</h4>
+    </div>
+    <div class="row">
+    	<div id="mychart" style="width:100%; height:400px;"></div>
+    </div>
+</div>
 </body>
 <script type="text/javascript">
+var chart_data_cnt = 7;
+var calendar;
+var myChart;
+
 $(function(){
 	initToday();//오늘일자 Init
 	initTimer();//현재시간 Init
@@ -120,6 +126,8 @@ $(function(){
 	fetch(apiurl)
 	  .then((response) =>  response.json())
 	  .then((data) => initWeatherInfo(data))
+	  
+	initGraph(); 
 });
 
 var initWeatherInfo = function(info){
@@ -131,20 +139,20 @@ var initWeatherInfo = function(info){
 	$("#icon").append(icon_image);
 
 	//기온
-	var temp = "<h4 style='font-weight: bold;'>" + Math.round(info["main"]["temp"]) + "℃</h4>";
+	var temp = "<h6 style='font-weight: bold;'>" + "온도 : " + Math.round(info["main"]["temp"]) + "℃</h6>";
 	$("#temp").append(temp);
 	
 	//대기압
-	var pressure = "<h6 style='font-weight: bold;'>" + "대기압 : " +info["main"]["pressure"] + "hPa</h6>";
+	var pressure = "<h6 style='font-weight: bold;'>" + ", 대기압 : " +info["main"]["pressure"] + "hPa</h6>";
 	$("#pressure").append(pressure); 
 	
 	//습도
-	var humidity = "<h6 style='font-weight: bold;'>" + "습도 : " + info["main"]["humidity"] + "%</h6>";
+	var humidity = "<h6 style='font-weight: bold;'>" + ", 습도 : " + info["main"]["humidity"] + "%</h6>";
 	$("#humidity").append(humidity);
 	
 	//wind
 	var windinfo = "풍속 : " + info["wind"]["speed"] + "m/s, 풍향 : " + info["wind"]["deg"] + "도, 돌풍 : " + info["wind"]["gust"] + "m/s"
-	var wind = "<h7 style='font-weight: bold;'>" + windinfo + "</h7>";
+	var wind = "<h6 style='font-weight: bold;'>" + windinfo + "</h6>";
 	$("#windinfo").append(wind);
 }
 
@@ -159,8 +167,9 @@ var initToday = function(){
     var weekDay = week[now.getDay()];
     
     var today =  year + "년 " + month + "월 " + day + "일, " + weekDay + "요일";
-    //initCalendar(year + "-" + month + "-" + day);
     $("#today").text(today);
+    
+    initCalendar(year, month, day);
 }
 
 //현재시간 표시
@@ -168,6 +177,7 @@ var initTimer = function(){
 	setInterval(function(){
 		const now = new Date();
 		var hour = now.getHours();
+		hour = (hour < 10) ? ('0' + hour) : hour;
 	    var minutes = now.getMinutes();
 	    minutes = (minutes < 10) ? ('0' + minutes) : minutes;
 	    var seconds = now.getSeconds();
@@ -178,25 +188,177 @@ var initTimer = function(){
 	}, 1000);
 }
 
-/* var initCalendar = function(today){
+var initCalendar = function(){
+	const now = new Date();
+	var year = now.getFullYear();
+    var month = ("0" + (1 + now.getMonth())).slice(-2);
+    var day = ("0" + now.getDate()).slice(-2);
+    
+	var today = year + month + day;
 	var calendarEl = $('#calendar')[0];
-	var calendar = new FullCalendar.Calendar(calendarEl, {
-	    initialView: 'dayGridMonth',
-	    initialDate: today,
-	    height:500,
-	    contentHeight: 600,
-	    headerToolbar: {
-	      left: 'prev,next today',
-	      center: 'title',
-	      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-	    },
-	    events: [
-	      
-	    ]
-	  });
+	var calendar_param = new Object();
+	var eventList;
+	 
+	calendar = new FullCalendar.Calendar(calendarEl, {
+		/* plugins: [ 'interaction', 'dayGrid', 'timeGrid' ], */
+		headerToolbar: {
+			left: 'prev,next today',
+	        center: 'title',	
+		    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+		},
+		locale:'ko',
+		selectable: true,
+		selectMirror: true,
+		height:700,
+		contentHeight: 800,
+		editable: true,
+		droppable: true,
+		drop: function(info) {
+		    if (checkbox.checked) {
+		        info.draggedEl.parentNode.removeChild(info.draggedEl);
+		    }
+		},
+		select: function(info) {
+		    calendar_param = {
+		    	startDate : info.startStr,
+		    	endDate : info.endStr
+		    };
+		    openModalPop("#dayInfoModal", "/modals/dayInfo", calendar_param);
+		},
+		eventClick: function(info) {
+			calendar_param = {
+				id : info.event.id
+			};
+			openModalPop("#dayInfoModal", "/modals/dayInfo", calendar_param);
+		    
+		},
+		events: selectCalendarList()
+	});
 
-	  calendar.render();
-} */
+	calendar.render();
+}
+
+var selectCalendarList = function(){
+	var list = new Array();
+	
+	$.ajax({
+		url: "/calendar/selectCalendarList",
+		async: false,
+		type: 'GET',
+		dataType: 'json',
+		data: {},
+		success: function(data) {
+			list = data;
+		}
+	});
+	
+	return list;
+}
+
+var initGraph = function(){
+	var ex_dataList1 = makeRandomData();
+	console.log("dataList", ex_dataList1);
+	
+	myChart = echarts.init(document.getElementById('mychart'));
+    // 차트 속성과 데이터를 지정합니다.
+    var option = {
+    	title: {},
+    	tooltip: {
+    		trigger: 'axis'
+    	},
+    	legend: {
+    		data: ['A', 'B', 'C', 'D', 'E']
+    	},
+    	grid: {
+		    left: '2%',
+		    right: '3%',
+		    bottom: '2%',
+		    containLabel: true
+    	},
+	    toolbox: {
+	        feature: {
+	            saveAsImage: {}
+	        }
+	    },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+              name: 'A',
+              type: 'line',
+              data: [120, 132, 101, 134, 90]
+            },
+            {
+              name: 'B',
+              type: 'line',
+              data: [220, 182, 191, 234, 290]
+            },
+            {
+              name: 'C',
+              type: 'line',
+              data: [150, 232, 201, 154, 190]
+            },
+            {
+              name: 'D',
+              type: 'line',
+              data: [320, 332, 301, 334, 390]
+            },
+            {
+              name: 'E',
+              type: 'line',
+              data: [820, 932, 901, 934, 1290]
+            }
+        ]
+    };
+    myChart.setOption(option);
+    /* 
+    setInterval(() => {
+      myChart.setOption({
+        series: {
+          data: makeRandomData()
+        }
+      });
+    }, 2000);
+     */
+}
+
+var makeRandomData = function(){
+	var datalist = [
+		{
+			value: Math.round(Math.random()*500),
+			type: 'line',
+			name : 'A'
+		},
+		{
+			value: Math.round(Math.random()*500),
+			type: 'line',
+			name : 'B'
+		},
+		{
+			value: Math.round(Math.random()*500),
+			type: 'line',
+			name : 'C'
+		},
+		{
+			value: Math.round(Math.random()*500),
+			type: 'line',
+			name : 'D'
+		},
+		{
+			value: Math.round(Math.random()*500),
+			type: 'line',
+			name : 'E'
+		},
+	];
+
+	return datalist;
+}
 
 </script>
 </th:block>
