@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layout/layout}">  
+<th:block layout:fragment="content">
+	<title>Spring Boot 404 Error PAGE</title>
+	<link href="/css/errorPage.css" rel="stylesheet">
+	<div class="main">
+    	<div class="fof">
+        		<h1>Error 404</h1><br>
+        		CODE: <span th:text="${code}"></span><br>
+	            MSG: <span th:text="${msg}"></span><br>
+	            TIMESTAMP: <span th:text="${timestamp}"></span><br>
+    	</div>
+	</div>
+</th:block>
+</html>

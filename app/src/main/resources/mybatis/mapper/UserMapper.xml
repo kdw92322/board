@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.web.app.user.UserMapper">
+	<select id="selectUserList" resultType="map">
+		select user_id   as userId  
+			  ,password  as password  
+			  ,email     as email     
+			  ,join_date as joinDate 
+			  ,birth     as birth     
+			  ,username  as username
+			  ,phone     as phone  
+		  from user_info
+	</select>
+	
+	<update id="updateUserList" parameterType="map">
+		update user_info
+		   set title = #{title},
+			   content = #{content},
+           	   writer = #{writer},
+           	   upt_date = sysdate()
+		 where idx = #{idx}   
+	</update>
+	
+	<delete id="deleteUserList" parameterType="map">
+		delete 
+		  from user_info
+		 where idx = #{idx}   
+	</delete>
+</mapper>

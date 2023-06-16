@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.web.app.calendar.service.CalendarMapper">
+	<select id="selectCalendarList" resultType="map"  parameterType="map">
+	  select id
+			,groupId
+			,title
+			,writer
+			,content
+			,startDate
+			,startTime
+			,endDate
+			,endTime
+			,str_to_date(concat(startDate, startTime), '%Y%m%d%H%i') as start 
+            ,str_to_date(concat(endDate, endTime), '%Y%m%d%H%i') as end 
+			,allDay
+			,textColor
+			,backgroundColor
+			,borderColor
+		from calendar
+	   where 1=1
+	</select>
+	
+	<select id="selectDayInfo" resultType="map"  parameterType="map">
+	  select id
+			,groupId
+			,title
+			,writer
+			,content
+			,str_to_date(startDate, '%Y%m%d') as startDate
+			,str_to_date(startTime, '%H%i')   as startTime
+			,str_to_date(endDate  , '%Y%m%d') as endDate
+			,str_to_date(endTime  , '%H%i')   as endTime
+			,allDay
+			,textColor
+			,backgroundColor
+			,borderColor
+		from calendar
+	   where id = #{id}
+	</select>
+	
+	<insert id="insertCalendarInfo" parameterType="map">
+		insert into calendar(
+			 id             
+			,groupId        
+			,title          
+			,writer         
+			,content        
+			,startDate      
+			,startTime      
+			,endDate        
+			,endTime        
+			,allDay         
+			,textColor      
+			,backgroundColor
+			,borderColor
+		) values (
+			 (select lpad(ifnull(max(a.id),1),4,'0')+1 AS id from calendar a)
+			,(select lpad(ifnull(max(a.groupId),1),4,'0')+1 AS id from calendar a)
+			,#{title}
+			,#{writer}
+			,#{content}
+			,replace(#{startDate},'-','')
+			,replace(#{startTime},':','')
+			,replace(#{endDate}  ,'-','')
+			,replace(#{endTime}  ,':','')
+			,#{allDay}
+			,#{textColor}
+			,#{backgroundColor}
+			,#{borderColor}
+		)
+	</insert>
+	
+	<update id="updateCalendarInfo" parameterType="map">
+ 		update calendar
+ 		   set title           = #{title}
+			  ,writer          = #{writer}
+			  ,content         = #{content}
+			  ,startDate       = replace(#{startDate},'-','')
+			  ,startTime       = replace(#{startTime},':','')
+			  ,endDate         = replace(#{endDate}  ,'-','')
+			  ,endTime         = replace(#{endTime}  ,':','')
+			  ,allDay          = #{allDay}
+			  ,textColor       = #{textColor}
+			  ,backgroundColor = #{backgroundColor}
+			  ,borderColor     = #{borderColor}
+		 where id = #{id}
+	</update>
+	
+	<delete id="deleteCalendarInfo" parameterType="map">
+		delete 
+		  from calendar
+		 where id = #{id} 
+	</delete>
+</mapper>
