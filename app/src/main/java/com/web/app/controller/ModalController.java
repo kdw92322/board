@@ -1,5 +1,9 @@
 package com.web.app.controller;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.web.app.calendar.service.CalendarService;
+import com.web.app.calendar.service.CalendarVO;
 
 /*
 	사용할 ModalView 입력 Controller
@@ -44,28 +49,33 @@ public class ModalController {
     	
 		if (paramObj.get("id") != null) { /* 기존일정 정보 조회 */
     		String id = String.valueOf(paramObj.get("id"));
-			/* System.out.println("id : " + id); */
+			//System.out.println("id : " + id);
     		model.addAttribute("id", id);
-    		
-    		Map<String, Object> dayInfo = calendarservice.selectDayInfo(paramObj);
+ 
+    		List<CalendarVO> dayList = calendarservice.selectCalendarList(paramObj);
+    		CalendarVO dayInfo = (dayList.size() != 0) ? dayList.get(0) : null;
     		if(dayInfo != null) {
-    			//System.out.println("dayInfo : " + dayInfo);
-    			
-    			model.addAttribute("groupId"        , dayInfo.get("groupId"));
-    			model.addAttribute("title"          , dayInfo.get("title"));
-    			model.addAttribute("content"        , dayInfo.get("content"));
-    			model.addAttribute("startDate"      , dayInfo.get("startDate"));
-    			model.addAttribute("startTime"      , dayInfo.get("startTime"));
-    			model.addAttribute("endDate"        , dayInfo.get("endDate"));
-    			model.addAttribute("endTime"        , dayInfo.get("endTime"));
-    			model.addAttribute("allDay"         , dayInfo.get("allDay"));
-    			model.addAttribute("textColor"      , dayInfo.get("textColor"));
-    			model.addAttribute("backgroundColor", dayInfo.get("backgroundColor"));
-    			model.addAttribute("borderColor"    , dayInfo.get("borderColor"));   			
+    			model.addAttribute("groupId"        , dayInfo.getGroupId());
+    			model.addAttribute("title"          , dayInfo.getTitle());
+    			model.addAttribute("content"        , dayInfo.getContent());
+    			model.addAttribute("startDate"      , dayInfo.getStartDt());
+    			model.addAttribute("endDate"        , dayInfo.getEndDt());
+    			model.addAttribute("startTime"      , dayInfo.getStartTi());
+    			model.addAttribute("endTime"        , dayInfo.getEndTi());
+    			model.addAttribute("allDay"         , dayInfo.getAllDay());
+    			model.addAttribute("textColor"      , dayInfo.getTextColor());
+    			model.addAttribute("backgroundColor", dayInfo.getBackgroundColor());
+    			model.addAttribute("borderColor"    , dayInfo.getBorderColor());	
     		} 
 		} else { /* 신규일정 */
-    		model.addAttribute("startDate", paramObj.get("startDate"));
-        	model.addAttribute("endDate", paramObj.get("endDate"));
+			//Default 오늘날짜
+			Date now = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String strNow = sdf.format(now);
+			
+			model.addAttribute("allDay", true);
+    		model.addAttribute("start", strNow);
+        	model.addAttribute("end", strNow);
     	}
     	return "/modal/dayInfo";
     }

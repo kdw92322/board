@@ -10,10 +10,16 @@
     <body>
         <h2>Welcome</h2>
         <p>Spring Security Thymeleaf tutorial</p>
-        <div sec:authorize="hasRole('USER')"><strong>hasRole('USER') : Text visible to user.</strong></div>
-        <div sec:authorize="hasRole('ADMIN')"><strong>Text visible to admin.</strong></div>
+        <div sec:authorize="hasRole('ROLE_USER')"><strong>hasRole('USER') : Text visible to user.</strong></div>
+        <div sec:authorize="hasRole('ROLE_ADMIN')"><strong>Text visible to admin.</strong></div>
         <div sec:authorize="isAuthenticated()">
             <strong>Text visible only to authenticated users.</strong>
+        </div>
+        <div sec:authorize="isAnonymous()">
+            익명유저
+        </div>
+        <div sec:authorize="!isAnonymous()">
+            익명유저 아님
         </div>
         Authenticated username:
         <strong><div sec:authentication="name"></div></strong>

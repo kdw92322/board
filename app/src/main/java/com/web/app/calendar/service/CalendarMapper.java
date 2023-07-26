@@ -7,9 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CalendarMapper {
-	List<Map<String,Object>> selectCalendarList(Map<String,Object> paramMap);
-	
-	Map<String,Object> selectDayInfo(Map<String,Object> paramMap);
+	List<CalendarVO> selectCalendarList(Map<String,Object> paramMap);
 	
 	int insertCalendarInfo(Map<String, Object> paramMap); 
 

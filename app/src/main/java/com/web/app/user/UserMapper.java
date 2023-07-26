@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
 	List<Map<String,Object>> selectUserList(Map<String,Object> paramMap);
 
+	UserForm selectUserInfo(Map<String,Object> paramMap);
+	
 	int updateUserList(Map<String, Object> paramMap);
 	
 	int deleteUserList(Map<String, Object> paramMap);

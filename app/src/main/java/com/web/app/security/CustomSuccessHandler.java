@@ -39,7 +39,6 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
         //if redirected from some specific url, need to remove the cachedRequest to force use defaultTargetUrl
         final RequestCache requestCache = new HttpSessionRequestCache();
         final SavedRequest savedRequest = requestCache.getRequest(request, response);
-        //System.out.println("authentication : " + authentication.getPrincipal());
         if (!isAdminAuthority(authentication))
         {
         	String targetUrl = super.determineTargetUrl(request, response);

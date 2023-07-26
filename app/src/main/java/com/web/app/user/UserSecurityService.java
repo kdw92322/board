@@ -26,14 +26,19 @@ public class UserSecurityService implements UserDetailsService{
         if (!_userInfo.isPresent()) {
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
-        UserInfo userInfo = _userInfo.get();
         
+        UserInfo userInfo = _userInfo.get();        
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if ("ADMIN".equals(userId)) {
-            authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
-        } else {
-            authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
+        String userRole = userInfo.getUserRole();
+        
+        if(userRole.equals("ROLE_ADMIN")) {
+        	authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
+        }else if(userRole.equals("ROLE_USER")) {
+        	authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
+        }else {
+        	authorities.add(new SimpleGrantedAuthority(UserRole.GUEST.getValue()));
         }
+        
         return new User(userInfo.getUserId(), userInfo.getPassword(), authorities);
     }
 }

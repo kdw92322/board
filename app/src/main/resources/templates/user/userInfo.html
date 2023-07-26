@@ -4,97 +4,55 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
 	  layout:decorate="~{layout/layout}">
 <th:block layout:fragment="content">
-	<head>
-        <title>유저정보</title>
-    </head>
-    <body>
-    	<div class="container-fluid">
-			<div class="mb-3 row">
-			  <p class="h3">h3. Bootstrap heading</p>
-			</div>
-			<table class="table">
-			  <thead>
-			    <tr>
-			      <th scope="col">#</th>
-			      <th scope="col">First</th>
-			      <th scope="col">Last</th>
-			      <th scope="col">Handle</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <th scope="row">1</th>
-			      <td>Mark</td>
-			      <td>Otto</td>
-			      <td>@mdo</td>
-			    </tr>
-			    <tr>
-			      <th scope="row">2</th>
-			      <td>Jacob</td>
-			      <td>Thornton</td>
-			      <td>@fat</td>
-			    </tr>
-			    <tr>
-			      <th scope="row">3</th>
-			      <td colspan="2">Larry the Bird</td>
-			      <td>@twitter</td>
-			    </tr>
-			  </tbody>
-			</table>
-			
-		</div>
-    </body>
-    <script type="text/javascript">
-	    /* var grid;
-	    $(function(){		    
-		    grid = new tui.Grid({
-    		    el: document.getElementById('grid'),
-    		    scrollX: false,
-    		    scrollY: false,
-    		    bodyHeight:300,
-    		    rowHeight:30,
-    		    columnOptions: {
-    		        minWidth: 180
-    		    },
-    		    columns: [
-    		      {header: '아이디', name: 'userId', width: 'auto', align:'center'},
-    		      {header: '이름', name: 'username',  width: 'auto', align:'center'},
-    		      {header: '이메일', name: 'email', align:'center'},
-    		      {header: '가입일자', name: 'joinDate', width: 'auto', align:'center'},
-    		      {header: '생년월일', name: 'birth', width: 'auto', align:'center'},
-    		      {header: '전화번호', name: 'phone', width: 'auto', align:'center'},
-    		      {header: 'index', name: 'idx', align:'center', hidden: 1},
-    		    ]
-    		});
-    		
-    		tui.Grid.applyTheme('striped');
-    		
-    		grid.on('click', (evt) => {
-    			
-    		});
-	    });
-    	
-    	var selectUserList = function(){
-    		$.ajax({
-    		    url: '/user/selectUserList',
-    		    async: true,
-    		    type: 'GET',
-    		    data: {},
-    		    dataType: 'json',
-    		    success: function(data) {
-    		    	grid.resetData(data);
-    		    	setTimeout(
-    		    		grid.refreshLayout(), 
-    		    	1000);
-    		    },
-    		    error: function(jqXHR) {
-    		    	console.log("error"); 
-    		    },
-    		    complete: function(jqXHR) {
-    		    	console.log("complete"); 
-    		    }
-    		});
-    	}; */
-    </script>
+<head>
+    <title>사용자정보</title>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row" style="margin-top : 10px;">
+    	<h4 style="font-weight: bold;"><i class="fa-solid fa-users"></i>&nbsp;사용자 정보</h4>
+    </div>
+	<div class="row">
+	    <div id="div_userList" class="col-sm-12">
+	        <div class="card">
+	    	  	  <div class="card-header">
+	    	  	  	  <i class="fa-solid fa-list"></i>&nbsp;사용자 목록
+	    	  	  </div>
+	  		      <ul id="userList" class="list-group" th:each="user : ${userList}">
+	  		  	      <!-- user테이블에서 List 조회후 binding -->
+	  		  	      <li class="list-group-item" th:id=${user.userId} th:text=${user.userId} th:onclick="selectUserInfo([[${user.userId}]])"></li>
+	  		      </ul>
+	    	  </div>
+	    </div>
+	    <div class="col-sm-5">
+	  	    <div id="divUserInfo">
+	  	    	
+	  	    </div>
+	    </div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+$(function(){
+	//유저목록 Click
+	$("#userList li").on("click", function() {
+		$('.list-group-item.active').removeClass("active");
+        $(this).addClass("active");
+    });
+});
+
+var selectUserInfo = function(param){
+    $.ajax({
+		url: "/user/selectUserInfo",
+		async: false,
+		type: 'POST',
+		dataType: 'text',
+		data: param
+	}).done(function(data){
+		$("#div_userList").attr('class', 'col-sm-7');
+		$("#divUserInfo").html(data);
+	});
+}
+</script>
 </th:block>
 </html>

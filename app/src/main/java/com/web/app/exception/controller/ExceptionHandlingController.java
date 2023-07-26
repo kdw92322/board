@@ -36,33 +36,30 @@ public class ExceptionHandlingController implements ErrorController{
 		if (status != null) {
 			// HttpStatus와 비교해 페이지 분기를 나누기 위한 변수
 			int statusCode = Integer.valueOf(status.toString());
-
 			// 로그로 상태값을 기록 및 출력
 			logger.info("httpStatus : " + statusCode);
-
+			
 			// 404 error
 			if (statusCode == HttpStatus.NOT_FOUND.value()) {
+				logger.info("404 에러");
 				// 에러 페이지에 표시할 정보
 				model.addAttribute("code", status.toString());
 				model.addAttribute("msg", httpStatus.getReasonPhrase());
 				model.addAttribute("timestamp", new Date());
 				rtnPage = ERROR_404_PAGE_PATH;
-			}
-            
-			// 500 error
-			else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+			}else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) { // 500 error
 				// 서버에 대한 에러이기 때문에 사용자에게 정보를 제공하지 않는다.
 				rtnPage = ERROR_500_PAGE_PATH;
-			}
-			
-			else {
+			}else if (statusCode == HttpStatus.FORBIDDEN.value() ) { // 403 error
+				// 권한에 대한 에러이기 때문에 사용자에게 정보를 제공하지 않는다.
+				model.addAttribute("code", status.toString());
+				model.addAttribute("msg", "접근 권한이 없습니다.");
+				model.addAttribute("timestamp", new Date());
+				rtnPage = ERROR_ETC_PAGE_PATH;
+			}else {
 				rtnPage =  ERROR_ETC_PAGE_PATH;
 			}
 		}
 		return rtnPage;
-	}
-
-	public String getErrorPath() {
-		return "/error";
 	}
 }

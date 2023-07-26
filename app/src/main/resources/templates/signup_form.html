@@ -18,9 +18,9 @@
 	            <h1>회원가입</h1>
 	        </div>
 	    </div>
-	    <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
-	        <!-- <div th:replace="~{form_errors :: formErrorsFragment}"></div> -->
-	        <label for="username" class="form-label"><span class="req">*</span>ID/UserName</label>
+	    <form th:action="@{/user/signup}" th:object="${userForm}" method="post">
+	        
+	        <label for="username" class="form-label"><span class="req">*</span>아이디/이름</label>
 	        <div class="mb-3" style="padding-top:5px;">
 	            <input type="text" th:field="*{userId}" class="form-control" style="width:285px;display:inline-block;" required>
 	            <input type="text" th:field="*{username}" class="form-control" style="width:285px;display:inline-block;" required>
@@ -31,21 +31,62 @@
 	            <input type="password" th:field="*{password1}" class="form-control" style="width:285px;display:inline-block;" required>
 	            <input type="password" th:field="*{password2}" class="form-control" style="width:285px;display:inline-block;" required>
 	        </div>
-	        
-	        <label for="email" class="form-label"><span class="req">*</span>이메일</label>
-	        <div class="mb-3" style="padding-top:5px;">
-	            <input type="email" th:field="*{email}" class="form-control" required>
-	        </div>
-	        
+
+	        <label for="staticEmail" class="form-label">이메일</label>
+	        <div class="mb-3 row" style="padding-top:5px;">
+	             <div class="col-sm-4">
+	             	  <input type="text" class="form-control" id="emailId" th:field="*{emailId}" placeholder="이메일 ID" th:value="${emailId}">
+	             </div>
+	             <div class="col-sm-4">
+		             <select class="form-select" id="emailAddr" th:field="*{emailAddr}" aria-label="selectDomain">
+		         		 <option value="" selected>직접입력</option>
+		         		 <option th:each="emailAddr : ${emailAddrs}" th:value="${emailAddr}" th:text="${emailAddr}" ></option>
+		         	 </select>
+	         	 </div>
+	         	 <div class="col-sm-4">
+	             	<input type="text" class="form-control" id="txtEmailAddr" th:field="*{txtEmailAddr}" placeholder="주소직접입력">
+	             </div>
+	         </div> 
+	         
+	         
 	        <label for="birth" class="form-label">생년월일</label>
-	        <div class="mb-3" style="padding-top:5px;">
-	            <input type="text" th:field="*{birth}" class="form-control">
+	        <div class="mb-3 row" style="padding-top:5px;">
+	            <div class="col-sm-4">
+	                <select class="form-select" id="year" th:field="*{year}" aria-label="년도">
+	         		  <option value="" selected>년도</option>
+	         		  <option th:each="year : ${years}" th:value="${year}" th:text="${year}"></option>
+	         	    </select>
+	            </div>
+	            <div class="col-sm-4">
+	            	  <select class="form-select" id="month" th:field="*{month}" aria-label="월">
+	         		  <option value="" selected>월</option>
+	         		  <option th:each="month : ${months}" th:value="${month}" th:text="${month}"></option>
+	         	  </select>
+	            </div>
+	            <div class="col-sm-4">
+	            	  <select class="form-select" id="day" th:field="*{day}" aria-label="일">
+	         		  <option value="" selected>일</option>
+	         		  <option th:each="day : ${days}" th:value="${day}" th:text="${day}"></option>
+	         	  </select>
+	            </div>
 	        </div>
 	        
-	        <label for="phone" class="form-label">휴대폰번호(-없이 입력)</label>
-	        <div class="mb-3" style="padding-top:5px;">
-	            <input type="text" th:field="*{phone}" class="form-control">
+	        <label for="phone" class="form-label">휴대폰번호</label>
+	        <div class="mb-3 row" style="padding-top:5px;">
+	            <div class="col-sm-4">
+	         		  <select class="form-select" id="serial" th:field="*{serial}">
+	         			  <option value="">선택</option>
+	         			  <option th:each="serial : ${serials}" th:value="${serial}" th:text="${serial}"></option>
+	         		  </select>
+	             </div>
+	             <div class="col-sm-4">
+	         		  <input type="text" class="form-control" id="phoneNum1" th:field="*{phoneNum1}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="4">
+	             </div>
+	             <div class="col-sm-4">
+	         		  <input type="text" class="form-control" id="phoneNum2" th:field="*{phoneNum2}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="4">
+	             </div>
 	        </div>
+
 	        <button type="submit" class="btn btn-primary" style="margin-top: 5px;">계정등록</button>
 	        <button type="button" class="btn btn-primary" style="margin-top: 5px;" th:onclick="location.href='http://localhost:9000/user/login'">로그인 이동</button>
 	    </form>

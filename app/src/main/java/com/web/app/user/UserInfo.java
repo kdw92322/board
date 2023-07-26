@@ -37,4 +37,9 @@ public class UserInfo {
     @Column
     private Date joinDate;
     
+    @Column
+    private String userRole;
+    
+    @Column
+    private Date uptDt;
 }

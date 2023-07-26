@@ -159,7 +159,6 @@ section.notice {
 }
 
 /* reset */
-
 * {
   list-style: none;
   text-decoration: none;
@@ -206,7 +205,7 @@ section.notice {
 	display:inline-block;
 }
 .layout_common{
-	min-width:90%;	
+	min-width:100%;	
     max-height:85vh;
     min-height:85vh;
     overflow-y: auto;
@@ -254,11 +253,9 @@ section.notice {
 	top:1px;
 }
 
-@media (max-width:600px){ /*가로 너비가 600px 이하일 때 아래 스타일 적용*/
-    #main {
-        display: block;
-    }
-    #main .sidebar {
-        min-height: 0;
-    }
+.screenTitle {
+	display: inline-block;
+    font-size: 20px;
+    color: #111;
+    font-weight: bold;
 }

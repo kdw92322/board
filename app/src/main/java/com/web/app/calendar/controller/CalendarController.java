@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.web.app.calendar.service.CalendarService;
+import com.web.app.calendar.service.CalendarVO;
 
 @Controller
 @RequestMapping("/calendar")
@@ -25,8 +26,9 @@ public class CalendarController {
 	//1.SELECT
 	@GetMapping("/selectCalendarList")
 	@ResponseBody
-	public List<Map<String, Object>> selectCalendarList(@RequestParam Map<String, Object> paramMap) throws Exception {
-		return calendarservice.selectCalendarList(paramMap);
+	public List<CalendarVO> selectCalendarList(@RequestParam Map<String, Object> paramMap) throws Exception {
+		List<CalendarVO> list = calendarservice.selectCalendarList(paramMap);
+		return list;
 	}
 	
 	//2.INSERT

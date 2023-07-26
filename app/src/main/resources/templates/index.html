@@ -121,13 +121,15 @@ $(function(){
 	initTimer();//현재시간 Init
 	
 	//날씨정보 setUp
-	let apiurl = "https://api.openweathermap.org/data/2.5/weather?lat=35.2281&lon=128.6811&units=metric&cnt=5&appid=076b2699669346332a018f57695532e9";
+	let apiurl = "http://api.openweathermap.org/data/2.5/weather?lat=35.2281&lon=128.6811&units=metric&cnt=5&appid=076b2699669346332a018f57695532e9";
 	//GET방식
 	fetch(apiurl)
 	  .then((response) =>  response.json())
 	  .then((data) => initWeatherInfo(data))
 	  
-	initGraph(); 
+	setInterval(() => {
+		initGraph(); 
+	}, 2000);
 });
 
 var initWeatherInfo = function(info){
@@ -200,11 +202,11 @@ var initCalendar = function(){
 	var eventList;
 	 
 	calendar = new FullCalendar.Calendar(calendarEl, {
-		/* plugins: [ 'interaction', 'dayGrid', 'timeGrid' ], */
+		/* plugins: [ 'dayGrid', 'timeGrid' ], */
 		headerToolbar: {
-			left: 'prev,next today',
+			left: 'dayGridMonth,timeGridWeek,timeGridDay Add',
 	        center: 'title',	
-		    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+		    right: 'today prevYear,prev,next,nextYear'
 		},
 		locale:'ko',
 		selectable: true,
@@ -218,13 +220,6 @@ var initCalendar = function(){
 		        info.draggedEl.parentNode.removeChild(info.draggedEl);
 		    }
 		},
-		select: function(info) {
-		    calendar_param = {
-		    	startDate : info.startStr,
-		    	endDate : info.endStr
-		    };
-		    openModalPop("#dayInfoModal", "/modals/dayInfo", calendar_param);
-		},
 		eventClick: function(info) {
 			calendar_param = {
 				id : info.event.id
@@ -232,7 +227,15 @@ var initCalendar = function(){
 			openModalPop("#dayInfoModal", "/modals/dayInfo", calendar_param);
 		    
 		},
-		events: selectCalendarList()
+		events: selectCalendarList(),
+		customButtons: {
+			Add: {
+	        text: '일정추가',
+	        click: function() {
+	        	openModalPop("#dayInfoModal", "/modals/dayInfo", {});
+	        }
+	      }
+	    }
 	});
 
 	calendar.render();
@@ -256,8 +259,7 @@ var selectCalendarList = function(){
 }
 
 var initGraph = function(){
-	var ex_dataList1 = makeRandomData();
-	console.log("dataList", ex_dataList1);
+	var dataList = makeRandomSeries();
 	
 	myChart = echarts.init(document.getElementById('mychart'));
     // 차트 속성과 데이터를 지정합니다.
@@ -267,7 +269,7 @@ var initGraph = function(){
     		trigger: 'axis'
     	},
     	legend: {
-    		data: ['A', 'B', 'C', 'D', 'E']
+    		data: ['A', 'B', 'C']
     	},
     	grid: {
 		    left: '2%',
@@ -283,81 +285,52 @@ var initGraph = function(){
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+            data: ['Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri','Sat']
         },
         yAxis: {
             type: 'value'
         },
-        series: [
-            {
-              name: 'A',
-              type: 'line',
-              data: [120, 132, 101, 134, 90]
-            },
-            {
-              name: 'B',
-              type: 'line',
-              data: [220, 182, 191, 234, 290]
-            },
-            {
-              name: 'C',
-              type: 'line',
-              data: [150, 232, 201, 154, 190]
-            },
-            {
-              name: 'D',
-              type: 'line',
-              data: [320, 332, 301, 334, 390]
-            },
-            {
-              name: 'E',
-              type: 'line',
-              data: [820, 932, 901, 934, 1290]
-            }
-        ]
+        series: dataList
     };
     myChart.setOption(option);
-    /* 
-    setInterval(() => {
-      myChart.setOption({
-        series: {
-          data: makeRandomData()
-        }
-      });
-    }, 2000);
-     */
 }
 
-var makeRandomData = function(){
-	var datalist = [
+var makeRandomSeries = function(){
+	var dataListA = makeRandomDataList();
+	var dataListB = makeRandomDataList();
+	var dataListC = makeRandomDataList();
+
+	var lineChartSeries = [
 		{
-			value: Math.round(Math.random()*500),
-			type: 'line',
-			name : 'A'
+			data:dataListA,
+			name:'A',
+			type:'line',
+			smooth: true
 		},
 		{
-			value: Math.round(Math.random()*500),
-			type: 'line',
-			name : 'B'
+			data:dataListB,
+			name:'B',
+			type:'line',
+			smooth: true
 		},
 		{
-			value: Math.round(Math.random()*500),
-			type: 'line',
-			name : 'C'
-		},
-		{
-			value: Math.round(Math.random()*500),
-			type: 'line',
-			name : 'D'
-		},
-		{
-			value: Math.round(Math.random()*500),
-			type: 'line',
-			name : 'E'
-		},
+			data:dataListC,
+			name:'C',
+			type:'line',
+			smooth: true
+		}
 	];
 
-	return datalist;
+	return lineChartSeries;
+}
+
+var makeRandomDataList = function(){
+	var dataList = new Array();
+	for(var i=0; i<chart_data_cnt; i++){
+		var num = Math.round(Math.random()*500);
+		dataList.push(num);
+	}
+	return dataList;
 }
 
 </script>

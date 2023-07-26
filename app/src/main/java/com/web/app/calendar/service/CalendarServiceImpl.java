@@ -12,17 +12,11 @@ public class CalendarServiceImpl implements CalendarService{
 	private CalendarMapper calendarmapper; 
 	
 	@Override
-	public List<Map<String, Object>> selectCalendarList(Map<String, Object> paramMap){
+	public List<CalendarVO> selectCalendarList(Map<String, Object> paramMap){
 		// TODO Auto-generated method stub
 		return calendarmapper.selectCalendarList(paramMap);
 	}
-	
-	@Override
-	public Map<String, Object> selectDayInfo(Map<String, Object> paramMap) throws Exception {
-		// TODO Auto-generated method stub
-		return calendarmapper.selectDayInfo(paramMap);
-	}
-	
+
 	@Override
 	public int insertCalendarInfo(Map<String, Object> saveMap) throws Exception {
 		// TODO Auto-generated method stub

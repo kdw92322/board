@@ -13,37 +13,39 @@
 		    <input type="text" class="form-control" name="title" th:value="${title}">
 		    <label for="floatingInput">제목</label>
 		</div>
-		<div class="row g-2">
-		    <div class="col-md">
-		      <div class="form-floating">
-		          <input class="form-control" name="startDate" type="date" th:value="${startDate}">
-		          <label for="f_start_date">시작일자</label>
-		      </div>
-		    </div>
-		    <div class="col-md">
-		      <div class="form-floating">
-		          <input class="form-control" name="startTime" type="time" th:value="${startTime}" th:readonly="${allDay == '1' ? true : false}"> 
-		          <label for="f_start_time">시작시간</label>
-		      </div>
-		    </div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" id="startDate" name="startDate" type="text" th:value="${startDate}">
+			            <label for="f_start_date">시작일자</label>
+			        </div>
+			    </div>
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" id="startTime" name="startTime" type="text" th:value="${startTime}">
+			            <label for="f_start_time">시작시간</label>
+			        </div>
+			    </div>
+			</div>
 		</div>
 		<div class="form-floating mb-3">
 			<div class="row g-2">
 			    <div class="col-md">
-			      <div class="form-floating">
-			          <input class="form-control" name="endDate" type="date" th:value ="${endDate}">
-			    	  <label for="f_end_date">종료일자</label>
-			      </div>
+			        <div class="form-floating">
+			            <input class="form-control" id="endDate" name="endDate" type="text" th:value="${endDate}">
+			            <label for="f_end_date">종료일시</label>
+			        </div>
 			    </div>
 			    <div class="col-md">
-			      <div class="form-floating">
-			          <input class="form-control" name="endTime" type="time" th:value ="${endTime}" th:readonly="${allDay == '1' ? true : false}">
-			          <label for="f_end_time">종료시간</label>
-			      </div>
-			    </div> 
+			        <div class="form-floating">
+			            <input class="form-control" id="endTime" name="endTime" type="text" th:value="${endTime}">
+			            <label for="f_end_time">종료시간</label>
+			        </div>
+			    </div>
 			</div>
 			<div class="form-check form-switch">
-			    <input class="form-check-input" type="checkbox" name="allDay" th:checked ="${allDay == '1'}">
+			    <input class="form-check-input" type="checkbox" name="allDay" th:checked ="${allDay == true}">
 			    <label class="form-check-label" for="isAllDay">종일</label>
 			</div>
 		</div>
@@ -62,15 +64,15 @@
 		        <col width="23%"/>
 		    </colgroup>
 		    <tr>
-		      <th style="text-align: center;">글자</th>
+		      <th style="text-align: center; color: #000;">글자</th>
 		      <td>
 		      	<input type="color" class="form-control form-control-color" name="textColor" style="max-width: 10rem;" th:value ="${textColor}">
 		      </td>
-		      <th style="text-align: center;">배경</th>
+		      <th style="text-align: center; color: #000;">배경</th>
 		      <td>
 		      	<input type="color" class="form-control form-control-color" name="backgroundColor" style="max-width: 10rem;" th:value ="${backgroundColor}">
 		      </td>
-		      <th style="text-align: center;">테두리</th>
+		      <th style="text-align: center; color: #000;">테두리</th>
 		      <td>
 		      	<input type="color" class="form-control form-control-color" name="borderColor" style="max-width: 10rem;" th:value ="${borderColor}">
 		      </td>
@@ -92,6 +94,17 @@ $(function(){
 	}else{
 		$("#btn_delete").show();
 	}
+	
+	/* Start */
+	initDateTimePicker("startDate","D");
+	initDateTimePicker("startTime","T");
+	
+	/* End */
+	initDateTimePicker("endDate","D");
+	initDateTimePicker("endTime","T");
+
+	var isChk = $('input[name=allDay]').is(":checked");
+	setAllDay(isChk);
 });
 
 /* 저장 button click */
@@ -110,10 +123,30 @@ $("#btn_delete").click(function(){
 });
 
 var saveDayInfo = function(saveType){
+	//Data Setting 영역
 	var formdata = $("#modalBodyform").serializeObject();
 	var v_allDay = $("input:checkbox[name=allDay]").is(":checked") == true ? 1 : 0;
 	formdata.allDay = v_allDay;
 	
+	var startTime = $('input[name=startTime]').val();
+	var startDate = $('input[name=startDate]').val();
+	var endTime = $('input[name=endTime]').val();
+	var endDate = $('input[name=endDate]').val();
+	
+	
+	if($("#startTime").is(":disabled")){
+		formdata.start = startDate;
+	}else{
+		formdata.start = startDate.concat(" " + startTime);
+	}
+	
+	if($("#endTime").is(":disabled")){
+		formdata.end = endDate;
+	}else{
+		formdata.end = endDate.concat(" " + endTime);
+	}
+	
+	//저장상태에 따른 URL Setting
 	var saveUrl, ajaxType;
 	if(saveType == "I"){
 		ajaxType = "POST";
@@ -141,7 +174,6 @@ var saveDayInfo = function(saveType){
 	    	}else if(saveType == "D"){
 	    		restxt = "삭제 되었습니다.";
 	    	}
-	    	
 	    	swAlert(restxt, res + " 건 " + restxt, "S", "OK");
 	    },
 	    error: function(jqXHR) {
@@ -159,15 +191,22 @@ var saveDayInfo = function(saveType){
 }
 
 $('input[name=allDay]').click(function(){
-	var checked = $('input[name=allDay]').is(':checked');
-	if(checked){
-		$("input[name=startTime]").attr("readonly",true);
-		$("input[name=endTime]").attr("readonly",true);
-	}else{
-		$("input[name=startTime]").attr("readonly",false);
-		$("input[name=endTime]").attr("readonly",false);
-	}
+    var isChk = $(this).is(":checked");
+    setAllDay(isChk);
 });
+
+var setAllDay = function(isChk){
+	if(isChk){
+		$("#startTime").val("");
+		$("#endTime").val("");
+		
+		$("#startTime").attr("disabled", true);
+		$("#endTime").attr("disabled", true);
+	}else{
+		$("#startTime").attr("disabled", false);
+		$("#endTime").attr("disabled", false);
+	}
+}
 
 </script>
 </body>

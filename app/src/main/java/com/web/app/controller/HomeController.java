@@ -28,4 +28,14 @@ public class HomeController {
 	public String test() {
 		return "test/test";
 	}
+	
+	@GetMapping("test/diagram1")
+	public String testDiagram1() {
+		return "test/diagram1";
+	}
+	
+	@GetMapping("test/diagram2")
+	public String testDiagram2() {
+		return "test/diagram2";
+	}
 }
