@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
+<head>
+	<meta charset="UTF-8">
+	<title>파일관리</title>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row" style="margin-top : 10px; margin-bottom : 10px;">
+    	<h4 style="font-weight: bold;"><i class="fa-regular fa-file"></i>&nbsp;파일관리</h4>
+    	<div style="margin:5px;">
+    		<button class="btn btn-primary" type="button" style="float:right;">파일추가</button>
+    	</div>
+    </div>
+	<div class="row">
+	    <table class="table table-bordered">
+		    <thead>
+		        <tr>
+		            <th scope="col">번호</th>
+		            <th scope="col">이름</th>
+		            <th scope="col">유형</th>
+		            <th scope="col">크기</th>
+		            <th scope="col">업로드일자</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		        <tr>
+		            <th scope="row">1</th>
+		            <td>파일1</td>
+		            <td>xlsx</td>
+		            <td>1MB</td>
+		            <td>2023-07-01</td>
+		        </tr>
+		        <tr>
+		            <th scope="row">2</th>
+		            <td>파일2</td>
+		            <td>txt</td>
+		            <td>2MB</td>
+		            <td>2023-07-02</td>
+		        </tr>
+		        <tr>
+		            <th scope="row">3</th>
+		            <td>파일2</td>
+		            <td>pdf</td>
+		            <td>3MB</td>
+		            <td>2023-07-03</td>
+		        </tr>
+		    </tbody>
+		</table>
+	</div>
+</div>
+</body>
+</th:block>
+</html>
