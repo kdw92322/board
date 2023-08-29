@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("file")
 public class FileController {
-	@GetMapping("/fileview")
+	@GetMapping("fileview")
 	public String fileview() {
 		return "file/fileview";
 	}

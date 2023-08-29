@@ -1,0 +1,28 @@
+<div class="modal-header" style="background-color: #2E9AFE">
+	<h5 class="modal-title" th:text="${ModalTitle}" id="modalTitle"></h5>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+	<form id="modalBodyform">
+		<input type="hidden" name="createby" th:value="${#authentication.name}">
+		<div class="form-floating mb-3">
+			<div class="row" style="margin-top : 10px; margin-bottom : 10px;">
+		    	<span style="font-weight: bold;"><i class="fa-solid fa-file-import"></i>&nbsp;UploadFiles</span>
+		    </div>
+			<div class="row">
+				<div class="my-dropzone"></div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer" style="background-color: #FBF8EF">
+	<button id="btn_save"   type="button" class="btn btn-primary">저장</button>
+    <button id="btn_close"  type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+</div>
+<script type="text/javascript">
+$(function(){
+	var dropzone = new Dropzone(".my-dropzone");
+});
+</script>

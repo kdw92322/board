@@ -80,4 +80,10 @@ public class ModalController {
     	return "/modal/dayInfo";
     }
     
+    @PostMapping("uploadView")
+    public String fileUpload(@RequestBody Map<String, Object> fileObj, Model model) {
+    	model.addAttribute("ModalTitle", "파일 업로드 Modal");
+    	return "/modal/fileupload";
+    }
+    
 }
