@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
+<head>
+    <title>Example Media Query</title>
+</head>
+<body>
+    <div>
+    	<div class="container-fluid">
+    		<div class="row">
+				<div class="col" style="display:inline-block;">
+					<div style="padding:5px; display:block; float:left;">
+						<span class="screenTitle"><i class="fa-regular fa-comment"></i>&nbsp;Example Media Query</span>
+					</div>
+			        <div style="padding:5px; display:block; float:right;">
+			        	<div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+				        	<button type="button" id="btn_save" class="btn btn-info">수정</button>
+				            <button type="button" id="btn_delete" class="btn btn-danger">삭제</button>
+				            <button type="button" id="btn_close" class="btn btn-light">닫기</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+    	</div>
+    </div>
+</body>
+</th:block>
+</html>

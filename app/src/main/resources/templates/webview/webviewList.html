@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#viewTableBody tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+<table class="table table-bordered">
+    <thead class="table-dark">
+    	<tr align="center">
+    		<th width="5%" style="font-size: 11px;">행 번호</th>
+    		<th width="15%" style="font-size: 11px;">코드</th>
+    		<th width="30%" style="font-size: 11px;">이름</th>
+    		<th width="15%" style="font-size: 11px;">사용여부</th>
+    		<th width="35%" style="font-size: 11px;">경로</th>
+    	</tr>
+    </thead>
+    <tbody id="viewTableBody">
+    	<tr th:each="view : ${viewList}" align="center">
+	    	<td style="vertical-align: middle;" th:onclick="onRowClick([[${view.code}]])">
+	    		<span th:text="${view.rownum}"></span>
+	    	</td>
+	    	<td style="vertical-align: middle;" th:onclick="onRowClick([[${view.code}]])">
+	    		<span th:text="${view.code}"></span>
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<input type="text" class="form-control form-control-sm" id="name" name="name" th:value="${view.name}">
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<select class="form-select" th:id="sel_useYn" th:name="sel_useYn">
+		    		<option value="">선택</option>
+		    		<option value="Y" th:selected="'Y' == ${view.useYn}">사용</option>
+				    <option value="N" th:selected="'N' == ${view.useYn}">미사용</option>
+	    		</select>
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<input type="text" class="form-control form-control-sm" id="url" name="url" th:value="${view.url}">
+	    	</td>
+	    </tr>
+    </tbody>
+</table>
+<script type="text/javascript">
+var onRowClick = function(viewcode){
+	var result = callService("GET", "/webview/selectViewAuthList", false, 'text', {"viewcode" : viewcode}, true, 0);
+	$("#webviewAuthList").html(result.value);
+	
+}
+</script>
+</html>

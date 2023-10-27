@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
+<head>
+	<title>게시판</title>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col" style="margin-top:10px;">
+	        <h4 style="font-weight: bold;"><i class="fa-regular fa-pen-to-square"></i>&nbsp;게시판</h4>
+	    </div>
+	    <div class="col" align="right" style="display:inline-block; margin-top:10px;">
+			<button type="button" class="btn btn-primary" th:onclick="selectBoardList();" style="margin-left:2px;">조회</button>
+			<button type="button" class="btn btn-secondary" th:onclick="boardModal();" style="margin-left:2px;">추가(Modal)</button>
+	    </div>
+	</div>
+	<div class="row" style="border:groove; border-radius:10px; padding-top:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+		<div class="row">
+			<div class="col">
+				<h6 style="font-weight: bold;"><i class="fa-solid fa-filter"></i>&nbsp;조회조건</h6>
+			</div>
+		</div>
+		<div class="row text-center">
+			<form id="searchForm">
+				<table class="table table-bordered">
+					<colgroup>
+						 <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					</colgroup>
+					<tr>			
+						<th><span>제목</span></th>
+						<td>
+							<input type="text" class="form-control form-control-sm" id="sch_title" name="sch_title">
+						</td>
+						<th><span>내용</span></th>
+						<td>
+							<input type="text" class="form-control form-control-sm" id="sch_content" name="sch_content">
+						</td>
+						<th><span>작성자</span></th>
+						<td>
+							<input type="text" class="form-control form-control-sm" id="sch_writer" name="sch_writer">
+						</td>
+						<th><span>작성일</span></th>
+						<td>
+							<input type="date" class="form-control form-control-sm" id="sch_regDate" name="sch_regDate">
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+	
+	<div class="row" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+		<div class="col-12">
+		    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;목록</span>
+	    </div>
+	    <div class="col-12" style="text-align:center; max-height:25vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+			<div id="divBoardList"></div>
+		</div>
+	</div>
+	
+	<div class="row" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+		<div class="col-12">
+		    <span style="font-weight: bold;"><i class="fa-regular fa-comment"></i>&nbsp;댓글</span>
+	    </div>
+	</div>
+	
+	<th:block th:replace="/fragments/_modals :: modal('boardModal')">modal</th:block>
+</div>
+	  	
+</body>
+<script type="text/javascript">
+$(function(){
+	selectBoardList();
+});
+
+
+var selectBoardList = function(){
+	var list = callService("GET", "/board/BoardList", false, 'text', {}, true, 0);
+	$("#divBoardList").html(list.value);
+}
+	
+var boardModal = function(){
+	openModalPop("#boardModal", "/modals/boardModal", {"type" : 'I'});
+}
+
+var onRowClick = function(idx){
+	openModalPop("#boardModal", "/modals/boardModal", {"type" : 'U', "idx" : idx});
+}
+
+</script>
+</th:block>
+</html>

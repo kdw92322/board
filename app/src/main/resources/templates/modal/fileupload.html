@@ -6,13 +6,15 @@
 </div>
 <div class="modal-body">
 	<form id="modalBodyform">
-		<input type="hidden" name="createby" th:value="${#authentication.name}">
+		<input type="hidden" id="uploadBy" name="uploadBy" th:value="${#authentication.name}">
 		<div class="form-floating mb-3">
 			<div class="row" style="margin-top : 10px; margin-bottom : 10px;">
-		    	<span style="font-weight: bold;"><i class="fa-solid fa-file-import"></i>&nbsp;UploadFiles</span>
+		    	<span style="font-weight: bold;"><i class="fa-solid fa-file-import"></i>&nbsp;UploadFiles(최대 5개까지 Upload 가능합니다.)</span>
 		    </div>
+		</div>
+		<div class="form-floating mb-3">
 			<div class="row">
-				<div class="my-dropzone"></div>
+				<input type="file" class="mng_file" id="filepond" height="300" multiple data-allow-reorder="true" data-max-file-size="3MB" data-max-files="5"/>
 			</div>
 		</div>
 	</form>
@@ -21,8 +23,126 @@
 	<button id="btn_save"   type="button" class="btn btn-primary">저장</button>
     <button id="btn_close"  type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 </div>
+<style>
+@media (min-width: 30em) {
+    .filepond--item {
+        width: calc(50% - 0.5em);
+    }
+}
+@media (min-width: 50em) {
+    .filepond--item {
+        width: calc(33.33% - 0.5em);
+    }
+}
+.filepond--root {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    height: 20em;    
+}
+.filepond--file-action-button {
+    cursor: pointer;
+}
+/* the text color of the drop label*/
+.filepond--drop-label {
+    color: #D8D8D8;
+}
+/* underline color for "Browse" button */
+.filepond--label-action {
+    text-decoration-color: #D8D8D8;
+    text-decoration : initial;
+    font-weight: bold;
+}
+/* the background color of the filepond drop area */
+.filepond--panel-root {
+    background-color: #FBF8EF;
+}
+/* the border radius of the drop area */
+.filepond--panel-root {
+    border-radius: 0.5em;
+}
+/* the border radius of the file item */
+.filepond--item-panel {
+    border-radius: 0.5em;
+}
+/* bordered drop area */
+.filepond--panel-root {
+    /* background-color: transparent; */
+    border: 1px dashed #F3E2A9;
+    border-color: #A7A2A2;
+}
+</style>
 <script type="text/javascript">
+var pond;
 $(function(){
-	var dropzone = new Dropzone(".my-dropzone");
+	FilePond.registerPlugin(
+		// encodes the file as base64 data
+		FilePondPluginFileEncode,
+		
+		// validates the size of the file
+		FilePondPluginFileValidateSize,
+				
+		// corrects mobile image orientation
+		FilePondPluginImageExifOrientation,
+				
+		// previews dropped images
+		FilePondPluginImagePreview		
+	);
+	
+	FilePond.setOptions({
+	    server: {
+	        process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+	            const formData = new FormData();
+	            formData.append("file", file);
+
+	            const request = new XMLHttpRequest();
+	            request.open('POST', 'http://localhost:9000/file/upload', false);
+	            request.setRequestHeader("userId", $("#uploadBy").val());
+	            request.upload.onprogress = (e) => {
+	                progress(e.lengthComputable, e.loaded, e.total);
+	            };
+	            request.onload = function () {
+	            	if (request.status >= 200 && request.status < 300) {
+	            		let result = request.response;
+	                    load(request.responseText);
+	                    
+	                    swAlert("Success", "파일이 성공적으로 UPLOAD 되었습니다.", "S", "OK");
+	                    
+	                } else {
+	                    error('oh no');
+	                    swAlert("Error", "파일 업로드중 에러가 발생하였습니다.", "E", "OK");
+	                }
+	            };
+	            request.send(formData);
+	            
+	            return {
+	                abort: () => {
+	                    request.abort();
+	                    abort();
+	                },
+	            };
+	            
+	        },
+	    },
+	});
+
+	const inputElement = document.getElementById("filepond");
+	pond = FilePond.create(inputElement,{
+		allowMultiple: true,
+		imagePreviewHeight: 135 
+	});
+	
+	pond.on('addfile', (error, file) => {
+		if (error) {
+	        return;
+	    }
+	});
+	
+	
+	
 });
+
+$("#btn_save").click(function(){
+	var files = pond.getFiles();
+});
+
 </script>

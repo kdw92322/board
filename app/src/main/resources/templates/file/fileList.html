@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<table class="table table-bordered">
+    <thead class="table-dark">
+    	<tr align="center">
+    		<th width="10%">번호</th>
+    		<th width="18%">파일이름</th>
+    		<th width="18%">확장자</th>
+    		<th width="18%">크기(KB)</th>
+    		<th width="18%">BY</th>
+    		<th width="18%">업로드 일자</th>
+    	</tr>
+    </thead>
+    <tbody>
+    	<tr th:each="FileVo : ${fileList}" align="center">
+	    	<th scope="row" th:text="${FileVo.rownum}"></th>
+	    	<td><a th:href="@{/file/download(uuid=${FileVo.uuid})}" th:text="${FileVo.originName}" style="text-decoration:none; color:inherit; font-weight:bold;"></a></td>
+	    	<td th:text="${FileVo.fileExt}"></td>
+	    	<td th:text="${FileVo.size}"></td>
+	    	<td th:text="${FileVo.uploadBy}"></td>
+	    	<td th:text="${FileVo.uploadDt}"></td>
+	    </tr>
+    </tbody>
+</table>
+<script type="text/javascript">
+	$(function(){
+		const urlParams = new URL(location.href).searchParams;
+		const result = urlParams.get('result');
+		const msg = urlParams.get('msg');
+		
+		if(result != null && msg != null){
+			swAlert(result, msg, "E", "OK");
+			return;
+		}
+	});
+</script>
+</html>
+

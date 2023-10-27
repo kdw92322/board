@@ -1,5 +1,5 @@
 /*
-	Modal Popup생성
+	Modal 생성
 	result : html 호출
 */
 var openModalPop = function(modalId, url, param){
@@ -87,3 +87,101 @@ var DateToStringFormat = function(date){
 	}
 	return rtnStrDate;
 }
+
+/*
+    method : callService
+    parameter : (type, url, async, dataType, data, isReturnValue, timeout)
+    desc : Service 호출 function
+*/
+var callService = function(type, url, async, dataType, data, isReturnValue, timeout){
+	//Return Object
+	var returnObject = new Object();
+	
+	/* type : GET, POST, PUT, DELETE */
+	if(type == null && url == "" && url == undefined){
+		type = type.toUpperCase();
+		console.log("type is null, parameter order : 1");
+		return;
+	}
+	
+	/* Service URL */
+	if(url == null && url == "" && url == undefined){
+		console.log("url is null, parameter order : 2");
+		return;
+	} 
+	
+	/* 동기/비동기 여부(기본 비동기) */
+	if(async == null && async == "" && async == undefined){
+		console.log("async is null(default : true), parameter order : 3");
+		async = true;
+	}
+	
+	/* 서버에서 return 되는 DataType : text, html, xml, json, jsonp, script */
+	if(dataType == null && dataType == "" && dataType == undefined){
+		console.log("dataType is null(default : text), parameter order : 4");
+		dataType = "text";
+	}
+	
+	/* 서버에 전송할 데이터 */
+	if(data == null && data == "" && data == undefined){
+		console.log("dataType is null(default : {}), parameter order : 5");
+		data = new Object();
+	}
+	
+	/* Call Service 후 Return 여부 */
+	if(isReturnValue == null && isReturnValue == "" && isReturnValue == undefined){
+		console.log("isReturnValue is null(default : true), parameter order : 6");
+		isReturnValue = false;//default
+	}
+	
+	/* 타임아웃 설정 */
+	if(timeout == null && timeout == "" && timeout == undefined){
+		console.log("dataType is null(default : 0), parameter order : 7");
+		timeout = 0;//default
+	}
+	
+	let ContentType = 'application/x-www-form-urlencoded; charset=utf-8';
+	if(dataType == "json") {
+		ContentType = 'application/json; charset=utf-8';
+	}
+	
+	$.ajax({
+		type: type,
+		url: url,
+		async: async,
+		dataType: dataType,
+		data: data,
+		contentType: ContentType,
+		timeout : timeout,
+		beforeSend:function(){
+			$('.layout_loader').show(); // loading bar show
+	    },
+	    complete:function(){
+			setTimeout(() => {
+			    $('.layout_loader').hide(); // loading bar hide
+			}, 1000);
+	    },
+	})
+	.done(function(data, textStatus, xhr){
+		if(isReturnValue){
+			returnObject = {
+				"value" : data,
+				"Status" : textStatus,
+				"xhr" : xhr
+			};
+		}
+	})
+	.fail(function(xhr, textStatus, errorThrown){
+		if(isReturnValue){
+			returnObject = {
+				"xhr" : xhr,
+				"Status" : textStatus,
+				"Thrown" : errorThrown,
+			};
+		}
+	});
+	
+	return returnObject;
+}
+
+

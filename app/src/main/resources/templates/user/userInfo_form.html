@@ -113,20 +113,7 @@ $(function(){
 });
 
 var deleteUserInfo = function(userId){
-	$.ajax({
-	    url: '/user/deleteUserInfo/' + userId,
-	    async: false,
-	    type: 'DELETE',
-	    success: function(data) {
-	    	
-	    },
-	    error: function(jqXHR) {
-	    	console.log("error"); 
-	    },
-	    complete: function(jqXHR) {
-	    	console.log("complete"); 
-	    }
-	}); 
+	var result = callService("DELETE", "/user/deleteUserInfo/" + userId, false, 'text', param, true, 0);
 };
 
 var chkUserInfo = function(){

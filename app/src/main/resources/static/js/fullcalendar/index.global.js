@@ -8675,9 +8675,7 @@ var FullCalendar = (function (exports) {
             eventSources: handleEventSources,
         },
     });
-    /*
-    BUG: if `event` was supplied, all previously-given `eventSources` will be wiped out
-    */
+
     function handleEventSources(inputs, context) {
         let unfoundSources = hashValuesToArray(context.getCurrentData().eventSources);
         if (unfoundSources.length === 1 &&

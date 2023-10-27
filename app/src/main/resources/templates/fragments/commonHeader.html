@@ -1,53 +1,57 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:fragment="commonHeader">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- <nav class="navbar navbar-expand-lg navbar-light"> -->
-<nav class="navbar navbar-expand-lg navbar-light bg-dark text-white">
-  <div class="container-fluid">
-    <a class="navbar-brand text-white" href="/">
-    	<i class="fa-solid fa-house"></i>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarScroll">
-        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-            <li class="nav-item dropdown">
-            	<a class="nav-link dropdown-toggle text-white" href="#" id="administratorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    관리자
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="administratorDropdown">
-                    <li><a class="dropdown-item" href="/user/userInfo">사용자정보</a></li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="/board/boardList">게시판</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="/file/fileview">파일관리</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    ETC.Page
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                    <li><a class="dropdown-item" href="/test">Sample Page</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </li>
-        </ul>
-        <form class="d-flex">
-        	<div style="margin: auto 0 auto auto; padding:5px;">
-	  		    <strong><span th:text="${#authentication.name}"></span></strong>
-	  		    <span>님이 로그인 하셨습니다.</span>
-	  		    <i id="logout_icon" class="fa-solid fa-right-from-bracket fa-xl" style="cursor: pointer" onclick="location.href='/user/logout';"></i>
-	  	    </div>
-        </form>
-    </div>
-  </div>
-</nav>
+	<!-- ========================== Header ============================ -->
+	<Header>
+		<nav class="navbar navbar-expand-lg navbar-light bg-primary text-white">
+			<div class="container-fluid">
+			    <a class="navbar-brand text-white" href="/">
+			    	<i class="fa-solid fa-house"></i>
+			    </a>
+			    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+			        <span class="navbar-toggler-icon"></span>
+			    </button>
+			    <div class="collapse navbar-collapse" id="navbarScroll">
+			        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+			            <li class="nav-item dropdown">
+			            	<a class="nav-link dropdown-toggle text-white" href="#" id="administratorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+			                    관리자
+			                </a>
+			                <ul class="dropdown-menu" aria-labelledby="administratorDropdown">
+			                    <li><a class="dropdown-item" href="/user/userInfo">사용자정보</a></li>
+			                    <li><a class="dropdown-item" href="/webview/webviewInfo">화면정보</a></li>
+			                </ul>
+			            </li>
+			            <li class="nav-item">
+			                <a class="nav-link text-white" href="/board/boardForm">게시판</a>
+			            </li>
+			            <li class="nav-item">
+			                <a class="nav-link text-white" href="/file/fileview">파일관리</a>
+			            </li>
+			            <li class="nav-item dropdown">
+			                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+			                    ETC.Page
+			                </a>
+			                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+			                    <li><a class="dropdown-item" href="/test">Sample Page</a></li>
+			                    <li><hr class="dropdown-divider"></li>
+			                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+			                    <li><a class="dropdown-item" href="/media">Media Test</a></li>
+			                </ul>
+			            </li>
+			        </ul>
+			        <form class="d-flex">
+			        	<div style="margin: auto 0 auto auto; padding:5px;">
+			        		<span th:id="userAuth" sec:authentication="principal.authorities" style="display:none;"></span>
+			        		<strong><span sec:authentication="name"></span></strong>
+				    		<span>님이 로그인 하셨습니다.</span>
+				    		<i id="logout_icon" class="fa-solid fa-right-from-bracket fa-xl" style="cursor: pointer" onclick="location.href='/user/logout';"></i>
+				    	</div>
+			        </form>
+			    </div>
+			</div>
+		</nav>
+	</Header>
 </th:block>
 </html>
 

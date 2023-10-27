@@ -15,12 +15,18 @@
 		 <if test="idx != '' and idx != null">
 		   and idx = #{idx}
 		 </if>
-		 <if test="keyword != '' and keyword != null">
-		   and(
-		       title like concat_ws(#{keyword},'%','%') or		
-		       content like concat_ws(#{keyword},'%','%')
-		   )
-		 </if>    
+		 <if test="sch_title != '' and sch_title != null">
+		   and title like CONCAT('%', #{sch_title}, '%')
+		 </if>
+		 <if test="sch_content != '' and sch_content != null">
+		   and content like CONCAT('%', #{sch_content}, '%')
+		 </if>
+		 <if test="sch_writer != '' and sch_writer != null">
+		   and writer like CONCAT('%', #{sch_writer}, '%')
+		 </if>
+		 <if test="sch_regDate != '' and sch_regDate != null">
+		   and DATE_FORMAT(reg_date, '%Y-%m-%d') = #{sch_regDate}
+		 </if> 
 	</select>
 	
 	<insert id="insertBoardList" parameterType="map">

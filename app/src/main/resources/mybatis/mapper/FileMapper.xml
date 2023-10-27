@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.web.app.file.service.FileMapper">
+	<select id="selectfilelist" parameterType="map" resultType="com.web.app.file.service.FileVo">
+		select row_number() over(order by a.uploadDt desc) as rownum
+			  ,a.uuid
+			  ,a.content
+			  ,a.originName
+			  ,a.fileExt
+			  ,a.storedFileNm
+			  ,a.filePath
+			  ,case 
+               when a.size  <![CDATA[<]]> 1024 then 1
+               else round(a.size/1024) end as size
+			  ,a.uploadBy
+			  ,a.uploadDt
+		  from tb_file_mng a
+		 where 1=1 
+		 <if test="uuid != '' and uuid != null">
+		   and a.uuid = #{uuid}
+		 </if>  
+		 order by a.uploadDt desc
+	</select>
+
+	<insert id="saveInfo" parameterType="map">
+		insert into tb_file_mng(
+			 uuid
+			,content
+			,originName
+			,fileExt
+			,storedFileNm
+			,filePath
+			,size
+			,uploadBy
+			,uploadDt
+		) values (
+			 #{uuid}
+			,#{content}
+			,#{originName}
+			,#{ext}
+			,#{storedFile}
+			,#{filePath}
+			,#{size}
+			,#{uploadBy}
+			,sysdate()
+		)
+	</insert>
+</mapper>

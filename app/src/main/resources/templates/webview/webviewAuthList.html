@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#viewTableBody tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+<table class="table table-bordered">
+    <thead class="table-dark">
+    	<tr align="center">
+    		<th width="40%" style="font-size: 11px;">권한</th>
+    		<th width="20%" style="font-size: 11px;">조회</th>
+    		<th width="20%" style="font-size: 11px;">저장</th>
+    		<th width="20%" style="font-size: 11px;">삭제</th>
+    	</tr>
+    </thead>
+    <tbody>
+    	<tr th:each="viewAuth : ${viewAuthList}" align="center">
+	    	<td style="vertical-align: middle;">
+	    		<span th:text="${viewAuth.auth}"></span>
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<input type="checkbox" class="form-check-input" id="searchYn" name="searchYn" th:checked="${viewAuth.searchYn == 'Y' ? true : false}">
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<input type="checkbox" class="form-check-input" id="saveYn" name="saveYn" th:checked="${viewAuth.saveYn == 'Y' ? true : false}">
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<input type="checkbox" class="form-check-input" id="deleteYn" name="deleteYn" th:checked="${viewAuth.deleteYn == 'Y' ? true : false}">
+	    	</td>
+	    </tr>
+    </tbody>
+</table>
+</html>

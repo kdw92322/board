@@ -1,4 +1,4 @@
-<div class="modal-header" style="background-color: #2E9AFE">
+<div class="modal-header" style="background-color: #DCD776">
     <h5 class="modal-title" th:text="${ModalTitle}" id="modalTitle"></h5>
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -159,35 +159,23 @@ var saveDayInfo = function(saveType){
 		saveUrl = "/calendar/deleteCalendarInfo";
 	}
 	
-	$.ajax({
-	    url: saveUrl,
-	    type: ajaxType,
-	    data: JSON.stringify(formdata),
-	    dataType: 'json',
-	    contentType: 'application/json',
-	    success: function(res) {
-	    	var restxt = "";
-	    	if(saveType == "I"){
-	    		restxt = "저장 되었습니다.";
-	    	}else if(saveType == "U"){
-	    		restxt = "수정 되었습니다.";
-	    	}else if(saveType == "D"){
-	    		restxt = "삭제 되었습니다.";
-	    	}
-	    	swAlert(restxt, res + " 건 " + restxt, "S", "OK");
-	    },
-	    error: function(jqXHR) {
-	    	console.log("error"); 
-	    },
-	    complete: function(jqXHR) {
-	    	calendar.destroy();
-	    	setTimeout(function(){
-	    		initCalendar();
-	    		$("#btn_close").click();	
-	    		swal.close();
-	    	}, 1000);
-	    }
-	});
+	var result = callService(ajaxType, saveUrl, false, 'json', JSON.stringify(formdata), true, 0);
+	var restxt = "";
+	if(saveType == "I"){
+		restxt = "저장 되었습니다.";
+	}else if(saveType == "U"){
+		restxt = "수정 되었습니다.";
+	}else if(saveType == "D"){
+		restxt = "삭제 되었습니다.";
+	}
+	swAlert(restxt, result.value + " 건 " + restxt, "S", "OK");
+	
+	calendar.destroy();
+	setTimeout(function(){
+		initCalendar();
+		$("#btn_close").click();	
+		swal.close();
+	}, 1000);
 }
 
 $('input[name=allDay]').click(function(){

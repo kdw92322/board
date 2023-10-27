@@ -1,0 +1,72 @@
+<div class="modal-header" style="background-color: #DCD776">
+    <h5 class="modal-title" th:text="${ModalTitle}" id="modalTitle"></h5>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+	<form id="modalBodyform">
+		<input type="hidden" id="createdBy" name="createdBy" th:value="${#authentication.name}">
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" id="boardNo" name="boardNo" type="text" th:value="${boardNo}" readonly>
+			            <label for="f_boardNo">게시글번호</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" id="title" name="title" type="text" th:value="${title}">
+			            <label for="f_title">제목</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <textarea class="form-control" name="content" style="height: 200px" th:text ="${content}"></textarea>
+		    			<label for="txt_content">내용</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" id="writer" name="writer" type="text" th:value="${writer}" readonly>
+			            <label for="f_writer">작성자</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" id="regDate" name="regDate" type="text" th:value="${regDate}" readonly>
+			            <label for="f_regDate">등록일자</label>
+			        </div>
+			    </div>
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" id="uptDate" name="uptDate" type="text" th:value="${uptDate}" readonly>
+			            <label for="f_uptDate">수정일자</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer" style="background-color: #FBF8EF">
+	<button id="btn_save"   type="button" class="btn btn-primary">저장</button>
+	<button id="btn_delete" type="button" class="btn btn-danger">삭제</button>
+    <button id="btn_close"  type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+</div>

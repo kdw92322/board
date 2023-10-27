@@ -1,48 +1,49 @@
-package com.web.app.board.controller;
+package com.web.app.screen.controller;
 
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.web.app.board.service.BoardService;
+import com.web.app.screen.service.WebViewService;
 
 @Controller
-@RequestMapping("/board")
-public class BoardController {
+@RequestMapping("/webview")
+public class WebViewController {
 	
 	@Autowired
-	private BoardService boardservice;
+	private WebViewService webviewservice;
 	
-	@GetMapping("/boardForm")
-	public String boardList() {
-		return "board/boardForm";
+	@GetMapping("webviewInfo")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String webviewList(Model model) {
+        return "webview/webviewInfo";
+    }
+	
+	@GetMapping("/selectViewList")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String selectViewList(@RequestParam Map<String, Object> paramMap, Model model) throws Exception {
+		List<Map<String, Object>> selectViewList = webviewservice.selectViewList(paramMap);
+		model.addAttribute("viewList", selectViewList);
+		return "webview/webviewList";
 	}
 	
-	@GetMapping("/BoardList")
-	public String boardList(Model model) throws Exception {
-		List<Map<String, Object>> boardList = boardservice.selectboardList(null);
-		model.addAttribute("boardList", boardList);
-		return "board/boardList";
+	@GetMapping("/selectViewAuthList")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String selectViewAuthList(@RequestParam Map<String, Object> paramMap, Model model) throws Exception {
+		List<Map<String, Object>> selectViewAuthList = webviewservice.selectViewAuthList(paramMap);
+		model.addAttribute("viewAuthList", selectViewAuthList);
+		return "webview/webviewAuthList";
 	}
 	
-	@GetMapping("/selectBoardList")
-	@ResponseBody
-	public List<Map<String, Object>> selectboardList(@RequestParam Map<String, Object> paramMap, Model model) throws Exception {
-		List<Map<String, Object>> selectboardList = boardservice.selectboardList(paramMap);
-		return selectboardList;
-	}
-
+	/*
 	@PostMapping("/insertBoardList")
 	@ResponseBody
 	public int insertBoardList(@RequestBody Map<String, Object> paramMap) throws Exception {
@@ -63,4 +64,5 @@ public class BoardController {
 		int deleteBoardList = boardservice.deleteBoardList(paramMap);
 		return deleteBoardList;
 	}
+	*/
 }

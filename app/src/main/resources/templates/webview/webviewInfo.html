@@ -9,13 +9,38 @@
 </head>
 <body>
 <div class="container-fluid">
-	<div class="row" style="margin-top : 10px;">
-    	<h4 style="font-weight: bold;"><i class="fa-solid fa-display"></i>&nbsp;화면정보</h4>
-    </div>
+	<th:block th:replace="/fragments/viewTitle :: viewTitle('화면정보')"></th:block> <!-- 화면 Title -->
+		<div class="row" style="border:groove; border-radius:10px; padding:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<div class="col-12">
+			    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;목록</span>
+			</div>
+			<div class="col-12" style="text-align:center; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+				<div id="webViewList" ></div>
+			</div>
+		</div>
+		<div class="row" style="border:groove; border-radius:10px; padding:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<div class="col-12">
+			    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;권한</span>
+			</div>
+			<div class="col-12" style="text-align:center; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+				<div id="webviewAuthList"></div>
+			</div>
+		</div>
 </div>
 </body>
 <script type="text/javascript">
+$(function(){
+	selectViewList();
+});
 
+var upload = function(){
+	openModalPop("#fileUploadModal", "/modals/uploadView", {});
+}
+
+var selectViewList = function(){
+	var result = callService("GET", "/webview/selectViewList", false, 'text', {}, true, 0);
+	$("#webViewList").html(result.value);
+}
 </script>
 </th:block>
 </html>

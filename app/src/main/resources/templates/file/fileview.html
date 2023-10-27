@@ -14,16 +14,31 @@
 	    	<h4 style="font-weight: bold;"><i class="fa-regular fa-file"></i>&nbsp;파일관리</h4>
 	    </div>
 	    <div class="row">
-			<div style="margin:5px;">
-	    		<button class="btn btn-primary" type="button" style="float:right;" th:onclick="upload()">파일 Upload(Common)</button>
+			<div style="margin:5px;">				
+	    		<button class="btn btn-primary" type="button" style="float:right; margin:5px;" th:onclick="upload()">파일 Upload(Common)</button>
+	    		<button class="btn btn-info" type="button" style="float:right; margin:5px;" th:onclick="selectFileList();">조회</button>
 	    	</div>
 		</div>
 		<th:block th:replace="/fragments/_modals :: modal('fileUploadModal')">modal</th:block>
+		<div class="row">
+			<div class="table-responsive" id="divFileList">
+				<!-- FileList html bind -->
+			</div>
+		</div>
 	</div>
 </body>
 <script type="text/javascript">
-function upload(){
+$(function(){
+	selectFileList();
+});
+
+var upload = function(){
 	openModalPop("#fileUploadModal", "/modals/uploadView", {});
+}
+
+var selectFileList = function(){
+	var result = callService("GET", "/file/fileList", false, 'text', {}, true, 0);
+	$("#divFileList").html(result.value);
 }
 </script>
 </th:block>

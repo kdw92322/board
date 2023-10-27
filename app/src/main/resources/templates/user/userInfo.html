@@ -24,7 +24,7 @@
 	  		    </ul>
 	    	</div>
 	    </div>
-	    <div class="col-sm-5">
+	    <div class="col-sm-6">
 	  	    <div id="divUserInfo">
 	  	    	
 	  	    </div>
@@ -42,16 +42,9 @@ $(function(){
 });
 
 var selectUserInfo = function(param){
-    $.ajax({
-		url: "/user/selectUserInfo",
-		async: false,
-		type: 'POST',
-		dataType: 'text',
-		data: param
-	}).done(function(data){
-		$("#div_userList").attr('class', 'col-sm-7');
-		$("#divUserInfo").html(data);
-	});
+	var result = callService("POST", "/user/selectUserInfo", false, 'text', param, true, 0);
+	$("#div_userList").attr('class', 'col-sm-6');
+	$("#divUserInfo").html(result.value);
 }
 </script>
 </th:block>

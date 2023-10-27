@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.web.app.board.service.BoardService;
 import com.web.app.calendar.service.CalendarService;
 import com.web.app.calendar.service.CalendarVO;
 
@@ -29,6 +30,9 @@ public class ModalController {
 	
 	@Autowired
 	private CalendarService calendarservice;
+	
+	@Autowired
+	private BoardService boardservice;
 	
 	@GetMapping("modal1")
     public String modal1() {
@@ -80,10 +84,29 @@ public class ModalController {
     	return "/modal/dayInfo";
     }
     
+    //파일업로드 Modal
     @PostMapping("uploadView")
     public String fileUpload(@RequestBody Map<String, Object> fileObj, Model model) {
     	model.addAttribute("ModalTitle", "파일 업로드 Modal");
     	return "/modal/fileupload";
     }
+    
+    @PostMapping("boardModal")
+    public String boardModal(@RequestBody Map<String, Object> paramObj, Model model) throws Exception {
+    	if(paramObj.get("idx") != null) {
+    		Map<String,Object> boardInfo = boardservice.selectboardList(paramObj).get(0);
+    		model.addAttribute("idx", boardInfo.get("idx"));
+    		model.addAttribute("boardNo", boardInfo.get("boardNo"));
+    		model.addAttribute("title", boardInfo.get("title"));
+    		model.addAttribute("content", boardInfo.get("content"));
+    		model.addAttribute("writer", boardInfo.get("writer"));
+    		model.addAttribute("regDate", boardInfo.get("regDate"));
+    		model.addAttribute("uptDate", boardInfo.get("uptDate"));
+    	}
+    	
+    	model.addAttribute("ModalTitle", "게시판");
+    	return "/board/boardModal";
+    }
+    
     
 }

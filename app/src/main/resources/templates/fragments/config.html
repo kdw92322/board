@@ -3,13 +3,19 @@
 <body>
 <th:block th:fragment="config">
 	<meta charset="UTF-8">
-	<!-- Default -->
+	
+	<!-- Custom JavaScript&CSS -->
+	
+	<!-- Default CSS-->
 	<link th:href="@{/css/main.css}" rel="stylesheet" />
+	
+	<!-- Media Query CSS -->
+	<link th:href="@{/css/media.css}" rel="stylesheet" />
 	
 	<!-- JQuery -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	
-	<!-- JQuery datetimepicker -->
+	<!-- JQuery DateTimePicker -->
 	<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.3.2/jquery.datetimepicker.min.css}" integrity="sha512-gBQEG7Lg5A5Lk5BukavrfOY3T4OZGBgHkLnk49iQeGaxc3nnNLgNbPlMmVA3q6iJMk/vPVpdWNWx+llELM78tA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.3.2/jquery.datetimepicker.min.js}" integrity="sha512-fb8aHhY1Ln4M5Vm9XziTcZDpzhxZQnrKOEDXx+kx5iUl1FqDr49blYHwOEqygoCBRK4eztBsLy/2CfAcT/OFcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js}" integrity="sha512-ux1VHIyaPxawuad8d1wr1i9l4mTwukRq5B3s8G3nEmdENnKF5wKfOV6MEUH0k/rNT4mFr/yL+ozoDiwhUQekTg==" crossorigin="anonymous"></script>
@@ -29,27 +35,26 @@
 	<script type="text/javascript" th:src="@{/fontawesome/js/all.min.js}"></script>
 	<link th:href="@{/fontawesome/css/all.min.css}" rel="stylesheet">
 	
-	<!-- apache Echarts -->
+	<!-- APACHE ECHARTS -->
 	<script th:src="@{https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js}"></script>
-	
-	<!-- Custom Javascript -->
-	<script type="text/javascript" th:src="@{/js/swalert.js}"></script>
-	<script type="text/javascript" th:src="@{/js/common.js}"></script>
-	<script type="text/javascript" th:src="@{/js/dataSet.js}"></script>
-		 
-	<!-- Toast Grid -->
-	<link rel="stylesheet" th:href="@{https://uicdn.toast.com/grid/latest/tui-grid.css}" />
-	<script th:src="@{https://uicdn.toast.com/grid/latest/tui-grid.js}"></script>
-	
+
 	<!-- Day.js -->
 	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.8/dayjs.min.js}"></script>
 	
-	<!-- GO.js -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.3.9/go-debug.min.js" integrity="sha512-uFrNqp09n1UXB3dfoAPIQ6Q5Kmod0+hO+1o0ros1lq0OZ4AhrrfjQ+KZT+wJGdEVfTKaAUaqiSl9Vs4PeoAoQg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<!-- FilePond library -->
+	<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+	<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+	<script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+	<script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
+	<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+	<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+  	<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
 	
-	<!-- Dropzone.js -->
-	<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
-	<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+	<!-- Default JS-->
+	<script type="text/javascript" th:src="@{/js/swalert.js}"></script>
+	<script type="text/javascript" th:src="@{/js/common.js}"></script>
+	<script type="text/javascript" th:src="@{/js/dataSet.js}"></script>
+	
 </th:block>
 </body>
 </html>

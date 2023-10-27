@@ -24,18 +24,13 @@ public class HomeController {
 		return mv;
 	}
 	
-	@GetMapping("/test")
+	@GetMapping("test")
 	public String test() {
 		return "test/test";
 	}
 	
-	@GetMapping("test/diagram1")
+	@GetMapping("media")
 	public String testDiagram1() {
-		return "test/diagram1";
-	}
-	
-	@GetMapping("test/diagram2")
-	public String testDiagram2() {
-		return "test/diagram2";
+		return "test/media";
 	}
 }

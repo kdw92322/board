@@ -5,109 +5,60 @@
 	  layout:decorate="~{layout/layout}">
 <th:block layout:fragment="content">
 <head>
-	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Home</title>
-	<style>
-		.wrap-box {
-		  width: 100%;
-		  height:85vh;
-		  background-color:#EFFBFB;
-		  text-align:center;
-		}
-		.calendar-box {
-		    position: relative;
-		    border: none;
-		    display: inline-block;
-		    padding: 15px 30px;
-		    border-radius: 15px;
-		    font-family: "paybooc-Light", sans-serif;
-		    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-		    font-weight: 600;
-		}
-		.w-btn {
-		    /* position: relative; */
-		    border: none;
-		    display: inline-block;
-		    padding: 15px 30px;
-		    border-radius: 15px;
-		    font-family: "paybooc-Light", sans-serif;
-		    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-		    text-decoration: none;
-		    font-weight: 600;
-		    transition: 0.25s;
-		}
-		.w-btn-indigo {
-		    background-color: #58D3F7;
-		    color: #FFFFFF;
-		    width:100%;
-		    height:200px;
-		    margin:5px;
-		    /* text-align:center; */
-		}
-		.w-btn:hover {
-		    letter-spacing: 2px;
-		    transform: scale(1.01);
-		    cursor: pointer;
-		}
-		.w-btn:active {
-		    transform: scale(1.01);
-		}
-		a {
-			text-decoration-line : initial;
-		}
-	</style>	
 </head>
 <body>
 <div class="container-fluid">
-    <div class="row" style="margin-top:10px;">
-    	<h4 style="font-weight: bold;"><i class="fab fa-staylinked"></i>&nbsp;Daily</h4>
-    </div>
-    <div class="row">
+	<!-- 1.Daily Info -->
+    <div class="row" style="border:groove; border-radius:10px; padding:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+        <span class="screenTitle"><i class="fab fa-staylinked"></i>&nbsp;Daily</span>
         <div class="col-md-4">
-          <div class="w-btn w-btn-indigo" style="background-color: #A9E2F3;">
-  			<div>
-  				<h1 style="font-weight: bold;">Day</h1>
-  				&nbsp;
-  				<h3 id="today" style="font-weight: bold;"></h3>
-  			</div>
-  		</div>
-  	</div>
-  	<div class="col-md-4">
-  		<div class="w-btn w-btn-indigo" style="background-color: #81DAF5;">
-  			<div>
-  				<h1 style="font-weight: bold;">Time</h1>
-  				&nbsp;
-  				<h3 id="now" style="font-weight: bold;"></h3>
-  			</div>
-  		</div>
-  	</div>
-  	<div class="col-md-4">
-  		<div class="w-btn w-btn-indigo" style="display:inline-block;">
-  			<div>
-  				<span id="icon"></span>
-  	        </div>
-  	        <div style="display:inline-block;">
-  		        <h4 id="localName" style="font-weight: bold; "></h4>
-  		        <span id="temp" style="display:inline-block;vertical-align: middle;"></span>
-  		        <span id="pressure" style="display:inline-block;vertical-align: middle;"></span>
-  		        <span id="humidity" style="display:inline-block;vertical-align: middle;"></span>
-  		        <span id="windinfo" style="display:inline-block;vertical-align: middle;"></span>
+            <div class="w-btn w-btn-indigo" style="background-color: #A9E2F3;">
+  		  	    <div>
+  		  	    	<p class="w-btn-title">Day <i class="fa-regular fa-calendar"></i></p>
+  		  	    	<p class="w-btn-desc" id="today"></p>
+  		  	    </div>
+  		    </div>
+  	    </div>
+  	    <div class="col-md-4">
+  	    	<div class="w-btn w-btn-indigo" style="background-color: #81DAF5;">
+  	    		<div>
+  	    			<p class="w-btn-title">Time <i class="fa-regular fa-clock"></i></p>
+  	    			<p class="w-btn-desc" id="now"></p>
+  	    		</div>
+  	    	</div>
+  	    </div>
+  	    <div class="col-md-4">
+  	    	<div class="w-btn w-btn-indigo">
+  	    		<div style="width:30%; height:100%; float:left;">
+  	    			<div style="height:40%">
+	  	    			<span class="w-btn-title">Weather <i class="fa-solid fa-temperature-half"></i></span>
+		  	    	</div>
+		  	    	<div style="height:60%; display: flex; justify-content: center; align-items: center;">
+						<span id="icon"></span>
+		  	    	</div>
+		  	    </div>
+		  	    <div style="width:70%; height:100%; float:right;">
+		  	        <div style="display:inline-block;">
+		  	       		<ul id="weatherInfo"></ul>
+	  	    	    </div>
+		  	    </div>
   	        </div>
   	    </div>
-  	</div>
-  	<th:block th:replace="/fragments/_modals :: modal('dayInfoModal')">modal</th:block>
+  		<th:block th:replace="/fragments/_modals :: modal('dayInfoModal')">modal</th:block>
     </div>
-    <div class="row" style="margin-top:30px;">
-    	 <h4 style="font-weight: bold;"><i class="far fa-calendar-alt"></i>&nbsp;Calendar</h4>
+    
+    <!-- 2.Calendar -->
+    <div class="row" style="margin-top:30px; border:groove; border-radius:10px; padding:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+    	<span class="screenTitle"><i class="far fa-calendar-alt"></i>&nbsp;Calendar</span>
+    	<div id="calendar" style="padding:3px; z-index: 1;"></div>
     </div>
-    <div class="row">
-    	 <div id="calendar" style="padding:3px;"></div>
-    </div>
-    <div class="row" style="margin-top:30px;">
-    	 <h4 style="font-weight: bold;"><i class="fa-solid fa-chart-simple"></i>&nbsp;Chart</h4>
-    </div>
-    <div class="row">
-    	<div id="mychart" style="width:100%; height:400px;"></div>
+    
+    <!-- 3.Chart --> 
+    <div class="row" style="margin-top:30px; border:groove; border-radius:10px; padding:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+    	<span class="screenTitle"><i class="fa-solid fa-chart-simple"></i>&nbsp;Chart</span>
+    	<div id="mychart" class="chart" style="height:400px; z-index: 1;"></div>
     </div>
 </div>
 </body>
@@ -133,29 +84,30 @@ $(function(){
 });
 
 var initWeatherInfo = function(info){
-	//지역
-	$("#localName").text(info["name"] + ", " + info.sys["country"]);
-	
 	//날씨 icon
-	var icon_image =  "<img src=https://openweathermap.org/img/wn/" + info["weather"][0]["icon"] + ".png " + "width=80 " + "height=80" + ">";
+	var icon_image =  "<img src=https://openweathermap.org/img/wn/" + info["weather"][0]["icon"] + ".png " + "width=90 " + "height=90" + ">";
 	$("#icon").append(icon_image);
+	
+	var local = "<li class='w-btn-element'>" + "Local : " + info["name"] + ", " + info.sys["country"] + "</li>";
+	$("#weatherInfo").append(local);
+	
+	var temp = "<li class='w-btn-element'>" + "Temp : " + Math.round(info["main"]["temp"]) + "℃" + "</li>";
+	$("#weatherInfo").append(temp);
+	
+	var pressure = "<li class='w-btn-element'>" + "Atmospheric Pressure : " + info["main"]["pressure"] + "hPa" + "</li>";
+	$("#weatherInfo").append(pressure); 
 
-	//기온
-	var temp = "<h6 style='font-weight: bold;'>" + "온도 : " + Math.round(info["main"]["temp"]) + "℃</h6>";
-	$("#temp").append(temp);
+	var humidity = "<li class='w-btn-element'>" + "Humidity : " + info["main"]["humidity"] + "%" + "</li>";
+	$("#weatherInfo").append(humidity);
 	
-	//대기압
-	var pressure = "<h6 style='font-weight: bold;'>" + ", 대기압 : " +info["main"]["pressure"] + "hPa</h6>";
-	$("#pressure").append(pressure); 
+	var Wind_Speed = "<li class='w-btn-element'>" + "Wind Speed : " + info["wind"]["speed"] + "m/s" + "</li>";	
+	$("#weatherInfo").append(Wind_Speed);
 	
-	//습도
-	var humidity = "<h6 style='font-weight: bold;'>" + ", 습도 : " + info["main"]["humidity"] + "%</h6>";
-	$("#humidity").append(humidity);
+	var Wind_Direction = "<li class='w-btn-element'>" + "Wind Direction : " + info["wind"]["deg"] + "도," + "</li>";	
+	$("#weatherInfo").append(Wind_Direction);
 	
-	//wind
-	var windinfo = "풍속 : " + info["wind"]["speed"] + "m/s, 풍향 : " + info["wind"]["deg"] + "도, 돌풍 : " + info["wind"]["gust"] + "m/s"
-	var wind = "<h6 style='font-weight: bold;'>" + windinfo + "</h6>";
-	$("#windinfo").append(wind);
+	var Wind_Flaw = "<li class='w-btn-element'>" + "Wind Flaw : " + info["wind"]["gust"] + "m/s" + "</li>";	
+	$("#weatherInfo").append(Wind_Flaw);
 }
 
 //Today 일자 표시
@@ -206,7 +158,7 @@ var initCalendar = function(){
 		headerToolbar: {
 			left: 'dayGridMonth,timeGridWeek,timeGridDay Add',
 	        center: 'title',	
-		    right: 'today prevYear,prev,next,nextYear'
+		    right: 'today prev next'
 		},
 		locale:'ko',
 		selectable: true,
@@ -225,7 +177,6 @@ var initCalendar = function(){
 				id : info.event.id
 			};
 			openModalPop("#dayInfoModal", "/modals/dayInfo", calendar_param);
-		    
 		},
 		events: selectCalendarList(),
 		customButtons: {
@@ -235,27 +186,15 @@ var initCalendar = function(){
 	            	openModalPop("#dayInfoModal", "/modals/dayInfo", {});
 	            }
 	        }
-	    }
+	    },
+	    themeSystem : 'bootstrap5'
 	});
-
 	calendar.render();
 }
 
 var selectCalendarList = function(){
-	var list = new Array();
-	
-	$.ajax({
-		url: "/calendar/selectCalendarList",
-		async: false,
-		type: 'GET',
-		dataType: 'json',
-		data: {},
-		success: function(data) {
-			list = data;
-		}
-	});
-	
-	return list;
+	var result = callService("GET", "/calendar/selectCalendarList", false, 'json', {}, true, 0);
+	return result.value;
 }
 
 var initGraph = function(){
@@ -292,9 +231,10 @@ var initGraph = function(){
         },
         series: dataList
     };
-    myChart.setOption(option);
+    myChart.setOption({baseOption : option});
 }
 
+//Temp DataList Series 생성
 var makeRandomSeries = function(){
 	var dataListA = makeRandomDataList();
 	var dataListB = makeRandomDataList();
@@ -332,6 +272,10 @@ var makeRandomDataList = function(){
 	}
 	return dataList;
 }
+
+$(window).on('resize', function(){
+    myChart.resize();
+});
 
 </script>
 </th:block>

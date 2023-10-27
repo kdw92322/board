@@ -50,14 +50,12 @@ public class ExceptionHandlingController implements ErrorController{
 			}else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) { // 500 error
 				// 서버에 대한 에러이기 때문에 사용자에게 정보를 제공하지 않는다.
 				rtnPage = ERROR_500_PAGE_PATH;
-			}else if (statusCode == HttpStatus.FORBIDDEN.value() ) { // 403 error
+			}else {
 				// 권한에 대한 에러이기 때문에 사용자에게 정보를 제공하지 않는다.
 				model.addAttribute("code", status.toString());
 				model.addAttribute("msg", "접근 권한이 없습니다.");
 				model.addAttribute("timestamp", new Date());
 				rtnPage = ERROR_ETC_PAGE_PATH;
-			}else {
-				rtnPage =  ERROR_ETC_PAGE_PATH;
 			}
 		}
 		return rtnPage;
