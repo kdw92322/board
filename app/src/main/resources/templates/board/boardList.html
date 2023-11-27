@@ -19,7 +19,7 @@
     	</tr>
     </thead>
     <tbody id="boardTableBody">
-    	<tr th:each="board : ${boardList}" align="center" th:ondblclick="'javascript:onRowClick(\'' + ${board.idx} + '\');'">
+    	<tr th:each="board : ${boardList}" align="center" th:onclick="'javascript:onRowClick(\'' + ${board.idx} + '\');'" th:ondblclick="'javascript:onRowDblClick(\'' + ${board.idx} + '\');'">
 	    	<th scope="row" th:text="${board.idx}" style="display:none;"></th>
 	    	<th scope="row" th:text="${board.boardNo}"></th>
 	    	<td th:text="${board.title}"></td>

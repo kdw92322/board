@@ -7,7 +7,10 @@
   	    </div>
 	    <div class="card-body">
 	        <div class="card-body" style="margin: 0 auto;">
-	      	    <img src="/image/usericon.png" alt="user_image" height="180">
+			    <img th:src="${userform.fileNm} != '-' ? |/upload/files/${userform.fileNm}| : @{/image/usericon.png}" alt="user_image" height="180">
+	      	    <div style="vertical-align: middle; margin-top:10px;">
+	      	    	<button type="button" class="btn btn-secondary btn-sm" th:onclick="userimgupload([[${userform.userId}]]);">...</button>
+	      	    </div>
 		    </div>
 		    <div class="card-body" style="margin: 0 auto;">
 		        <div class="mb-3 row">
@@ -73,7 +76,7 @@
 		            </div>
 		        </div>
 		        <div class="mb-3 row">
-		        	<label for="labeluserRole" class="col-sm-3 col-form-label">Role</label>
+		        	<label for="labeluserRole" class="col-sm-3 col-form-label">권한</label>
 		        	<div class="col-sm-3">
 		        		<select class="form-select form-select-sm" aria-label="" th:field="*{userRole}">
 						    <option value="" selected>선택</option>
@@ -93,6 +96,7 @@
   	    	<small class="text-muted">Last updated 3 mins ago</small>
   	    </div>
     </div>
+    <th:block th:replace="/fragments/_modals :: modal('fileUploadModal')">modal</th:block>
 </form>
 <script type="text/javascript">
 $(function(){
@@ -113,7 +117,16 @@ $(function(){
 });
 
 var deleteUserInfo = function(userId){
-	var result = callService("DELETE", "/user/deleteUserInfo/" + userId, false, 'text', param, true, 0);
+	serviceParam.type = "DELETE";
+	serviceParam.url = "/user/deleteUserInfo/" + userId;
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = {};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
 };
 
 var chkUserInfo = function(){
@@ -139,6 +152,10 @@ var chkUserInfo = function(){
 		swal.close();
 	}, 3000);
 	
+}
+
+var userimgupload = function(userId){
+	openModalPop("#fileUploadModal", "/modals/uploadView", {"refWord" : "USER", "refKey" : userId});
 }
 
 </script>

@@ -159,7 +159,16 @@ var saveDayInfo = function(saveType){
 		saveUrl = "/calendar/deleteCalendarInfo";
 	}
 	
-	var result = callService(ajaxType, saveUrl, false, 'json', JSON.stringify(formdata), true, 0);
+	serviceParam.type = ajaxType;
+	serviceParam.url = saveUrl;
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify(formdata);
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	
 	var restxt = "";
 	if(saveType == "I"){
 		restxt = "저장 되었습니다.";

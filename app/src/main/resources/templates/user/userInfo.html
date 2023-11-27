@@ -42,7 +42,16 @@ $(function(){
 });
 
 var selectUserInfo = function(param){
-	var result = callService("POST", "/user/selectUserInfo", false, 'text', param, true, 0);
+	serviceParam.type = "POST";
+	serviceParam.url = "/user/selectUserInfo";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = param;
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
 	$("#div_userList").attr('class', 'col-sm-6');
 	$("#divUserInfo").html(result.value);
 }

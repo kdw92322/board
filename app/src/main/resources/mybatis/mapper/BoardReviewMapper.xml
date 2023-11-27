@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.web.app.boardreview.service.BoardReviewMapper">
+	<!-- 게시물 댓글 -->
+	<select id="selectreviewList" parameterType="map" resultType="map">
+		select b.idx           as idx 
+			  ,a.rev_no        as parentRevNo
+			  ,a.origin_rev_no as revNo
+			  ,b.login_id      as loginId  
+			  ,b.rev_txt       as revTxt   
+			  ,a.lev           as revLevel 
+			  ,b.rev_link      as revLink  
+			  ,b.cnt_like      as cntLike  
+			  ,b.cnt_hate      as cntHate
+			  ,(select count(*) as cnt from boardreview where parent_rev_no = b.rev_no)   as reviewCnt
+			  ,(select count(*) as cnt from review_like_hate_log where rev_no = b.rev_no and login_id = #{loginId}) as isLikeAndHate
+			  ,date_format(b.reg_date, '%Y-%m-%d %H:%i:%S')                     as regDate  
+			  ,date_format(ifnull(b.upt_date, b.reg_date), '%Y-%m-%d %H:%i:%S') as uptDate
+		  from (
+		  	  select  rev_no as origin_rev_no,
+		  	          case 
+		  	  	      when rev_level = 1 then rev_no  
+		  	  	      else parent_rev_no 
+		  	  	      end as rev_no,
+		  	  	      rev_level as lev
+		  	    from boardreview
+		  ) a 
+		  left outer join boardreview b on a.origin_rev_no = b.rev_no
+		 where 1=1
+		 <if test="idx != '' and idx != null">  
+		   and b.idx = #{idx}
+		 </if>
+		 order by a.rev_no, a.lev
+	</select>
+	
+	<insert id="insertBoardReview" parameterType="map">
+			<selectKey resultType="string" keyProperty="revNo" order="BEFORE">
+		        select concat('rev', lpad(ifnull(max(replace(rev_no,'rev','')),0) + 1, 4,'0')) as revNo
+	  			  from boardreview  
+		    </selectKey>
+			insert into boardreview(
+				 idx      
+				,rev_no
+				,parent_rev_no   
+				,login_id 
+				,rev_txt  
+				,rev_level
+				,rev_link 
+				,cnt_like 
+				,cnt_hate 
+				,reg_date 
+			) values (
+				 #{idx}      
+				,#{revNo}
+				,#{parentRevNo}
+				,#{createdBy} 
+				,trim(#{revTxt})  
+				,IFNULL(#{revLevel},0)
+				,IFNULL(#{revLink},0) 
+				,IFNULL(#{cntLike},0) 
+				,IFNULL(#{cntHate},0) 
+				,now() 
+			);
+	</insert>
+	
+	<update id="updateBoardReview" parameterType="map">
+		update boardreview
+		   set rev_txt = #{revTxt},
+		   	   upt_date = now()
+		 where idx = #{idx}
+		   and rev_no = #{revNo}
+	</update>
+	
+	<update id="updateReviewLike" parameterType="map">
+	  	update boardreview
+		   set cnt_like = #{cntLike}
+		 where idx = #{idx}
+		   and rev_no = #{revNo};
+	</update>
+	
+	<update id="updateReviewHate" parameterType="map">
+		update boardreview
+		   set cnt_hate = #{cntHate}
+		 where idx = #{idx}
+		   and rev_no = #{revNo}
+	</update>
+	
+	<delete id="deleteBoardReview" parameterType="map">
+	  	delete 
+		  from boardreview
+		 where idx = 1
+		   and rev_no in (
+		       select a.rev_no 
+		         from (SELECT rev_no, parent_rev_no FROM boardreview) a
+		        where (a.parent_rev_no = #{revNo} or a.rev_no = #{revNo})
+		   )
+	</delete>
+	
+	<delete id="deleteReviewLog" parameterType="map">
+		delete 
+		  from review_like_hate_log
+		 where rev_no = #{revNo}
+	</delete>
+	
+	<insert id="insertLikeAndHateLog" parameterType="map">
+		insert into review_like_hate_log(
+		    rev_no
+		   ,login_id
+		)values(
+			#{revNo}
+		   ,#{loginId}
+		)
+	</insert>
+	
+</mapper>

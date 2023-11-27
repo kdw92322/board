@@ -7,6 +7,8 @@
 <div class="modal-body">
 	<form id="modalBodyform">
 		<input type="hidden" id="uploadBy" name="uploadBy" th:value="${#authentication.name}">
+		<input type="hidden" id="refWord" name="refWord" th:value="${refWord}">
+		<input type="hidden" id="refKey" name="refKey" th:value="${refKey}">
 		<div class="form-floating mb-3">
 			<div class="row" style="margin-top : 10px; margin-bottom : 10px;">
 		    	<span style="font-weight: bold;"><i class="fa-solid fa-file-import"></i>&nbsp;UploadFiles(최대 5개까지 Upload 가능합니다.)</span>
@@ -20,7 +22,6 @@
 	</form>
 </div>
 <div class="modal-footer" style="background-color: #FBF8EF">
-	<button id="btn_save"   type="button" class="btn btn-primary">저장</button>
     <button id="btn_close"  type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 </div>
 <style>
@@ -85,7 +86,7 @@ $(function(){
 		FilePondPluginImageExifOrientation,
 				
 		// previews dropped images
-		FilePondPluginImagePreview		
+		//FilePondPluginImagePreview		
 	);
 	
 	FilePond.setOptions({
@@ -97,6 +98,8 @@ $(function(){
 	            const request = new XMLHttpRequest();
 	            request.open('POST', 'http://localhost:9000/file/upload', false);
 	            request.setRequestHeader("userId", $("#uploadBy").val());
+	            request.setRequestHeader("refWord", $("#refWord").val());
+	            request.setRequestHeader("refKey", $("#refKey").val());
 	            request.upload.onprogress = (e) => {
 	                progress(e.lengthComputable, e.loaded, e.total);
 	            };
@@ -106,9 +109,12 @@ $(function(){
 	                    load(request.responseText);
 	                    
 	                    swAlert("Success", "파일이 성공적으로 UPLOAD 되었습니다.", "S", "OK");
-	                    
+	                    setTimeout(function(){
+		                    $("#btn_close").click();
+		                    swal.close();
+	                    }, 500);
 	                } else {
-	                    error('oh no');
+	                    error('Error');
 	                    swAlert("Error", "파일 업로드중 에러가 발생하였습니다.", "E", "OK");
 	                }
 	            };
@@ -120,7 +126,6 @@ $(function(){
 	                    abort();
 	                },
 	            };
-	            
 	        },
 	    },
 	});
@@ -136,13 +141,5 @@ $(function(){
 	        return;
 	    }
 	});
-	
-	
-	
 });
-
-$("#btn_save").click(function(){
-	var files = pond.getFiles();
-});
-
 </script>

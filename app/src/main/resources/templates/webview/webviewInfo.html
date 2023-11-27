@@ -38,7 +38,16 @@ var upload = function(){
 }
 
 var selectViewList = function(){
-	var result = callService("GET", "/webview/selectViewList", false, 'text', {}, true, 0);
+	serviceParam.type = "GET";
+	serviceParam.url = "/webview/selectViewList";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = {};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
 	$("#webViewList").html(result.value);
 }
 </script>

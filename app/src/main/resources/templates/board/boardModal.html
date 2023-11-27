@@ -7,6 +7,7 @@
 <div class="modal-body">
 	<form id="modalBodyform">
 		<input type="hidden" id="createdBy" name="createdBy" th:value="${#authentication.name}">
+		<input type="hidden" id="idx" name="idx" th:value="${idx}">
 		<div class="form-floating mb-3">
 			<div class="row g-2">
 			    <div class="col-md">
@@ -70,3 +71,87 @@
 	<button id="btn_delete" type="button" class="btn btn-danger">삭제</button>
     <button id="btn_close"  type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 </div>
+<script type="text/javascript">
+$(function(){
+	var createdBy = $("#createdBy").val();
+	var boardNo = $("#boardNo").val();
+	
+	if(boardNo != "" && boardNo != null && boardNo != undefined){
+		//수정
+		saveUrl = "/board/updateBoardList";
+		type = "PUT";
+	}else{
+		//신규
+		saveUrl = "/board/insertBoardList";
+		type = "POST";
+		$("#writer").val(createdBy);
+	}
+
+	$("#btn_save").on("click", function() {
+		var boardNo = $("#boardNo").val();
+		var saveUrl = "";
+		var type = "";
+		if(boardNo != "" && boardNo != null && boardNo != undefined){
+			//수정
+			saveUrl = "/board/updateBoardList";
+			type = "PUT";
+		}else{
+			//신규
+			saveUrl = "/board/insertBoardList";
+			type = "POST";
+		}
+		var formdata = $("#modalBodyform").serializeObject();
+	
+		serviceParam.type = type;
+		serviceParam.url = saveUrl;
+		serviceParam.async = false;
+		serviceParam.dataType = "json";
+		serviceParam.data = JSON.stringify(formdata);
+		serviceParam.isReturnValue = true;
+		serviceParam.timeout = 0;
+		serviceParam.isLoadingBar = true;
+		var result = callService(serviceParam);
+
+		if(result.Status == "success"){
+			if(type == "POST"){
+				swAlert(result.Status, "게시글이 입력 되었습니다.", "S", "OK");
+			}else{
+				swAlert(result.Status, "게시글이 수정 되었습니다.", "S", "OK");
+			}	
+		}else{
+			swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+		}
+		setTimeout(function(){
+			selectBoardList();
+			swal.close();
+			$("#btn_close").click();
+		}, 500);
+	});
+	
+	$("#btn_delete").on("click", function() {
+		var idx = $("#idx").val();
+		
+		serviceParam.type = "DELETE";
+		serviceParam.url = "/board/deleteBoardList";
+		serviceParam.async = false;
+		serviceParam.dataType = "json";
+		serviceParam.data = JSON.stringify({"idx" : idx});
+		serviceParam.isReturnValue = true;
+		serviceParam.timeout = 0;
+		serviceParam.isLoadingBar = true;
+		var result = callService(serviceParam);
+
+		if(result.Status == "success"){
+			swAlert(result.Status, "게시글이 삭제 되었습니다.", "S", "OK");
+			setTimeout(function(){
+				selectBoardList();
+				swal.close();
+				$("#btn_close").click();
+			}, 1000);
+		}else{
+			swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+			return;
+		}
+	});
+});
+</script>

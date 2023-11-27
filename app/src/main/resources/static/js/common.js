@@ -89,16 +89,41 @@ var DateToStringFormat = function(date){
 }
 
 /*
+    value : serviceParam(Object)
+    desc : Service 호출을 위한 paramObject
+    Default로 우선 setting
+*/
+var serviceParam = {
+	"type" : "",
+	"url" : "",
+	"async" : false,
+	"dataType" : "",
+	"data" : null,
+	"isReturnValue" : false,
+	"timeout" : 0 ,
+	"isLoadingBar" : false
+};
+
+/*
     method : callService
-    parameter : (type, url, async, dataType, data, isReturnValue, timeout)
+    parameter : (type, url, async, dataType, data, isReturnValue, timeout, isLoadingBar)
     desc : Service 호출 function
 */
-var callService = function(type, url, async, dataType, data, isReturnValue, timeout){
+var callService = function(param){
+	var type = param.type;
+	var url = param.url;
+	var async = param.async;
+	var dataType = param.dataType;
+	var data = param.data;
+	var isReturnValue = param.isReturnValue;
+	var timeout = param.timeout;
+	var isLoadingBar = param.isLoadingBar;
+	
 	//Return Object
 	var returnObject = new Object();
 	
 	/* type : GET, POST, PUT, DELETE */
-	if(type == null && url == "" && url == undefined){
+	if(type == null && type == "" && type == undefined){
 		type = type.toUpperCase();
 		console.log("type is null, parameter order : 1");
 		return;
@@ -136,8 +161,14 @@ var callService = function(type, url, async, dataType, data, isReturnValue, time
 	
 	/* 타임아웃 설정 */
 	if(timeout == null && timeout == "" && timeout == undefined){
-		console.log("dataType is null(default : 0), parameter order : 7");
+		console.log("timeout is null(default : 0), parameter order : 7");
 		timeout = 0;//default
+	}
+	
+	/* loading Bar 표시여부 */
+	if(isLoadingBar == null && isLoadingBar == "" && isLoadingBar == undefined){
+		console.log("isLoadingBar is null(default : 0), parameter order : 8");
+		isLoadingBar = false;
 	}
 	
 	let ContentType = 'application/x-www-form-urlencoded; charset=utf-8';
@@ -154,11 +185,15 @@ var callService = function(type, url, async, dataType, data, isReturnValue, time
 		contentType: ContentType,
 		timeout : timeout,
 		beforeSend:function(){
-			$('.layout_loader').show(); // loading bar show
+			if(isLoadingBar){
+				$('.layout_loader').show(); // loading bar show	
+			}
 	    },
 	    complete:function(){
 			setTimeout(() => {
-			    $('.layout_loader').hide(); // loading bar hide
+				if(isLoadingBar){
+					$('.layout_loader').hide(); // loading bar hide	
+				}		
 			}, 1000);
 	    },
 	})
@@ -181,6 +216,11 @@ var callService = function(type, url, async, dataType, data, isReturnValue, time
 		}
 	});
 	
+	//common service Object value 초기화
+	for(let key of Object.keys(serviceParam)){
+		serviceParam[key] = "";
+	}
+
 	return returnObject;
 }
 

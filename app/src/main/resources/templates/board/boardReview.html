@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:each="review : ${reviewList}" style="text-align: center; width:100%;">
+	<div th:style="${review.revLevel == '1' ? 'display: flex; align-items: center; width:100%; text-align:left; margin:10px;' : 'display:none;'}">
+		<div th:class="w2p" style="display: inline-block;">
+			<img src="/image/down-right-arrow.png" alt="down-right-arrow" height="25" style="float:right;">
+	    </div>
+	    <div th:class="w5p" style="text-align:right; display: inline-block; vertical-align: middle;">
+	    	<span th:text="${review.loginId}" style="font-size: 12px; font-weight: bold; font-family: system-ui;"></span>	
+	    </div>
+	    <div th:class="w85p" style="display: flex; justify-content: left; align-items: center; padding-left:5px;">
+			<div style="width:70%;margin-left:5px;">
+				<textarea class="form-control form-control-sm" th:disabled="${review.loginId != #authentication.name} ? 'disabled'" th:id="txt+'_'+${review.revNo}+'_'+'P'" th:name="txt + '_' + ${review.revNo} + '_' + ${review.revLevel}" th:text="${review.revTxt}" rows="1" style="resize: none;"></textarea>
+			</div>
+			<div style="width:10%; display: flex; justify-content: center; align-items: center;">
+				<button type="button" class="btn btn-dark btn-sm" th:disabled="${review.loginId != #authentication.name} ? 'disabled'" th:onclick="javascript:updateReview([[${review.idx}]], [[${review.revNo}]], 'P')" style="margin-left:1px;"><i class="fa-solid fa-check"></i></button>
+				<button type="button" class="btn btn-dark btn-sm" th:disabled="${review.loginId != #authentication.name} ? 'disabled'" th:onclick="javascript:deleteReview([[${review.idx}]], [[${review.revNo}]], 'P')" style="margin-left:1px;"><i class="fa-solid fa-xmark"></i></button>
+			</div>
+			<div style="width:5%;">
+				<button type="button" class="btn btn-dark btn-sm" th:disabled="${review.isLikeAndHate != 0} ? 'disabled'" th:onclick="javascript:updateReviewLike([[${review.idx}]], [[${review.revNo}]])" style="margin-left:2px;" data-bs-toggle="tooltip" data-bs-placement="top" title="Like"><i class="fa-regular fa-thumbs-up"></i></button>
+				<span th:id="cntLike + '_'  + ${review.revNo}" th:text="${review.cntLike}" style="font-size: 12px; font-weight: bold; font-family: system-ui;"></span>
+			</div>
+			<div style="width:5%;">
+				<button type="button" class="btn btn-dark btn-sm" th:disabled="${review.isLikeAndHate != 0} ? 'disabled'" th:onclick="javascript:updateReviewHate([[${review.idx}]], [[${review.revNo}]])" style="margin-left:2px;" data-bs-toggle="tooltip" data-bs-placement="top" title="Hate"><i class="fa-regular fa-thumbs-down"></i></button>
+				<span th:id="cntHate + '_'  + ${review.revNo}" th:text="${review.cntHate}" style="font-size: 12px; font-weight: bold; font-family: system-ui;"></span>
+			</div>
+			<div style="width:5%;">
+				<button type="button" class="btn btn-info btn-sm" th:onclick="javascript:addReview([[${review.idx}]], [[${review.revNo}]], [[${review.revLevel}]])" style="margin-left:2px;">댓글</button>
+				<span th:id="cntRev + '_'  + ${review.revNo}" th:text="${review.reviewCnt}" style="font-size: 12px; font-weight: bold; font-family: system-ui;"></span>
+			</div>
+	    </div>
+	    <div th:class="w8p" style="display: inline-block;">
+	    	<div style="vertical-align: middle;">
+				<span th:text="${review.uptDate}" style="font-size: 14px; font-weight: bold; font-family: system-ui;"></span>
+			</div>
+	    </div>
+	</div>
+	<div th:style="${review.revLevel != '1' ? 'display: flex; align-items: center; width:100%; text-align:left; margin:10px;' : 'display:none;'}">
+	    <div th:class="w2p" style="display: inline-block;">
+	    	
+	    </div>
+	    <div th:class="w3p" style="display: inline-block;">
+	    	<img src="/image/down-right-arrow.png" alt="down-right-arrow" height="25" style="float:right;">
+	    </div>
+	    <div th:class="w2p" style="text-align:right; display: inline-block;">
+	    	<span th:text="${review.loginId}" style="font-size: 10px; font-weight: bold; font-family: system-ui;"></span>	
+	    </div>
+	    <div th:class="w85p" style="display: flex; justify-content: left; align-items: center; padding-left:5px;">
+			<div style="width:70%;margin-left:5px;">
+				<textarea class="form-control form-control-sm" th:disabled="${review.loginId != #authentication.name} ? 'disabled'" th:id="txt+'_'+${review.revNo}+'_'+'C'" th:name="txt + '_' + ${review.revNo} + '_' + ${review.revLevel}" th:text="${review.revTxt}" rows="1" style="resize: none;"></textarea>
+			</div>
+			<div style="width:10%; display: flex; justify-content: center; align-items: center;">
+				<button type="button" class="btn btn-dark btn-sm" th:disabled="${review.loginId != #authentication.name} ? 'disabled'" th:onclick="javascript:updateReview([[${review.idx}]], [[${review.revNo}]], 'C')" style="margin-left:1px;"><i class="fa-solid fa-check"></i></button>
+				<button type="button" class="btn btn-dark btn-sm" th:disabled="${review.loginId != #authentication.name} ? 'disabled'" th:onclick="javascript:deleteReview([[${review.idx}]], [[${review.revNo}]], 'C')" style="margin-left:1px;"><i class="fa-solid fa-xmark"></i></button>
+			</div>
+			<div style="width:5%;">
+				<button type="button" class="btn btn-dark btn-sm" th:disabled="${review.isLikeAndHate != 0} ? 'disabled'" th:onclick="javascript:updateReviewLike([[${review.idx}]], [[${review.revNo}]])" style="margin-left:2px;"><i class="fa-regular fa-thumbs-up"></i></button>
+				<span th:id="cntLike + '_'  + ${review.revNo}" th:text="${review.cntLike}" style="font-size: 12px; font-weight: bold; font-family: system-ui;"></span>
+			</div>
+			<div style="width:5%;">
+				<button type="button" class="btn btn-dark btn-sm" th:disabled="${review.isLikeAndHate != 0} ? 'disabled'" th:onclick="javascript:updateReviewHate([[${review.idx}]], [[${review.revNo}]])" style="margin-left:2px;"><i class="fa-regular fa-thumbs-down"></i></button>
+				<span th:id="cntHate + '_'  + ${review.revNo}" th:text="${review.cntHate}" style="font-size: 12px; font-weight: bold; font-family: system-ui;"></span>
+			</div>
+			<!-- 
+			<div style="width:10%; vertical-align: middle;">
+				<span th:text="${review.uptDate}" style="font-size: 14px; font-weight: bold; font-family: system-ui;"></span>
+			</div>
+			 -->
+	    </div>
+	    <div th:class="w8p" style="display: inline-block;">
+	    	<div style="vertical-align: middle;">
+				<span th:text="${review.uptDate}" style="font-size: 14px; font-weight: bold; font-family: system-ui;"></span>
+			</div>
+	    </div>
+	</div>
+</div>
+</html>

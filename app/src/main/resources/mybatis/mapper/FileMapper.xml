@@ -34,6 +34,8 @@
 			,size
 			,uploadBy
 			,uploadDt
+			,refWord
+			,refKey
 		) values (
 			 #{uuid}
 			,#{content}
@@ -44,6 +46,14 @@
 			,#{size}
 			,#{uploadBy}
 			,sysdate()
+			,#{refWord}
+			,#{refKey}
 		)
 	</insert>
+	
+	<delete id="delete" parameterType="map">
+		delete 
+		  from tb_file_mng
+		 where uuid = #{uuid} 
+	</delete>
 </mapper>

@@ -39,6 +39,7 @@ public class UserForm {
     private String phoneNum2;
     
     private String userRole;
+    private String fileNm;
     
     private Date joinDate;
     private Date uptDt;

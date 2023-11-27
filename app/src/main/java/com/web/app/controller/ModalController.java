@@ -87,10 +87,13 @@ public class ModalController {
     //파일업로드 Modal
     @PostMapping("uploadView")
     public String fileUpload(@RequestBody Map<String, Object> fileObj, Model model) {
+    	model.addAttribute("refWord", fileObj.get("refWord"));
+    	model.addAttribute("refKey", fileObj.get("refKey"));
     	model.addAttribute("ModalTitle", "파일 업로드 Modal");
     	return "/modal/fileupload";
     }
     
+    //게시물 작성 Modal
     @PostMapping("boardModal")
     public String boardModal(@RequestBody Map<String, Object> paramObj, Model model) throws Exception {
     	if(paramObj.get("idx") != null) {
@@ -104,9 +107,27 @@ public class ModalController {
     		model.addAttribute("uptDate", boardInfo.get("uptDate"));
     	}
     	
-    	model.addAttribute("ModalTitle", "게시판");
+    	model.addAttribute("ModalTitle", "게시글 정보");
     	return "/board/boardModal";
     }
+    
+    //게시물 댓글 작성 Modal
+    @PostMapping("boardReviewModal")
+    public String boardReviewModal(@RequestBody Map<String, Object> paramObj, Model model) throws Exception {
+    	System.out.println("paramObj : " + paramObj);
+    	
+    	List<Map<String,Object>> selectboardList = boardservice.selectboardList(paramObj);
+    	Map<String,Object> boardInfo = selectboardList.get(0);
+    	String boardNo = String.valueOf(boardInfo.get("boardNo"));
+    	model.addAttribute("ModalTitle", "댓글");
+    	model.addAttribute("boardNo", boardNo);
+    	model.addAttribute("revLevel", String.valueOf(paramObj.get("revLevel")));
+    	model.addAttribute("idx", String.valueOf(paramObj.get("idx")));
+    	model.addAttribute("parentRevNo", String.valueOf(paramObj.get("parentRevNo")));
+    	
+    	return "/board/boardReviewModal";
+    }
+    
     
     
 }

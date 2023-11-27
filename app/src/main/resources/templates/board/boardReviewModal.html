@@ -1,0 +1,83 @@
+<div class="modal-header" style="background-color: #DCD776">
+    <h5 class="modal-title" th:text="${ModalTitle}" id="modalTitle"></h5>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+	<form id="modalBodyform">
+		<input type="hidden" id="idx" name="idx" th:value="${idx}">
+		<input type="hidden" id="revLevel" name="revLevel" th:value="${revLevel}">
+		<input type="hidden" id="parentRevNo" name="parentRevNo" th:value="${parentRevNo}">
+		<input type="hidden" id="createdBy" name="createdBy" th:value="${#authentication.name}">
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" id="boardNo" name="boardNo" type="text" th:value="${boardNo}" readonly>
+			            <label for="f_boardNo">게시글번호</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <textarea class="form-control" id="revTxt" name="revTxt" style="resize: none; height: 200px"></textarea>
+		    			<label for="txt_revTxt">내용</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer" style="background-color: #FBF8EF">
+	<button id="btn_save" type="button" class="btn btn-primary" th:onclick="insertBoardReview();">저장</button>
+    <button id="btn_close" type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+</div>
+<body>
+<script type="text/javascript">
+
+var insertBoardReview = function(){
+	var revLevel = $("#revLevel").val();
+	var boardNo = $("#boardNo").val();
+	var revTxt = $("#revTxt").val();
+	var idx = $("#idx").val();
+	var parentRevNo = $("#parentRevNo").val();
+	var createdBy = $("#createdBy").val();
+	
+	var saveMap = {
+		"revLevel" : revLevel,
+		"boardNo" : boardNo,
+		"revTxt" : revTxt,
+		"idx" : idx,
+		"parentRevNo" : parentRevNo,
+		"createdBy" : createdBy
+	};
+
+	serviceParam.type = "POST";
+	serviceParam.url = "/boardReview/insertBoardReview";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify(saveMap);
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	if(result.Status == "success"){
+		swAlert(result.Status, "댓글이 입력되었습니다.", "I", "OK");
+	}else{
+		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+	}
+	setTimeout(function(){	
+		swal.close();
+		onRowClick(idx);
+		$("#btn_close").click();
+	}, 500);
+	
+}
+
+
+</script>
+</body>

@@ -30,20 +30,23 @@
 	</select>
 	
 	<insert id="insertBoardList" parameterType="map">
-		<selectKey resultType="string" keyProperty="boardNo" order="BEFORE">
-	        select concat('B',lpad(ifnull(max(idx),1),4,'0'))  as boardNo
-  			  from simpleboard       
+		<selectKey keyColumn="idx,boardNo" keyProperty="idx,boardNo" resultType="hashmap" order="BEFORE">
+	       select concat('B', lpad(ifnull(max(idx),0)+1, 4, '0')) as boardNo, 
+	       		  ifnull(max(idx),0) + 1 as idx 
+	       	 from simpleboard    
 	    </selectKey> 
 		insert simpleboard(
+			idx,
 			title,
 			content,
 			board_no,
             writer,
             reg_date
 		) values (
+			#{idx},
 			#{title},
 			#{content},
-			#{boardNo},
+			#{boardNo}, 
             #{writer},
             sysdate()
 		)
@@ -53,7 +56,6 @@
 		update simpleboard
 		   set title = #{title},
 			   content = #{content},
-           	   writer = #{writer},
            	   upt_date = sysdate()
 		 where idx = #{idx}   
 	</update>

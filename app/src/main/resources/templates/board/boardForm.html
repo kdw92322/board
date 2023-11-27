@@ -64,29 +64,54 @@
 		<div class="col-12">
 		    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;목록</span>
 	    </div>
-	    <div class="col-12" style="text-align:center; max-height:25vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
-			<div id="divBoardList"></div>
+	    <div class="col-12" style="text-align:center; height:25vh; max-height:25vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+			<div id="divBoardList">
+				<span></span>
+			</div>
 		</div>
 	</div>
 	
 	<div class="row" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
 		<div class="col-12">
-		    <span style="font-weight: bold;"><i class="fa-regular fa-comment"></i>&nbsp;댓글</span>
+		    <span style="font-weight: bold;"><i class="fa-solid fa-comments"></i>&nbsp;댓글</span>
+		    <div style="float:right;">
+				<button type="button" class="btn btn-info" th:onclick="addNewReview();" style="margin-left:2px;"><i class="fa-solid fa-plus"></i></button>
+		    </div>
+	    </div>
+		<div class="col-12" style="text-align:center; height:28vh; max-height:28vh; overflow-y: auto; overflow-x: auto;">
+		    <div id="divReviewList" style="width:100%;"></div>
 	    </div>
 	</div>
 	
-	<th:block th:replace="/fragments/_modals :: modal('boardModal')">modal</th:block>
+	<th:block th:replace="/fragments/_modals :: modal('boardModal')">boardModal</th:block>
+	<th:block th:replace="/fragments/_modals :: modal('boardReviewModal')">boardReviewModal</th:block>
 </div>
 	  	
 </body>
 <script type="text/javascript">
+var rowIndex;
 $(function(){
 	selectBoardList();
 });
 
-
 var selectBoardList = function(){
-	var list = callService("GET", "/board/BoardList", false, 'text', {}, true, 0);
+	
+	var param = {
+		 sch_title   : $("#sch_title").val()  
+		,sch_content : $("#sch_content").val()
+		,sch_writer  : $("#sch_writer").val() 
+		,sch_regDate : $("#sch_regDate").val()
+	}
+	
+	serviceParam.type = "GET";
+	serviceParam.url = "/board/boardList";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = param;
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var list = callService(serviceParam);
 	$("#divBoardList").html(list.value);
 }
 	
@@ -94,8 +119,126 @@ var boardModal = function(){
 	openModalPop("#boardModal", "/modals/boardModal", {"type" : 'I'});
 }
 
-var onRowClick = function(idx){
+var onRowDblClick = function(idx){
 	openModalPop("#boardModal", "/modals/boardModal", {"type" : 'U', "idx" : idx});
+}
+
+//게시판 글 클릭시 댓글목록 조회
+var onRowClick = function(idx){
+	rowIndex = idx;
+	serviceParam.type = "GET";
+	serviceParam.url = "/boardReview/selectreviewList";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = {"idx" : idx};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var list = callService(serviceParam);
+	$("#divReviewList").html(list.value);
+}
+
+/* 
+ * 댓글관련 function
+ */
+var addNewReview = function(){
+	if(rowIndex == undefined){
+		swAlert("", "댓글을 작성할 게시물을 선택하세요.", "I", "OK");
+		return;
+	}
+	openModalPop("#boardReviewModal", "/modals/boardReviewModal", {"idx": rowIndex, "parentRevNo" : 0, "revLevel" : 1});
+}
+ 
+//댓글추가
+var addReview = function(index, revNo, revLevel){
+	revLevel = Number(revLevel) + 1;
+	openModalPop("#boardReviewModal", "/modals/boardReviewModal", {"idx": rowIndex, "parentRevNo" : revNo, "revLevel" : revLevel});
+}
+
+var updateReview = function(idx, revNo, revLevel){
+	var id = "#txt_" + revNo + "_"+revLevel;
+	var revTxt = $(id).val();
+	
+	var saveMap = {
+		"idx" : idx,
+		"revNo" : revNo,
+		"revTxt" : revTxt
+ 	};
+	
+	serviceParam.type = "PUT";
+	serviceParam.url = "/boardReview/updateBoardReview";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify(saveMap);
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	onRowClick(idx);
+}
+
+var deleteReview = function(idx, revNo, revLevel){
+	var saveMap = {
+		"idx" : idx,
+		"revNo" : revNo
+	};
+	serviceParam.type = "DELETE";
+	serviceParam.url = "/boardReview/deleteBoardReview";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify(saveMap);
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	onRowClick(idx);
+}
+
+//Like Count 증가
+var updateReviewLike = function(idx, revNo){
+	var cnt = Number($("#cntLike_" + revNo).text());
+	$("#cntLike_" + revNo).text(cnt + 1);
+	serviceParam.type = "PUT";
+	serviceParam.url = "/boardReview/updateReviewLike";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify({"idx" : idx, "revNo" : revNo, "cntLike" : cnt + 1});
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	insertLikeAndHateLog(revNo);
+	onRowClick(idx);
+}
+
+//Hate Count 증가
+var updateReviewHate = function(idx, revNo){
+	var cnt = Number($("#cntHate_" + revNo).text());
+	$("#cntHate_" + revNo).text(cnt + 1);
+	serviceParam.type = "PUT";
+	serviceParam.url = "/boardReview/updateReviewHate";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify({"idx" : idx, "revNo" : revNo, "cntHate" : cnt + 1});
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	insertLikeAndHateLog(revNo);
+	onRowClick(idx);
+}
+
+//Like & Hate Log
+var insertLikeAndHateLog = function(revNo){
+	serviceParam.type = "POST";
+	serviceParam.url = "/boardReview/insertLikeAndHateLog";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify({"revNo" : revNo});
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
 }
 
 </script>

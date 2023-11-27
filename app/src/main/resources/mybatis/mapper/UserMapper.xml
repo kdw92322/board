@@ -18,22 +18,25 @@
 	</select>
 	
 	<select id="selectUserInfo" resultType="com.web.app.user.UserForm">
-		select user_id                       as userId
-			  ,username                      as username	
-			  ,SUBSTRING_INDEX(email,'@',1)  as emailId
-              ,concat('@', SUBSTRING_INDEX(email,'@',-1)) as emailAddr
-              ,concat('@', SUBSTRING_INDEX(email,'@',-1)) as txtEmailAddr
-			  ,SUBSTR(birth,1,4)             as year
-              ,SUBSTR(birth,5,2)             as month
-              ,SUBSTR(birth,7,2)             as day
-              ,SUBSTR(phone,1,3)             as serial
-              ,SUBSTR(phone,4,4)             as phoneNum1
-              ,SUBSTR(phone,8,4)             as phoneNum2
-			  ,join_date                     as joinDate
-			  ,user_role                     as userRole
-			  ,upt_dt                        as uptDt
-			  ,convert(ifnull(DATEDIFF(sysdate(), upt_dt), 0), char) as lastupdatediff
-		  from user_info
+		select a.user_id                       as userId
+			  ,a.username                      as username	
+			  ,SUBSTRING_INDEX(a.email,'@',1)  as emailId
+              ,concat('@', SUBSTRING_INDEX(a.email,'@',-1)) as emailAddr
+              ,concat('@', SUBSTRING_INDEX(a.email,'@',-1)) as txtEmailAddr
+			  ,SUBSTR(a.birth,1,4)             as year
+              ,SUBSTR(a.birth,5,2)             as month
+              ,SUBSTR(a.birth,7,2)             as day
+              ,SUBSTR(a.phone,1,3)             as serial
+              ,SUBSTR(a.phone,4,4)             as phoneNum1
+              ,SUBSTR(a.phone,8,4)             as phoneNum2
+			  ,a.join_date                     as joinDate
+			  ,a.user_role                     as userRole
+			  ,a.upt_dt                        as uptDt
+			  ,convert(ifnull(DATEDIFF(sysdate(), a.upt_dt), 0), char) as lastupdatediff
+			  ,ifnull(b.storedFileNm,'-') as fileNm
+		  from user_info a
+		  left outer join tb_file_mng b on a.user_id = b.refKey
+		  							   and b.refWord = 'USER'		
 		 where 1=1
 		 <if test="userId != '' and userId != null">
 		   and user_id = #{userId}
@@ -56,4 +59,22 @@
 		  from user_info
 		 where user_id = #{id}   
 	</delete>
+	
+	<insert id="saveLoginUserLog" parameterType="map">
+		insert into user_connect_log_history(
+			 ID
+			,LOG_TYPE
+			,IP
+			,HOSTNAME
+			,CONNECT_DT
+		)values(
+			 #{loginId} 
+			,'LOGIN'
+			,#{ip}
+			,#{HostName}
+			,sysdate()
+		)
+	</insert>
+	
+	
 </mapper>

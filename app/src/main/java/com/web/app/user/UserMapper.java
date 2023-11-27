@@ -14,4 +14,7 @@ public interface UserMapper {
 	int updateUserList(Map<String, Object> paramMap);
 	
 	int deleteUserList(Map<String, Object> paramMap);
+	
+	//접속시마다 로그인 이력 저장
+	int saveLoginUserLog(Map<String,Object> saveMap);
 }

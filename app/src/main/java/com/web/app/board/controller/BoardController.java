@@ -24,43 +24,51 @@ public class BoardController {
 	@Autowired
 	private BoardService boardservice;
 	
+	/* 게시판 */
 	@GetMapping("/boardForm")
-	public String boardList() {
+	public String boardForm() {
 		return "board/boardForm";
 	}
 	
-	@GetMapping("/BoardList")
-	public String boardList(Model model) throws Exception {
-		List<Map<String, Object>> boardList = boardservice.selectboardList(null);
+	/* 게시물 목록 조회 */
+	@GetMapping("/boardList")
+	public String boardList(@RequestParam Map<String, Object> paramMap, Model model) throws Exception {
+		List<Map<String, Object>> boardList = boardservice.selectboardList(paramMap);
 		model.addAttribute("boardList", boardList);
 		return "board/boardList";
 	}
 	
+	/* 1. 조회 */
 	@GetMapping("/selectBoardList")
 	@ResponseBody
-	public List<Map<String, Object>> selectboardList(@RequestParam Map<String, Object> paramMap, Model model) throws Exception {
+	public List<Map<String, Object>> selectboardList(Map<String, Object> paramMap, Model model) throws Exception {
 		List<Map<String, Object>> selectboardList = boardservice.selectboardList(paramMap);
 		return selectboardList;
 	}
-
+	
+	/* 2. 저장 */
 	@PostMapping("/insertBoardList")
 	@ResponseBody
-	public int insertBoardList(@RequestBody Map<String, Object> paramMap) throws Exception {
-		int insertBoardList = boardservice.insertBoardList(paramMap);
-		return insertBoardList;
+	public Map<String, Object> insertBoardList(@RequestBody Map<String, Object> saveMap) throws Exception {
+		int result = boardservice.insertBoardList(saveMap);
+		saveMap.put("rtnCnt", result);
+		return saveMap;
 	}
 	
+	/* 3. 수정 */
 	@PutMapping("/updateBoardList")
 	@ResponseBody
-	public int updateBoardList(@RequestBody Map<String, Object> paramMap) throws Exception {
-		int updateBoardList = boardservice.updateBoardList(paramMap);
-		return updateBoardList;
+	public Map<String, Object> updateBoardList(@RequestBody Map<String, Object> saveMap) throws Exception {
+		int result = boardservice.updateBoardList(saveMap);
+		saveMap.put("rtnCnt", result);
+		return saveMap;
 	}
 	
+	/* 4. 삭제 */
 	@DeleteMapping("/deleteBoardList")
 	@ResponseBody
 	public int deleteBoardList(@RequestBody Map<String, Object> paramMap) throws Exception {
-		int deleteBoardList = boardservice.deleteBoardList(paramMap);
-		return deleteBoardList;
+		int result = boardservice.deleteBoardList(paramMap);
+		return result;
 	}
 }

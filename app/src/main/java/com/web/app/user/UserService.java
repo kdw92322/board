@@ -1,6 +1,7 @@
 package com.web.app.user;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -80,5 +81,9 @@ public class UserService {
     public int delete(String userId) {
     	System.out.println("userId : " + userId);
 		return 0;
+    }
+    
+    public int saveUserConnectLog(Map<String,Object> saveMap) {
+		return usermapper.saveLoginUserLog(saveMap);
     }
 }

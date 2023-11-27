@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -14,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class UserSecurityService implements UserDetailsService{
 	private final UserRepository userRepository;
 	
@@ -38,7 +39,7 @@ public class UserSecurityService implements UserDetailsService{
         }else {
         	authorities.add(new SimpleGrantedAuthority(UserRole.GUEST.getValue()));
         }
-        
+
         return new User(userInfo.getUserId(), userInfo.getPassword(), authorities);
     }
 }

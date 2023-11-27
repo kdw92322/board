@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <style>
+/* 
 	#viewTableBody tr:hover{
 		cursor: pointer; 
 		background: #E6E6E6;
 	}
-</style>
+	
+ */
+ </style>
 <table class="table table-bordered">
     <thead class="table-dark">
     	<tr align="center">
@@ -42,7 +45,16 @@
 </table>
 <script type="text/javascript">
 var onRowClick = function(viewcode){
-	var result = callService("GET", "/webview/selectViewAuthList", false, 'text', {"viewcode" : viewcode}, true, 0);
+	serviceParam.type = "GET";
+	serviceParam.url = "/webview/selectViewAuthList";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = {"viewcode" : viewcode};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
 	$("#webviewAuthList").html(result.value);
 	
 }

@@ -1,5 +1,6 @@
 package com.web.app.user;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.web.app.util.DefaultDataUtil;
 
@@ -76,6 +78,13 @@ public class UserController {
     public String login() {
         return "login_form";
     }
+    
+    @GetMapping("/logoutProcess")
+    public String logout(Principal principal) {
+        System.out.println("로그아웃 테스트 : ");
+    	return "logout_form";
+    }
+    
     
     @GetMapping("/userInfo")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

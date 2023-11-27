@@ -22,7 +22,7 @@ public class FileService {
 		
 	}
 	
-	public void save(List<MultipartFile> files, String uploadPath, String userId) {
+	public void save(List<MultipartFile> files, String uploadPath, String userId, String refWord, String refKey) {
 		Map<String, Object> saveFileInfo = new HashMap<String, Object>();
 		
 		for (int i=0; i<files.size(); i++) {
@@ -45,6 +45,8 @@ public class FileService {
 			saveFileInfo.put("filePath", fullFileName);
 			saveFileInfo.put("size", size);
 			saveFileInfo.put("uploadBy", userId);
+			saveFileInfo.put("refWord", refWord);
+			saveFileInfo.put("refKey", refKey);
 			
 			//Table에 file정보 insert
 			try {
@@ -67,7 +69,7 @@ public class FileService {
 		}
 	}
 	
-	public void delete() {
-		System.out.println("delete");
+	public int delete(Map<String, Object> paramMap) {
+		return filemapper.delete(paramMap);
 	}
 }

@@ -193,7 +193,16 @@ var initCalendar = function(){
 }
 
 var selectCalendarList = function(){
-	var result = callService("GET", "/calendar/selectCalendarList", false, 'json', {}, true, 0);
+	serviceParam.type = "GET";
+	serviceParam.url = "/calendar/selectCalendarList";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = {};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
 	return result.value;
 }
 

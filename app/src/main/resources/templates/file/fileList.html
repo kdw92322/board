@@ -1,38 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<table class="table table-bordered">
+<table class="table table-bordered" id="fileTableGrid">
     <thead class="table-dark">
     	<tr align="center">
-    		<th width="10%">번호</th>
-    		<th width="18%">파일이름</th>
-    		<th width="18%">확장자</th>
-    		<th width="18%">크기(KB)</th>
-    		<th width="18%">BY</th>
-    		<th width="18%">업로드 일자</th>
+    		<th id="rowNum" width="5%">번호</th>
+    		<th id="fileNm" width="18%">파일이름</th>
+    		<th id="fileExt" width="18%">확장자</th>
+    		<th id="fileSize" width="18%">크기(KB)</th>
+    		<th id="uptBy" width="18%">BY</th>
+    		<th id="uptDt" width="10%">업로드 일자</th>
+    		<th id="deleteBtn" width="8%">업로드 일자</th>
     	</tr>
     </thead>
     <tbody>
     	<tr th:each="FileVo : ${fileList}" align="center">
 	    	<th scope="row" th:text="${FileVo.rownum}"></th>
-	    	<td><a th:href="@{/file/download(uuid=${FileVo.uuid})}" th:text="${FileVo.originName}" style="text-decoration:none; color:inherit; font-weight:bold;"></a></td>
+	    	<td><a th:href="@{/file/download/{uuid}(uuid = ${FileVo.uuid})}" th:text="${FileVo.originName}" style="text-decoration:none; color:inherit; font-weight:bold; cursor : pointer;"></a></td>
 	    	<td th:text="${FileVo.fileExt}"></td>
 	    	<td th:text="${FileVo.size}"></td>
 	    	<td th:text="${FileVo.uploadBy}"></td>
 	    	<td th:text="${FileVo.uploadDt}"></td>
+	    	<td><button class="btn btn-danger btn-sm" type="button" style="margin:5px;" th:onclick="deleteFile([[${FileVo.uuid}]]);">삭제</button></td>
 	    </tr>
     </tbody>
 </table>
 <script type="text/javascript">
-	$(function(){
-		const urlParams = new URL(location.href).searchParams;
-		const result = urlParams.get('result');
-		const msg = urlParams.get('msg');
-		
-		if(result != null && msg != null){
-			swAlert(result, msg, "E", "OK");
-			return;
-		}
-	});
+$(function(){
+	const urlParams = new URL(location.href).searchParams;
+	const result = urlParams.get('result');
+	const msg = urlParams.get('msg');
+	
+	if(result != null && msg != null){
+		swAlert(result, msg, "E", "OK");
+		return;
+	}
+	
+	/*
+	$('input[type=checkbox][name=rowChk]').change(function() {
+        console.log($(this).is(':checked'));
+        console.log($(this));
+		if ($(this).is(':checked')) {
+            alert($(this).is(':checked') + ' is checked');
+        }
+        else {
+            alert($(this).is(':checked') + ' is unchecked');
+        }
+    });
+	*/
+});
+
 </script>
 </html>
 
