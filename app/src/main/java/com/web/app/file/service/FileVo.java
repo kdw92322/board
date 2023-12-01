@@ -16,6 +16,8 @@ public class FileVo {
 	private String storedFileNm;
 	private String filePath;
 	private int size;
+	private String refWord;
+	private String refKey;
 	private String uploadBy;
 	private Date uploadDt;
 }

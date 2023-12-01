@@ -1,14 +1,21 @@
 package com.web.app.user;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.web.app.file.service.FileService;
+import com.web.app.file.service.FileVo;
+import com.web.app.security.CustomSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,9 +25,14 @@ public class UserService {
 	@Autowired
 	private UserMapper usermapper;
 	
+	@Autowired
+	private FileService fileservice;
+	
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-
+	
+	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+	
     public UserInfo create(UserForm userform) {
     	UserInfo user = new UserInfo();
     	user.setUserId(userform.getUserId());
@@ -41,7 +53,9 @@ public class UserService {
         String phone = userform.getSerial() + userform.getPhoneNum1() + userform.getPassword2();
         user.setPhone(phone);
         
-        user.setJoinDate(userform.getJoinDate());
+        Date nowDate = new Date();
+        user.setJoinDate(nowDate);
+        user.setUserRole(UserRole.GUEST.getValue());
         this.userRepository.save(user);
         return user;
     }
@@ -78,12 +92,27 @@ public class UserService {
     	});
     }
     
-    public int delete(String userId) {
-    	System.out.println("userId : " + userId);
-		return 0;
+    public int delete(Map<String, Object> paramMap) {
+    	//첨부파일 제거
+    	List<FileVo> fileList = fileservice.selectfilelist(paramMap);
+    	if(fileList.size() == 1) {
+    		FileVo filevo = fileList.get(0);
+    		paramMap.put("uuid", String.valueOf(filevo.getUuid()));  
+    	}else {
+    		LOG.info("첨부사진 없음");
+    	}
+    	LOG.info("parameter ==============>", paramMap);
+    	fileservice.delete(paramMap);
+    	return usermapper.deleteUser(paramMap);
     }
     
-    public int saveUserConnectLog(Map<String,Object> saveMap) {
-		return usermapper.saveLoginUserLog(saveMap);
+    public int saveUserLog(Map<String,Object> saveMap) {
+		return usermapper.saveUserLog(saveMap);
     }
+    
+    public List<Map<String, Object>> getConnUserLogData(Map<String,Object> paramMap){
+		return usermapper.getConnUserLogData(paramMap);
+    }
+    
+    
 }

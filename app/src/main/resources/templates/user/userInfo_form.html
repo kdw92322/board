@@ -127,6 +127,11 @@ var deleteUserInfo = function(userId){
 	serviceParam.isLoadingBar = false;
 	
 	var result = callService(serviceParam);
+	if(result.Status == "success"){
+		swAlert(result.Status, "사용자 정보가 삭제 되었습니다.", "S", "OK");	
+	}else{
+		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+	}
 };
 
 var chkUserInfo = function(){
@@ -143,15 +148,12 @@ var chkUserInfo = function(){
 		swAlert("이메일 아이디", "이메일 아이디를 입력하세요.", "W", "OK");
 		return false;	
 	};
-	if(emailAddr == "" && txtEmailAddr == ""){
+	if(emailAddr == "" || txtEmailAddr == ""){
 		swAlert("이메일 주소", "이메일 주소를 입력하세요.", "W", "OK");
 		return false;	
 	};
 	
-	setTimeout(function(){
-		swal.close();
-	}, 3000);
-	
+	swAlert("Success", "사용자 정보가 수정되었습니다.", "S", "OK");
 }
 
 var userimgupload = function(userId){

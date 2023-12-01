@@ -20,10 +20,32 @@
 			<div class="row">
 				<div class="col">
 					로그아웃 되었습니다.<br>
-					<button type="button" class="btn btn-primary" style="margin-top: 8px;">회원가입</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<span id="countDown" style="font-weight: bold;"></span>초 후에 로그인 화면으로 돌아갑니다.
 				</div>
 			</div>
 		</div>
 	</div>
 </body>
+<script type="text/javascript">
+var timeout = 3000;
+var timeoutCnt = (timeout/1000);
+$("#countDown").text(timeoutCnt);
+
+$(function(){
+	setInterval(() => {
+		console.log(timeoutCnt);
+		if(timeoutCnt < 1){
+			window.location.href = 'http://localhost:9000/user/login';
+		}else{
+			timeoutCnt -= 1
+			$("#countDown").text(timeoutCnt);
+		}
+	}, 1000);
+	
+});
+</script>
 </html>

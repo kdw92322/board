@@ -70,6 +70,19 @@ public class FileService {
 	}
 	
 	public int delete(Map<String, Object> paramMap) {
+		List<FileVo> fileList = this.selectfilelist(paramMap);
+		if(fileList.size() > 0) {
+			FileVo fileData = fileList.get(0);
+			String filePath = fileData.getFilePath();
+			
+			//경로에 존재하는 파일 삭제
+			File file = new File(filePath);
+			if(file.delete()) {
+				System.out.println("파일을 삭제하였습니다");
+			}else {
+				System.out.println("파일 삭제에 실패하였습니다");
+			}
+		}
 		return filemapper.delete(paramMap);
 	}
 }

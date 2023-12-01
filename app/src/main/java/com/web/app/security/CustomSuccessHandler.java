@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionListener;
 
 import org.slf4j.Logger;
@@ -57,21 +58,11 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
             }
             clearAuthenticationAttributes(request);
             LOG.info("Redirecting customer to the following location {} ",targetUrl);
-            LOG.info("success");
             redirectStrategy.sendRedirect(request, response, targetUrl);
             
-            //접속로그 저장
-            Map<String,Object> saveMap = new HashMap<String, Object>();
-            User user = (User) authentication.getPrincipal();
-            saveMap.put("loginId", user.getUsername());
-            
-            InetAddress inetaddress = InetAddress.getLocalHost();
-            String hostAddress = inetaddress.getHostAddress();
-            saveMap.put("ip", hostAddress);
-            String hostName = inetaddress.getHostName();
-            saveMap.put("HostName", hostName);
-            
-            userservice.saveUserConnectLog(saveMap);
+            HttpSession session = request.getSession();
+            Map<String, Object> connUserInfo = (Map<String, Object>) session.getAttribute("connUserInfo");
+            userservice.saveUserLog(connUserInfo);
             
             //You can let Spring security handle it for you.
             // super.onAuthenticationSuccess(request, response, authentication);

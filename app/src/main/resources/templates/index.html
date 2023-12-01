@@ -51,14 +51,24 @@
     
     <!-- 2.Calendar -->
     <div class="row" style="margin-top:30px; border:groove; border-radius:10px; padding:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
-    	<span class="screenTitle"><i class="far fa-calendar-alt"></i>&nbsp;Calendar</span>
+    	<span class="screenTitle"><i class="far fa-calendar-alt"></i>&nbsp;달력</span>
     	<div id="calendar" style="padding:3px; z-index: 1;"></div>
     </div>
     
     <!-- 3.Chart --> 
     <div class="row" style="margin-top:30px; border:groove; border-radius:10px; padding:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
-    	<span class="screenTitle"><i class="fa-solid fa-chart-simple"></i>&nbsp;Chart</span>
-    	<div id="mychart" class="chart" style="height:400px; z-index: 1;"></div>
+    	<div class="col-11">
+    		<span class="screenTitle"><i class="fa-solid fa-chart-simple"></i>&nbsp;주간접속기록</span>
+    	</div>
+    	<div class="col-1">	
+	    	<select class="form-select form-select-sm" id="sel_logtype" aria-label="logType">
+			    <option value="LOGIN" selected>로그인</option>
+			    <option value="LOGOUT">로그아웃</option>
+			</select>
+    	</div>
+    	<div class="col">
+    		<div id="mychart" class="chart" style="height:400px; z-index: 1;"></div>
+    	</div>
     </div>
 </div>
 </body>
@@ -68,8 +78,8 @@ var calendar;
 var myChart;
 
 $(function(){
-	initToday();//오늘일자 Init
-	initTimer();//현재시간 Init
+	initToday(); //오늘일자 Init
+	initTimer(); //현재시간 Init
 	
 	//날씨정보 setUp
 	let apiurl = "http://api.openweathermap.org/data/2.5/weather?lat=35.2281&lon=128.6811&units=metric&cnt=5&appid=076b2699669346332a018f57695532e9";
@@ -77,10 +87,16 @@ $(function(){
 	fetch(apiurl)
 	  .then((response) =>  response.json())
 	  .then((data) => initWeatherInfo(data))
-	  
+	/*  
 	setInterval(() => {
-		initGraph(); 
+		
 	}, 2000);
+	*/
+	initGraph(); 
+	
+	$(window).on('resize', function(){
+	    myChart.resize();
+	});
 });
 
 var initWeatherInfo = function(info){
@@ -207,10 +223,12 @@ var selectCalendarList = function(){
 }
 
 var initGraph = function(){
-	var dataList = makeRandomSeries();
-	
+	var optionObject = makeOptionResource();
 	myChart = echarts.init(document.getElementById('mychart'));
-    // 차트 속성과 데이터를 지정합니다.
+    
+	// 차트 속성과 데이터를 지정합니다.
+    /* 
+    var dataList = makeRandomSeries();
     var option = {
     	title: {},
     	tooltip: {
@@ -240,10 +258,78 @@ var initGraph = function(){
         },
         series: dataList
     };
-    myChart.setOption({baseOption : option});
+    */
+    
+    myChart.setOption({baseOption : optionObject});
 }
 
+var makeOptionResource = function(){
+	var option;
+	var xAxisData = new Array();
+	var seriesData = new Array();
+	
+	serviceParam.type = "GET";
+	serviceParam.url = "/user/getConnUserLogData?logtype=" + $("#sel_logtype").val() + "&userId=" + $("#loginUserId").text();
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = {};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
+	var resultList = result.value;
+	for(var i=0; i<resultList.length; i++){
+		var obj = resultList[i]
+		//dt.push(obj["DT"]);
+		//day.push(codeToday(obj["DAYCODE"], 'kr'));
+		//cnt.push(obj["CNT"]);
+		
+		console.log(obj["DT"], String(obj["DAYCODE"]), codeToday(obj["DAYCODE"], 'kr'), obj["CNT"]);
+		xAxisData.push(codeToday(obj["DAYCODE"], 'kr'));
+		
+		var today = DateToStringFormat(new Date());
+		today = today.substring(0, 10);
+		console.log("Today is ", today);
+		
+		if(obj["DT"] == today){
+			var itemObj = {
+				value : obj["CNT"],
+				itemStyle : {color: '#a90000'} 	
+			}
+			seriesData.push(itemObj);
+		}else{
+			seriesData.push(obj["CNT"]);
+		}
+	}
+
+	option = {
+	xAxis: {
+	      type: 'category',
+	      data: xAxisData
+	    },
+	    yAxis: {
+	      type: 'value'
+	    },
+	    series: [
+	       {
+	         data: seriesData,
+	         type: 'bar'
+	       }
+	    ]
+	};
+	
+	return option;
+}
+
+$("#sel_logtype").change(function(){
+	initGraph();
+});
+
+
+
 //Temp DataList Series 생성
+/*
 var makeRandomSeries = function(){
 	var dataListA = makeRandomDataList();
 	var dataListB = makeRandomDataList();
@@ -281,10 +367,7 @@ var makeRandomDataList = function(){
 	}
 	return dataList;
 }
-
-$(window).on('resize', function(){
-    myChart.resize();
-});
+*/
 
 </script>
 </th:block>

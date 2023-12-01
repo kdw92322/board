@@ -3,17 +3,24 @@
 	result : html 호출
 */
 var openModalPop = function(modalId, url, param){
+    var rtnMap = new Object();
     $.ajax({
 		type:'post',	
 	    dataType:"html", //서버에서 html타입을 반환받는다.
 	    url: url,
+	    async : false,
 	    contentType: "application/json; charset=utf-8",
 	    data : JSON.stringify(param),
 	    success : function(resultHtml) {
 	        $(modalId).find('.modal-content').html(resultHtml);
         	$(modalId).modal('show');
-	    },
-	});    
+        	rtnMap.result = 0;
+	    },error : function(xhr, ajaxSettings, thrownError){
+			rtnMap.result = 1
+		}
+	});
+	
+	return rtnMap;
 };
 
 /*
@@ -84,9 +91,57 @@ var DateToStringFormat = function(date){
 	if(typeof date == 'object'){
 		date.setHours(date.getHours() + 9); //한국 시간대로 setting
 		rtnStrDate = date.toISOString().substring(0, 19);
+		rtnStrDate = rtnStrDate.replace("T", " ");
+		rtnStrDate = rtnStrDate.trim();
 	}
 	return rtnStrDate;
 }
+
+/*
+    dayCode를 문자(한글, 영어로 변환)
+    code : (0:일, 1:월, 2:화, 3:수, 4:목, 5:금, 6:토)
+	lang : 'kr', 'en'
+*/
+var codeToday = function(code, lang){
+	var rtnvalue = "";
+	
+	code = String(code);
+	if(code == "" || code == null || code == undefined){
+		console.log("날짜 코드를 입력하세요.(" + code + ") (0:일, 1:월, 2:화, 3:수, 4:목, 5:금, 6:토)");
+		return;
+	} 
+	if(lang == "" || lang == null || lang == undefined){
+		console.log("언어 코드를 입력하세요.(" + lang + ") ('kr' : 한글, 'en' : 영어)");
+		return;
+	}
+	
+	switch(code){
+		case "0" : 
+		  rtnvalue = lang == 'kr' ? '일' : 'Sun'; 
+		  break;
+		case "1" : 
+		  rtnvalue = lang == 'kr' ? '월' : 'Mon'; 
+		  break;
+		case "2" :
+		  rtnvalue = lang == 'kr' ? '화' : 'Tue'; 
+		  break;
+		case "3" :
+		  rtnvalue = lang == 'kr' ? '수' : 'Wed'; 
+		  break;
+		case "4" :
+		  rtnvalue = lang == 'kr' ? '목' : 'Thu'; 
+		  break;	
+		case "5" :
+	      rtnvalue = lang == 'kr' ? '금' : 'Fri'; 
+		  break;		 
+		case "6" :
+		  rtnvalue = lang == 'kr' ? '토' : 'Sat'; 
+		  break;	 	
+	}
+	
+	return rtnvalue; 
+}
+
 
 /*
     value : serviceParam(Object)

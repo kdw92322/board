@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,8 +82,7 @@ public class UserController {
     }
     
     @GetMapping("/logoutProcess")
-    public String logout(Principal principal) {
-        System.out.println("로그아웃 테스트 : ");
+    public String logout(HttpServletRequest request, Principal principal) {
     	return "logout_form";
     }
     
@@ -116,12 +117,26 @@ public class UserController {
     @PostMapping("/updateUserInfo")
 	public String updateUserInfo(@Valid UserForm userform) throws Exception {
 		userService.update(userform);
+		Thread.sleep(2000);//2초 후 redirect 실행
 		return "redirect:/user/userInfo";
 	}
     
 	@DeleteMapping("/deleteUserInfo/{userId}")
+	@ResponseBody
 	public int deleteBoardList(@PathVariable("userId") String userId) throws Exception {
-		int rescnt = userService.delete(userId);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userId", userId);
+		paramMap.put("refKey", userId);
+		paramMap.put("refWord", "USER");
+		int rescnt = userService.delete(paramMap);
 		return rescnt;
 	}
+	
+	@GetMapping("/getConnUserLogData")
+	@ResponseBody
+	public List<Map<String, Object>> getConnUserLogData(@RequestParam Map<String,Object> paramMap){
+		System.out.println("paramMap : " + paramMap);
+		return userService.getConnUserLogData(paramMap);
+	}
+	
 }

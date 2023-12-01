@@ -13,13 +13,19 @@
 			  ,case 
                when a.size  <![CDATA[<]]> 1024 then 1
                else round(a.size/1024) end as size
+              ,a.refWord
+			  ,a.refKey
 			  ,a.uploadBy
 			  ,a.uploadDt
 		  from tb_file_mng a
 		 where 1=1 
 		 <if test="uuid != '' and uuid != null">
 		   and a.uuid = #{uuid}
-		 </if>  
+		 </if>
+		 <if test="refKey != '' and refKey != null">
+		   and a.refWord = #{refWord}
+		   and a.refKey = #{refKey}
+		 </if>
 		 order by a.uploadDt desc
 	</select>
 

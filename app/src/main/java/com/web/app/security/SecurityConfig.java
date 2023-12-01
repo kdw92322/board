@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,8 +14,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -33,10 +36,15 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.web.app.user.UserService;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true) 
 public class SecurityConfig {
+	
+	@Resource(name="sqlSession")
+	private SqlSession sqlSession;
 	
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -62,7 +70,21 @@ public class SecurityConfig {
 	            .permitAll()
 	        .and()
                 .logout()
-                .logoutUrl("/logout") 
+                .logoutUrl("/logout")
+                .addLogoutHandler((request, response, authentication) -> { 
+                    HttpSession session = request.getSession();
+                    
+                    Map<String, Object> connUserInfo = (Map<String, Object>) session.getAttribute("connUserInfo");
+                    connUserInfo.remove("seq");
+                    connUserInfo.replace("logType", "LOGOUT");
+                    sqlSession.insert("com.web.app.user.UserMapper.saveUserLog", connUserInfo);
+                    
+                     // 사실 굳이 세션 무효화하지 않아도 됨.(LogoutFilter가 내부적으로 처리)
+                    if (session != null) {
+                        session.invalidate();
+                    }
+                    
+                })
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                 .logoutSuccessUrl("/user/logoutProcess")
                 .invalidateHttpSession(true)
@@ -88,9 +110,4 @@ public class SecurityConfig {
     CustomSuccessHandler successHandler() {
 	    return new CustomSuccessHandler();
 	}
-    
-    @Bean
-    public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
-        return new ServletListenerRegistrationBean<>(new HttpSessionEventPublisher());
-    }
 }

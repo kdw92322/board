@@ -2,11 +2,6 @@
 	margin-bottom : 5px;
 }
 
-tr:hover{
-		cursor: pointer; 
-		background: #E6E6E6;
-}
-
 th, td {
   vertical-align : middle;
 }

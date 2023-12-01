@@ -43,38 +43,64 @@
 		 </if>   	
 	</select>	   
 	
-	
-	<update id="updateUserList" parameterType="map">
-		update user_info
-		   set title = #{title}
-			  ,content = #{content}
-           	  ,writer = #{writer}
-           	  ,user_role = #{userRole}
-           	  ,upt_dt = sysdate()
-		 where user_id = #{id}   
-	</update>
-	
-	<delete id="deleteUserList" parameterType="map">
+	<delete id="deleteUser" parameterType="map">
 		delete 
 		  from user_info
-		 where user_id = #{id}   
+		 where user_id = #{userId}   
 	</delete>
 	
-	<insert id="saveLoginUserLog" parameterType="map">
+	<select id="getUserLogKey" resultType="string">
+		 select ifnull(max(seq),0)+1 as seq from user_connect_log_history
+	</select>
+	
+	<insert id="saveUserLog" parameterType="map">
+		<selectKey resultType="int" keyProperty="seq" order="BEFORE">
+		     select ifnull(max(seq),0)+1 as seq from user_connect_log_history  
+		</selectKey>
 		insert into user_connect_log_history(
-			 ID
+			 SEQ
+			,ID
 			,LOG_TYPE
 			,IP
 			,HOSTNAME
 			,CONNECT_DT
 		)values(
-			 #{loginId} 
-			,'LOGIN'
+		     #{seq}
+			,#{loginId} 
+			,#{logType}
 			,#{ip}
-			,#{HostName}
+			,#{hostName}
 			,sysdate()
 		)
 	</insert>
+	
+	<select id="getUserLog" resultType="map">
+		select date_format(CONNECT_DT, '%Y-%m-%d') as CONNECT_DT
+			  ,ID
+			  ,count(*) as CNT
+		  from user_connect_log_history
+		 where 1=1
+		   and LOG_TYPE = 'LOGIN'
+		  group by ID, date_format(CONNECT_DT, '%Y-%m-%d')
+	</select>
+	
+	<select id="getConnUserLogData" parameterType="map" resultType="map">
+		with temp1 as (
+		    select DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -6 DAY),'%Y-%m-%d') as DT, count(*) as CNT from user_connect_log_history where DATE_FORMAT(CONNECT_DT,'%Y-%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -6 DAY),'%Y-%m-%d') and ID = #{userId} and LOG_TYPE = #{logtype} union all
+		    select DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -5 DAY),'%Y-%m-%d') as DT, count(*) as CNT from user_connect_log_history where DATE_FORMAT(CONNECT_DT,'%Y-%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -5 DAY),'%Y-%m-%d') and ID = #{userId} and LOG_TYPE = #{logtype} union all
+		    select DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -4 DAY),'%Y-%m-%d') as DT, count(*) as CNT from user_connect_log_history where DATE_FORMAT(CONNECT_DT,'%Y-%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -4 DAY),'%Y-%m-%d') and ID = #{userId} and LOG_TYPE = #{logtype} union all
+		    select DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -3 DAY),'%Y-%m-%d') as DT, count(*) as CNT from user_connect_log_history where DATE_FORMAT(CONNECT_DT,'%Y-%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -3 DAY),'%Y-%m-%d') and ID = #{userId} and LOG_TYPE = #{logtype} union all 
+		    select DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -2 DAY),'%Y-%m-%d') as DT, count(*) as CNT from user_connect_log_history where DATE_FORMAT(CONNECT_DT,'%Y-%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -2 DAY),'%Y-%m-%d') and ID = #{userId} and LOG_TYPE = #{logtype} union all 
+		    select DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY),'%Y-%m-%d') as DT, count(*) as CNT from user_connect_log_history where DATE_FORMAT(CONNECT_DT,'%Y-%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY),'%Y-%m-%d') and ID = #{userId} and LOG_TYPE = #{logtype} union all
+		    select DATE_FORMAT(NOW(),'%Y-%m-%d') as DT, count(*) as CNT from user_connect_log_history where DATE_FORMAT(CONNECT_DT,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and ID = #{userId} and LOG_TYPE = #{logtype}
+		), temp2 as (
+			select DT, CNT, dayofweek(STR_TO_DATE(replace(DT,'-',''), '%Y%m%d%'))-1 as DAYCODE
+			  from temp1
+		)
+		select DT, CNT, DAYCODE
+		  from temp2
+		 order by DT
+	</select>
 	
 	
 </mapper>

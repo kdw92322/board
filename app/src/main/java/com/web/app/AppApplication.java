@@ -11,16 +11,22 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class AppApplication extends SpringBootServletInitializer{
 	public static void main(String[] args) {
-		SpringApplication.run(AppApplication.class, args);
+		SpringApplication app = new SpringApplication(AppApplication.class);
+		app.run(args);
 	}
 	
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 	    return builder.sources(AppApplication.class);
 	}
-
+	
+	//실행 SQL TEXT 출력을 위한 Bean 설정
 	@Bean(name="sqlSession")
     public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
+	
+	
+	
+	
 }
