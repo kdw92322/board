@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#mstLogTableBody tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<div th:object="${dtlLogInfo}">
+				<table class="table table-bordered">
+					<colgroup>
+					    <col width="20%"/>
+					    <col width="80%"/>
+					</colgroup>
+					<tr>
+						<th>ID</th>
+						<td th:text="${dtlLogInfo.ID}"></td>
+					</tr>
+					<tr>
+						<th>Path</th>
+						<td th:text="${dtlLogInfo.path}"></td>
+					</tr>
+					<tr>
+						<th>Parameter</th>
+						<td th:text="${dtlLogInfo.param}"></td>
+					</tr>
+					<tr>
+						<th colspan="2">SQL</th>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<textarea class="form-control" name="content" cols="50" rows="14" th:text ="${dtlLogInfo.txtExecQuery}" th:readonly="readonly" style="resize: none;"></textarea>
+						</td>
+					</tr>
+				</table>				 
+			</div>
+		</div>	
+	</div>
+</div>		
+</html>

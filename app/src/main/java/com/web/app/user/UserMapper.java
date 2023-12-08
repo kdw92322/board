@@ -13,9 +13,6 @@ public interface UserMapper {
 	
 	int deleteUser(Map<String,Object> paramMap);
 	
-	//접속시마다 로그인/아웃 이력 저장
-	int saveUserLog(Map<String,Object> saveMap);
-	
 	List<Map<String,Object>> getUserLog(Map<String,Object> paramMap);
 	
 	List<Map<String,Object>> getConnUserLogData(Map<String,Object> paramMap);

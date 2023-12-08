@@ -60,9 +60,22 @@ public class FileController {
 		return "file/fileview";
 	}
 	
+	@GetMapping("getfileCommonKey")
+	@ResponseBody
+	public String getfileCommonKey(@RequestParam Map<String, Object> paramMap) {
+		return fileservice.getfileCommonKey(paramMap);
+	}
+	
+	@GetMapping("fileTypeList")
+	public String fileThemeList(@RequestParam Map<String, Object> paramMap, Model model) {
+		List<Map<String, Object>> selectfileTypeList = fileservice.selectfileTypeList(paramMap);
+    	model.addAttribute("fileTypeList", selectfileTypeList);
+		return "file/fileTypeList";
+	}
+	
 	@GetMapping("fileList")
-	public String fileList(Model model) {
-		List<FileVo> selectfilelist = fileservice.selectfilelist(null);
+	public String fileList(@RequestParam Map<String, Object> paramMap, Model model) {
+		List<FileVo> selectfilelist = fileservice.selectfilelist(paramMap);
     	model.addAttribute("fileList", selectfilelist);
 		return "file/fileList";
 	}

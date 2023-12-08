@@ -24,9 +24,12 @@
 		 <if test="sch_writer != '' and sch_writer != null">
 		   and writer like CONCAT('%', #{sch_writer}, '%')
 		 </if>
-		 <if test="sch_regDate != '' and sch_regDate != null">
-		   and DATE_FORMAT(reg_date, '%Y-%m-%d') = #{sch_regDate}
-		 </if> 
+		 <if test="sch_startDate != '' and sch_startDate != null">	
+		    and #{sch_startDate} <![CDATA[<=]]> DATE_FORMAT(reg_date, '%Y-%m-%d')
+		 </if>
+		 <if test="sch_endDate != '' and sch_endDate != null">   
+   		 	and DATE_FORMAT(reg_date, '%Y-%m-%d') <![CDATA[<=]]> #{sch_endDate}
+   		 </if>
 	</select>
 	
 	<insert id="insertBoardList" parameterType="map">

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +134,6 @@ public class UserController {
 	@GetMapping("/getConnUserLogData")
 	@ResponseBody
 	public List<Map<String, Object>> getConnUserLogData(@RequestParam Map<String,Object> paramMap){
-		System.out.println("paramMap : " + paramMap);
 		return userService.getConnUserLogData(paramMap);
 	}
 	

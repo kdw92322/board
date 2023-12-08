@@ -28,14 +28,14 @@
 			<form id="searchForm">
 				<table class="table table-bordered">
 					<colgroup>
-						 <col width="10%" style="background: #E3E3E1"/>
+						 <col width="5%" style="background: #E3E3E1"/>
 					     <col width="15%" style="background: #FFFFFF"/>
-					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="5%" style="background: #E3E3E1"/>
 					     <col width="15%" style="background: #FFFFFF"/>
-					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="5%" style="background: #E3E3E1"/>
 					     <col width="15%" style="background: #FFFFFF"/>
-					     <col width="10%" style="background: #E3E3E1"/>
-					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="5%" style="background: #E3E3E1"/>
+					     <col width="35%" style="background: #FFFFFF"/>
 					</colgroup>
 					<tr>			
 						<th><span>제목</span></th>
@@ -50,9 +50,13 @@
 						<td>
 							<input type="text" class="form-control form-control-sm" id="sch_writer" name="sch_writer">
 						</td>
-						<th><span>작성일</span></th>
+						<th><span>작성일자</span></th>
 						<td>
-							<input type="date" class="form-control form-control-sm" id="sch_regDate" name="sch_regDate">
+							<div style="display: flex;">
+								<input type="date" class="form-control form-control-sm" id="sch_startDate" name="sch_startDate">
+								<span style="margin-right: 5px; margin-left: 5px;">~</span>
+								<input type="date" class="form-control form-control-sm" id="sch_endDate" name="sch_endDate">
+							</div>
 						</td>
 					</tr>
 				</table>
@@ -95,19 +99,13 @@ $(function(){
 });
 
 var selectBoardList = function(){
-	
-	var param = {
-		 sch_title   : $("#sch_title").val()  
-		,sch_content : $("#sch_content").val()
-		,sch_writer  : $("#sch_writer").val() 
-		,sch_regDate : $("#sch_regDate").val()
-	}
+	var searchFormData = $("#searchForm").serializeObject();
 	
 	serviceParam.type = "GET";
 	serviceParam.url = "/board/boardList";
 	serviceParam.async = false;
 	serviceParam.dataType = "text";
-	serviceParam.data = param;
+	serviceParam.data = searchFormData;
 	serviceParam.isReturnValue = true;
 	serviceParam.timeout = 0;
 	serviceParam.isLoadingBar = false;

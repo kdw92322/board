@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#mstLogTableBody tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+	<table class="table table-bordered">
+	    <thead class="table-dark">
+	    	<tr align="center">
+	    		<th style="display:none;">seq</th>
+	    		<th width="15%"></th>
+	    		<th width="20%">사용자</th>
+	    		<th width="65%">실행일시</th>
+	    	</tr>
+	    </thead>
+	    <tbody id="mstLogTableBody">
+	    	<tr th:each="mst : ${mstLogList}" align="center" th:onclick="'javascript:onRowClick(\'' + ${mst.seq} + '\');'">
+		    	<th scope="row" th:text="${mst.seq}" style="display:none;"></th>
+		    	<td th:text="${mst.rowNum}"></td>
+		    	<td th:text="${mst.username}"></td>
+		    	<td th:text="${mst.execDate}"></td>
+		    </tr>
+	    </tbody>
+	</table>
+</html>

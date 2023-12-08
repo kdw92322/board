@@ -2,6 +2,27 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.web.app.file.service.FileMapper">
+	<select id="getfileCommonKey" parameterType="map" resultType="string">
+		select (count(*) + 1) as fileCommonKey 
+		  from tb_file_mng 
+		 where refWord = #{refWord}
+	</select>
+
+	<select id="selectfileTypeList" parameterType="map" resultType="map">
+		 select row_number() over(order by refWord desc) as rownum
+		       ,refWord as fileType
+		       ,count(refWord) as cnt
+		   from tb_file_mng
+		  where 1=1
+		  <if test="sch_startDate != '' and sch_startDate != null">	
+		     and #{sch_startDate} <![CDATA[<=]]> DATE_FORMAT(uploadDt, '%Y-%m-%d')
+		  </if>
+		  <if test="sch_endDate != '' and sch_endDate != null">   
+   		 	and DATE_FORMAT(uploadDt, '%Y-%m-%d') <![CDATA[<=]]> #{sch_endDate}
+   		  </if>
+		  group by refWord
+	</select>
+
 	<select id="selectfilelist" parameterType="map" resultType="com.web.app.file.service.FileVo">
 		select row_number() over(order by a.uploadDt desc) as rownum
 			  ,a.uuid
@@ -22,8 +43,10 @@
 		 <if test="uuid != '' and uuid != null">
 		   and a.uuid = #{uuid}
 		 </if>
-		 <if test="refKey != '' and refKey != null">
+		 <if test="refWord != '' and refWord != null">
 		   and a.refWord = #{refWord}
+		 </if>
+		 <if test="refKey != '' and refKey != null">
 		   and a.refKey = #{refKey}
 		 </if>
 		 order by a.uploadDt desc

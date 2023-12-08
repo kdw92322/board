@@ -1,8 +1,6 @@
 package com.web.app.user;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.web.app.file.service.FileService;
 import com.web.app.file.service.FileVo;
-import com.web.app.security.CustomSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -105,11 +102,7 @@ public class UserService {
     	fileservice.delete(paramMap);
     	return usermapper.deleteUser(paramMap);
     }
-    
-    public int saveUserLog(Map<String,Object> saveMap) {
-		return usermapper.saveUserLog(saveMap);
-    }
-    
+
     public List<Map<String, Object>> getConnUserLogData(Map<String,Object> paramMap){
 		return usermapper.getConnUserLogData(paramMap);
     }

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.web.app.log.service.LogMapper">
+	<insert id="saveUserLog" parameterType="map">
+		<selectKey resultType="int" keyProperty="seq" order="BEFORE">
+		     select ifnull(max(seq),0)+1 as seq from user_connect_log_history
+		</selectKey>
+		insert into user_connect_log_history(
+			 SEQ
+			,ID
+			,LOG_TYPE
+			,IP
+			,HOSTNAME
+			,CONNECT_DT
+		)values(
+		     #{seq}
+			,#{loginId} 
+			,#{logType}
+			,#{ip}
+			,#{hostName}
+			,sysdate()
+		)
+	</insert>
+	
+	<insert id="saveExecQueryLog" parameterType="map">
+		<selectKey resultType="int" keyProperty="seq" order="BEFORE">
+		     select ifnull(max(seq),0)+1 as seq from tb_query_exec_history_log
+		</selectKey>
+		insert into tb_query_exec_history_log(
+	         seq
+	        ,queryID
+	        ,param
+	        ,exec_query
+	        ,username
+	        ,exec_date
+		)values(
+		     #{seq}
+			,#{queryID} 
+			,#{param}
+			,#{exec_query}
+			,#{username}
+			,sysdate()
+		)
+	</insert>
+
+	<select id="selectMstServiceLogList" resultType="map">
+		select seq
+			  ,row_number() over(order by seq desc) as rowNum	
+			  ,DATE_FORMAT(exec_date, '%Y-%m-%d %H:%i:%s') as execDate
+			  ,username 	
+		  from tb_query_exec_history_log
+		 where 1=1 
+		 <if test="sch_user != '' and sch_user != null">	
+		    and username like CONCAT('%', #{sch_user} ,'%')
+		 </if>
+		 <if test="sch_startDate != '' and sch_startDate != null">	
+		    and #{sch_startDate} <![CDATA[<=]]> DATE_FORMAT(exec_date, '%Y-%m-%d')
+		 </if>
+		 <if test="sch_endDate != '' and sch_endDate != null">   
+   			and DATE_FORMAT(exec_date, '%Y-%m-%d') <![CDATA[<=]]> #{sch_endDate}
+   		 </if>	
+		  order by seq desc
+	</select>
+	
+	<select id="selectDtlServiceLogInfo" resultType="map">
+		select queryID    as path, 
+			   param      as param, 
+			   exec_query as execQuery	
+		  from tb_query_exec_history_log
+		 where 1=1 
+		   and seq = #{seq}
+	</select>
+	
+	<select id="selectMstConnectLogList" resultType="map">
+		select row_number() over(order by ID) as rowNum
+		      ,ID as id
+			  ,CAST(count(*) AS char(10)) as cnt	
+		  from user_connect_log_history
+		 where 1=1 
+		 <if test="sch_user != '' and sch_user != null">	
+		    and ID like CONCAT('%', #{sch_user} ,'%')
+		 </if>
+		 <if test="sch_startDate != '' and sch_startDate != null">	
+		    and #{sch_startDate} <![CDATA[<=]]> DATE_FORMAT(CONNECT_DT, '%Y-%m-%d')
+		 </if>
+		 <if test="sch_endDate != '' and sch_endDate != null">   
+   			and DATE_FORMAT(CONNECT_DT, '%Y-%m-%d') <![CDATA[<=]]> #{sch_endDate}
+   		 </if>	
+		  group by ID
+	</select>
+	
+	<select id="selectDtlConnectLogList" resultType="map">
+		select row_number() over(order by CONNECT_DT desc) as rowNum 
+		      ,IP as ip
+			  ,HOSTNAME as hostname
+			  ,date_format(CONNECT_DT, '%Y-%m-%d %H:%i:%s') as connectDt 
+		  from user_connect_log_history
+		 where ID = #{id}
+		   <if test="sch_startDate != '' and sch_startDate != null">	
+		    and #{sch_startDate} <![CDATA[<=]]> DATE_FORMAT(CONNECT_DT, '%Y-%m-%d')
+		   </if>
+		   <if test="sch_endDate != '' and sch_endDate != null">   
+	   		and DATE_FORMAT(CONNECT_DT, '%Y-%m-%d') <![CDATA[<=]]> #{sch_endDate}
+	   	   </if>
+		 order by CONNECT_DT desc
+	</select>
+	
+</mapper>

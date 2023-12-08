@@ -94,6 +94,7 @@ var DateToStringFormat = function(date){
 		rtnStrDate = rtnStrDate.replace("T", " ");
 		rtnStrDate = rtnStrDate.trim();
 	}
+	
 	return rtnStrDate;
 }
 
@@ -279,4 +280,17 @@ var callService = function(param){
 	return returnObject;
 }
 
-
+//파일관리 파일 Upload시 COMMON에 대한 Key 조회
+var getfileCommonKey = function(){
+	serviceParam.type = "GET";
+	serviceParam.url = "/file/getfileCommonKey";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = {"refWord" : "COMMON"};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	var returnValue = result.value;
+	return returnValue;
+}

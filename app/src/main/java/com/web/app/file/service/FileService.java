@@ -16,10 +16,17 @@ public class FileService {
 	
 	@Autowired
 	private FileMapper filemapper; 
-
+	
+	public String getfileCommonKey(Map<String, Object> paramMap){
+		return filemapper.getfileCommonKey(paramMap);
+	}
+	
+	public List<Map<String, Object>> selectfileTypeList(Map<String, Object> paramMap){
+		return filemapper.selectfileTypeList(paramMap);
+	}
+	
 	public List<FileVo> selectfilelist(Map<String, Object> paramMap){
 		return filemapper.selectfilelist(paramMap);
-		
 	}
 	
 	public void save(List<MultipartFile> files, String uploadPath, String userId, String refWord, String refKey) {

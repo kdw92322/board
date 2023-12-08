@@ -20,6 +20,8 @@
 			                <ul class="dropdown-menu" aria-labelledby="administratorDropdown">
 			                    <li><a class="dropdown-item" href="/user/userInfo">사용자정보</a></li>
 			                    <li><a class="dropdown-item" href="/webview/webviewInfo">화면정보</a></li>
+			                    <li><a class="dropdown-item" href="/log/connectLogView">접속로그정보</a></li>
+			                    <li><a class="dropdown-item" href="/log/serviceLogView">서비스사용로그</a></li>
 			                </ul>
 			            </li>
 			            <li class="nav-item">
@@ -45,7 +47,7 @@
 			        		<span th:id="userAuth" sec:authentication="principal.authorities" style="display:none;"></span>
 			        		<strong><span th:id="loginUserId" sec:authentication="name"></span></strong>
 				    		<span>님이 로그인 하셨습니다.</span>
-				    		<i id="logout_icon" class="fa-solid fa-right-from-bracket fa-xl" style="cursor: pointer" onclick="location.href='/user/logout';"></i>
+				    		<i id="logout_icon" class="fa-solid fa-right-from-bracket fa-xl" style="cursor: pointer" onclick="location.href='/user/logoutProcess';"></i>
 				    	</div>
 			        </form>
 			    </div>

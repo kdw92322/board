@@ -10,22 +10,65 @@
 </head>
 <body>
 	<div class="container-fluid">
-		<div class="row" style="margin-top : 10px; margin-bottom : 10px;">
+		<div class="row">
 	    	<div class="col" style="margin-top:10px;">				
 	    		<h4 style="font-weight: bold;"><i class="fa-regular fa-file"></i>&nbsp;파일관리</h4>
 	    	</div>
 	    	<div class="col" align="right" style="display:inline-block; margin-top:10px;">
 	    		<button class="btn btn-primary" type="button" style="float:right; margin:5px;" th:onclick="upload()">파일 Upload(Common)</button>
-	    		<button class="btn btn-info" type="button" style="float:right; margin:5px;" th:onclick="selectFileList();">조회</button>
+	    		<button class="btn btn-info" type="button" style="float:right; margin:5px;" th:onclick="selectFileTypeList();">조회</button>
 	    	</div>
 	    </div>
-		<div class="row" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
-			<div class="col-12">
-				<span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;목록</span>
+		<div class="row" style="margin-top:10px; border:groove; border-radius:10px; padding-top:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<div class="row">
+				<div class="col">
+					<h6 style="font-weight: bold;"><i class="fa-solid fa-filter"></i>&nbsp;조회조건</h6>
+				</div>
 			</div>
-			<div class="col-12" style="text-align:center; max-height:70vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
-				<div class="table-responsive" id="divFileList">
-					<!-- FileList html bind -->
+			<div class="row text-center">
+				<form id="searchForm">
+					<table class="table table-bordered">
+						<colgroup>
+							 <col width="10%" style="background: #E3E3E1"/>
+						     <col width="20%" style="background: #FFFFFF"/>
+						     <col width="70%" style="background: #FFFFFF"/>
+						</colgroup>
+						<tr>			
+							<th><span>일자</span></th>
+							<td>
+								<div style="display: flex;">
+									<input type="date" class="form-control form-control-sm" id="sch_startDate" name="sch_startDate">
+									<span style="margin-right: 5px; margin-left: 5px;">~</span>
+									<input type="date" class="form-control form-control-sm" id="sch_endDate" name="sch_endDate">
+								</div>
+							</td>
+							<td>
+							
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-4" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+				<div class="col">
+				    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;파일유형 목록</span>
+			    </div>
+			    <div class="col" style="text-align:center; height:58vh; max-height:58vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+					<div class="table-responsive" id="divFileTypeList">
+						<!-- fileThemeList html bind -->
+					</div>
+				</div>
+			</div>
+			<div class="col-8" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+				<div class="col">
+				    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;유형별 파일 List</span>
+			    </div>
+			    <div class="col" style="text-align:center; height:58vh; max-height:58vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+					<div class="table-responsive" id="divFileList">
+						<!-- FileList html bind -->
+					</div>
 				</div>
 			</div>
 		</div>
@@ -35,19 +78,34 @@
 </body>
 <script type="text/javascript">
 $(function(){
-	selectFileList();
+	selectFileTypeList();
 });
 
 var upload = function(){
-	openModalPop("#fileUploadModal", "/modals/uploadView", {});
+	var key = getfileCommonKey();
+	openModalPop("#fileUploadModal", "/modals/uploadView", {"refWord" : "COMMON", "refKey" : key});
 }
 
-var selectFileList = function(){
+var selectFileTypeList = function(){
+	serviceParam.type = "GET";
+	serviceParam.url = "/file/fileTypeList";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = {sch_startDate : $("#sch_startDate").val(), sch_endDate : $("#sch_endDate").val()};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	$("#divFileTypeList").html(result.value);
+}
+
+
+var selectFileList = function(fileType){
 	serviceParam.type = "GET";
 	serviceParam.url = "/file/fileList";
 	serviceParam.async = false;
 	serviceParam.dataType = "text";
-	serviceParam.data = {};
+	serviceParam.data = {"refWord" : fileType};
 	serviceParam.isReturnValue = true;
 	serviceParam.timeout = 0;
 	serviceParam.isLoadingBar = false;

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
+<head>
+	<title>접속로그 조회</title>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col" style="margin-top:10px;">
+	        <h4 style="font-weight: bold;"><i class="fa-solid fa-tablet"></i>&nbsp;접속로그 조회</h4>
+	    </div>
+	    <div class="col" align="right" style="display:inline-block; margin-top:10px;">
+			<button type="button" class="btn btn-primary" th:onclick="selectLogMstList();" style="margin-left:2px;">조회</button>
+	    </div>
+	</div>
+	<div class="row" style="margin-top:10px; border:groove; border-radius:10px; padding-top:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+		<div class="row">
+			<div class="col">
+				<h6 style="font-weight: bold;"><i class="fa-solid fa-filter"></i>&nbsp;조회조건</h6>
+			</div>
+		</div>
+		<div class="row text-center">
+			<form id="searchForm">
+				<table class="table table-bordered">
+					<colgroup>
+						 <col width="10%" style="background: #E3E3E1"/>
+					     <col width="40%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="40%" style="background: #FFFFFF"/>
+					</colgroup>
+					<tr>			
+						<th><span>사용자</span></th>
+						<td>
+							<input type="text" class="form-control form-control-sm" id="sch_user" name="sch_user">
+						</td>
+						<th><span>일자</span></th>
+						<td>
+							<div style="display: flex;">
+								<input type="date" class="form-control form-control-sm" id="sch_startDate" name="sch_startDate">
+								<span style="margin-right: 5px; margin-left: 5px;">~</span>
+								<input type="date" class="form-control form-control-sm" id="sch_endDate" name="sch_endDate">
+							</div>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-4" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<div class="col">
+			    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;목록</span>
+		    </div>
+		    <div class="col" style="text-align:center; height:60vh; max-height:60vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+				<div id="divMstLogList">
+					<!-- connectLogMstView -->
+				</div>
+			</div>
+		</div>
+		<div class="col-8" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<div class="col">
+			    <span style="font-weight: bold;"><i class="fa-solid fa-check"></i>&nbsp;접속 기록</span>
+		    </div>
+		    <div class="col" style="text-align:center; height:60vh; max-height:60vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+				<div id="divDtlLogInfo">
+					<!-- connectLogDtlView -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+$(function(){
+	selectLogMstList();
+});
+var selectLogMstList = function(){
+	var searchFormData = $("#searchForm").serializeObject();
+	console.log("searchFormData", searchFormData);
+	
+	serviceParam.type = "GET";
+	serviceParam.url = "/log/connectLogMstView";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = searchFormData;
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	$("#divMstLogList").html(result.value);
+};
+
+var onRowClick = function(id){
+	var param = {
+		 id : id
+	    ,sch_startDate : $("#sch_startDate").val()  
+	    ,sch_endDate : $("#sch_endDate").val()
+	}
+	console.log("param", param);
+
+	serviceParam.type = "GET";
+	serviceParam.url = "/log/connectLogDtlView";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = param;
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	$("#divDtlLogInfo").html(result.value);
+}
+
+</script>
+</th:block>
+</html>

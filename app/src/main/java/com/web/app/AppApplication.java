@@ -1,5 +1,6 @@
 package com.web.app;
 
+
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.boot.SpringApplication;
@@ -19,14 +20,9 @@ public class AppApplication extends SpringBootServletInitializer{
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 	    return builder.sources(AppApplication.class);
 	}
-	
-	//실행 SQL TEXT 출력을 위한 Bean 설정
-	@Bean(name="sqlSession")
-    public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) throws Exception {
+
+    @Bean(name = "sqlSession")
+    SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
-	
-	
-	
-	
 }

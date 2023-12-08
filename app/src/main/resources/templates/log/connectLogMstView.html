@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#mstLogTableBody tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+	<table class="table table-bordered">
+	    <thead class="table-dark">
+	    	<tr align="center">
+	    		<th width="10%"></th>
+	    		<th width="50%">사용자</th>
+	    		<th width="40%">접속횟수</th>
+	    	</tr>
+	    </thead>
+	    <tbody id="mstLogTableBody">
+		    <tr th:each="mst : ${mstLogList}" align="center" th:onclick="onRowClick([[${mst.id}]])">
+		    	<td th:text="${mst.rowNum}"></td>
+		    	<td th:text="${mst.id}"></td>
+		    	<td th:text="${mst.cnt}"></td>
+		    </tr>
+	    </tbody>
+	</table>
+</html>

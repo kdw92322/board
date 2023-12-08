@@ -19,6 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.web.app.log.service.LogService;
 import com.web.app.user.UserMapper;
 import com.web.app.user.UserService;
 
@@ -42,7 +44,7 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     
     @Autowired
-    private UserService userservice;
+    private LogService logservice;
     
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -60,10 +62,37 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
             LOG.info("Redirecting customer to the following location {} ",targetUrl);
             redirectStrategy.sendRedirect(request, response, targetUrl);
             
-            HttpSession session = request.getSession();
-            Map<String, Object> connUserInfo = (Map<String, Object>) session.getAttribute("connUserInfo");
-            userservice.saveUserLog(connUserInfo);
+            //HttpSession session = request.getSession();
+            Object principal = authentication.getPrincipal();
+            UserDetails userdetails = (UserDetails)principal;
+            InetAddress inetaddress;
+            inetaddress = InetAddress.getLocalHost();
+			
+			String loginId  = userdetails.getUsername();
+			String ip       = inetaddress.getHostAddress();
+	        String hostName = inetaddress.getHostName();
+	        String logType  = "LOGIN";
             
+	        HttpSession session = request.getSession();
+			/* session.setMaxInactiveInterval(5); */
+	        session.setMaxInactiveInterval(1800); 
+	        
+	        LOG.info("**************************** session Created *****************************");
+	        LOG.info("********************************** 로그인 **********************************");
+	        LOG.info("loginId  : " + loginId );
+	        LOG.info("ip       : " + ip      );
+	        LOG.info("hostName : " + hostName);
+	        LOG.info("logType  : " + logType );
+	        LOG.info("**************************************************************************");
+	        
+            Map<String, Object> connUserInfo = new HashMap<String, Object>();
+	        connUserInfo.put("loginId" , loginId);
+	        connUserInfo.put("ip"      , ip);
+	        connUserInfo.put("hostName", hostName);
+	        connUserInfo.put("logType" , logType);
+	        session.setAttribute("connUserInfo", connUserInfo);
+	        
+	        logservice.saveUserLog(connUserInfo);
             //You can let Spring security handle it for you.
             // super.onAuthenticationSuccess(request, response, authentication);
         }
@@ -79,7 +108,7 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
     {
         SecurityContextHolder.getContext().setAuthentication(null);
         request.getSession().invalidate();
-        redirectStrategy.sendRedirect(request, response, "/admin");
+        redirectStrategy.sendRedirect(request, response, "/");
     }
 
     protected boolean isAdminAuthority(final Authentication authentication)

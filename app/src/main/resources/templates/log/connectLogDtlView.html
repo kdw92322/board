@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#mstLogTableBody tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<table class="table table-bordered">
+			    <thead class="table-dark">
+			    	<tr align="center">
+			    		<th width="10%"></th>
+			    		<th width="10%">IP</th>
+			    		<th width="30%">HOST</th>
+			    		<th width="50%">접속일시</th>
+			    	</tr>
+			    </thead>
+			    <tbody id="dtlLogInfoTableBody">
+			    	<tr th:each="dtlLog : ${dtlLogList}" align="center">
+				    	<td th:text="${dtlLog.rowNum}"></td>
+				    	<td th:text="${dtlLog.ip}"></td>
+				    	<td th:text="${dtlLog.hostname}"></td>
+				    	<td th:text="${dtlLog.connectDt}"></td>
+				    </tr>
+			    </tbody>
+			</table>
+		</div>	
+	</div>
+</div>		
+</html>
