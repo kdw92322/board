@@ -45,5 +45,83 @@
 	    filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#20000000', endColorstr='#20000000'); /* ie */
 	}
 </style>
+<script type="text/javascript">
+$(function(){
+	var Authenticated = $("#userAuth").text();
+	//관리자 권한이 없으면 관리자 메뉴를 숨김
+	if(Authenticated.indexOf('ADMIN') < 0){
+		$("#administratorDropdown").hide();	
+	}
+	topMenuList();
+});
 
+/*
+ * 상단 메뉴 List 조회
+ */
+var topMenuList = function(){
+	serviceParam.type = "GET";
+	serviceParam.url = "/common/topMenuList";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = {};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	
+	var menuHtml = "";
+	var menuList = result.value;
+	if(menuList.length > 0){
+		for(var i=0; i<menuList.length; i++){
+			var menuInfo = menuList[i];
+			
+			if(menuInfo.menutype == 'view'){
+				menuHtml += '<li class="nav-item">' + '<a class="nav-link text-white" href="' + menuInfo.menupath + '">' + menuInfo.menuname + '</a></li>' + '\n';       
+			}else if(menuInfo.menutype == 'menu'){
+				menuHtml += '<li class="nav-item dropdown">' + '\n';
+				menuHtml += '<a class="nav-link dropdown-toggle text-white" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">' + '\n';
+				menuHtml += menuInfo.menuname + '\n';
+				menuHtml += '</a>' + '\n';
+				
+				//메뉴에 따른 화면목록 조회
+				serviceParam.type = "GET";
+				serviceParam.url = "/common/topViewList?menucode=" + menuInfo.menucode;
+				serviceParam.async = false;
+				serviceParam.dataType = "json";
+				serviceParam.data = {};
+				serviceParam.isReturnValue = true;
+				serviceParam.timeout = 0;
+				serviceParam.isLoadingBar = false;
+				var result = callService(serviceParam);
+				var viewList = result.value;
+				
+				menuHtml += '<ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">' + '\n';
+				var viewHtml = "", currentViewLevel = "";
+				if(viewList.length > 0){
+					for(var j=0; j<viewList.length; j++){
+						viewInfo = viewList[j];
+						if(j == 0){
+							currentViewLevel = viewInfo.viewlevel;
+						}else{
+							if(currentViewLevel != viewInfo.viewlevel){
+								currentViewLevel = viewInfo.viewlevel;
+								viewHtml += '<li><hr class="dropdown-divider"></li>';
+							}
+						}
+						viewHtml += '<li><a class="dropdown-item" href="' + viewInfo.viewpath+ '">' + viewInfo.viewname + '</a></li>' + '\n';
+					}
+
+				}
+				menuHtml += viewHtml;
+				menuHtml += '</ul>' + '\n';
+				menuHtml += '</li>' + '\n';
+			}
+				
+		}
+	}
+	
+	$("#ul_menulist").append(menuHtml);
+}
+
+</script>
 </html>

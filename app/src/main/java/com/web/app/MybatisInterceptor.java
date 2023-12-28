@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -63,19 +64,20 @@ public class MybatisInterceptor implements Interceptor{
 		
 		//방법 3 - keySet() : key
 		String paramString = "";
-        for(String key : paramMap.keySet()){
-            String value = String.valueOf(paramMap.get(key));
-            String temp = "key:" + key + ",value:" + value + " ";
-            if(!value.equals("")) {
-            	paramString += temp;
-            }
-        }
+		if(paramMap != null) {
+			for(String key : paramMap.keySet()){
+	            String value = String.valueOf(paramMap.get(key));
+	            String temp = "key : " + key + ", value : " + value + " ";
+	            if(!value.equals("")) {
+	            	paramString += temp;
+	            }
+	        }
+		}
         //System.err.println("======> Convert parameter String : " + paramString);
         
 		//Query String
 		BoundSql boundSql = ((MappedStatement)invocation.getArgs()[0]).getBoundSql(paramMap);
 		String queryString = boundSql.getSql();
-		//System.err.println("Query String : \n" + queryString);
 		
 		Gson gson = new Gson();
 		List<ParameterMapping> parameterMapping = boundSql.getParameterMappings();
@@ -133,7 +135,6 @@ public class MybatisInterceptor implements Interceptor{
 		String username   = String.valueOf(saveMap.get("username")).trim();
 		
 		try {
-			
 			//로그관련 Service는 제외 하고 로그기록
 			if(queryID.indexOf("com.web.app.log.service.LogMapper") < 0) {
 				

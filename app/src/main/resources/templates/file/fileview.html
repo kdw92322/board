@@ -11,30 +11,44 @@
 <body>
 	<div class="container-fluid">
 		<div class="row">
-	    	<div class="col" style="margin-top:10px;">				
+	    	<div class="col">				
 	    		<h4 style="font-weight: bold;"><i class="fa-regular fa-file"></i>&nbsp;파일관리</h4>
 	    	</div>
-	    	<div class="col" align="right" style="display:inline-block; margin-top:10px;">
-	    		<button class="btn btn-primary" type="button" style="float:right; margin:5px;" th:onclick="upload()">파일 Upload(Common)</button>
-	    		<button class="btn btn-info" type="button" style="float:right; margin:5px;" th:onclick="selectFileTypeList();">조회</button>
+	    	<div class="col" align="right" style="display:inline-block;">
+	    		<button class="btn btn-info" type="button" style="margin-left:2px;" th:onclick="selectFileTypeList();">조회</button>
+	    		<button class="btn btn-primary" type="button" style="margin-left:2px;" th:onclick="upload()">파일 Upload(Common)</button>
 	    	</div>
 	    </div>
-		<div class="row" style="margin-top:10px; border:groove; border-radius:10px; padding-top:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
-			<div class="row">
-				<div class="col">
-					<h6 style="font-weight: bold;"><i class="fa-solid fa-filter"></i>&nbsp;조회조건</h6>
-				</div>
+		<div class="row" style="margin-top:10px; border:groove; border-radius:10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<div class="col-12">
+				<h6 style="font-weight: bold;"><i class="fa-solid fa-filter"></i>&nbsp;조회조건</h6>
 			</div>
-			<div class="row text-center">
+			<div class="col-12">
 				<form id="searchForm">
 					<table class="table table-bordered">
 						<colgroup>
 							 <col width="10%" style="background: #E3E3E1"/>
-						     <col width="20%" style="background: #FFFFFF"/>
-						     <col width="70%" style="background: #FFFFFF"/>
+						     <col width="15%" style="background: #FFFFFF"/>
+						     <col width="10%" style="background: #E3E3E1"/>
+						     <col width="15%" style="background: #FFFFFF"/>
+						     <col width="10%" style="background: #E3E3E1"/>
+						     <col width="15%" style="background: #FFFFFF"/>
+						     <col width="10%" style="background: #E3E3E1"/>
+						     <col width="15%" style="background: #FFFFFF"/>
 						</colgroup>
-						<tr>			
-							<th><span>일자</span></th>
+						<tr>
+							<th><span>파일이름</span></th>
+							<td>
+								<input type="text" class="form-control form-control-sm" id="sch_fileName" name="sch_fileName">
+							</td>
+							<th><span>파일유형</span></th>
+							<td>
+								<select class="form-select form-select-sm" id="sch_fileType" name="sch_fileType" aria-label="fileType">
+							  	    <option value="" selected>선택</option>
+							  	    <option th:each="fileType : ${fileTypeList}" th:value="${fileType}" th:text="${fileType}"></option>
+							    </select>
+							</td>
+							<th><span>업로드일자</span></th>
 							<td>
 								<div style="display: flex;">
 									<input type="date" class="form-control form-control-sm" id="sch_startDate" name="sch_startDate">
@@ -42,8 +56,9 @@
 									<input type="date" class="form-control form-control-sm" id="sch_endDate" name="sch_endDate">
 								</div>
 							</td>
+							<th><span>BY</span></th>
 							<td>
-							
+								<input type="text" class="form-control form-control-sm" id="sch_uploadBy" name="sch_uploadBy">
 							</td>
 						</tr>
 					</table>
@@ -53,9 +68,9 @@
 		<div class="row">
 			<div class="col-4" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
 				<div class="col">
-				    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;파일유형 목록</span>
+				    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;파일유형 List</span>
 			    </div>
-			    <div class="col" style="text-align:center; height:58vh; max-height:58vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+			    <div class="col" style="text-align:center; height:60vh; max-height:60vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
 					<div class="table-responsive" id="divFileTypeList">
 						<!-- fileThemeList html bind -->
 					</div>
@@ -63,9 +78,9 @@
 			</div>
 			<div class="col-8" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
 				<div class="col">
-				    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;유형별 파일 List</span>
+				    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;유형별 파일 List( ※ 파일이름을 누르면 다운로드 됩니다.)</span>
 			    </div>
-			    <div class="col" style="text-align:center; height:58vh; max-height:58vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+			    <div class="col" style="text-align:center; height:60vh; max-height:60vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
 					<div class="table-responsive" id="divFileList">
 						<!-- FileList html bind -->
 					</div>
@@ -87,25 +102,31 @@ var upload = function(){
 }
 
 var selectFileTypeList = function(){
+	var searchFormData = $("#searchForm").serializeObject();
 	serviceParam.type = "GET";
 	serviceParam.url = "/file/fileTypeList";
 	serviceParam.async = false;
 	serviceParam.dataType = "text";
-	serviceParam.data = {sch_startDate : $("#sch_startDate").val(), sch_endDate : $("#sch_endDate").val()};
+	serviceParam.data = searchFormData;
 	serviceParam.isReturnValue = true;
 	serviceParam.timeout = 0;
 	serviceParam.isLoadingBar = false;
 	var result = callService(serviceParam);
 	$("#divFileTypeList").html(result.value);
+	$("#divFileList").html("");
 }
 
 
 var selectFileList = function(fileType){
+	var searchFormData = $("#searchForm").serializeObject();
+	console.log("searchFormData", searchFormData);
+	searchFormData.refWord = fileType;
+	
 	serviceParam.type = "GET";
 	serviceParam.url = "/file/fileList";
 	serviceParam.async = false;
 	serviceParam.dataType = "text";
-	serviceParam.data = {"refWord" : fileType};
+	serviceParam.data = searchFormData;
 	serviceParam.isReturnValue = true;
 	serviceParam.timeout = 0;
 	serviceParam.isLoadingBar = false;

@@ -1,9 +1,18 @@
-.row {
-	margin-bottom : 5px;
+table {
+	border: 1px 1px 1px 1px #a39485 solid;
+    font-size: 0.9em;
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 5px;
+    overflow: hidden;
+    vertical-align: middle;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    /* box-shadow : rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
 }
 
 th, td {
-  vertical-align : middle;
+    vertical-align : middle;
+    box-shadow: 1px 1px 3px 1px #dadce0;
 }
 
 .alert {

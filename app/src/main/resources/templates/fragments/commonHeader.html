@@ -12,35 +12,20 @@
 			        <span class="navbar-toggler-icon"></span>
 			    </button>
 			    <div class="collapse navbar-collapse" id="navbarScroll">
-			        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-			            <li class="nav-item dropdown">
-			            	<a class="nav-link dropdown-toggle text-white" href="#" id="administratorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+			        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" id="ul_menulist" style="--bs-scroll-height: 100px;">
+			            <!-- 관리자 Menu는 Default -->
+			            <li class="nav-item dropdown" id="administratorDropdown">
+			            	<a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 			                    관리자
 			                </a>
 			                <ul class="dropdown-menu" aria-labelledby="administratorDropdown">
-			                    <li><a class="dropdown-item" href="/user/userInfo">사용자정보</a></li>
-			                    <li><a class="dropdown-item" href="/webview/webviewInfo">화면정보</a></li>
-			                    <li><a class="dropdown-item" href="/log/connectLogView">접속로그정보</a></li>
-			                    <li><a class="dropdown-item" href="/log/serviceLogView">서비스사용로그</a></li>
+			                    <li><a class="dropdown-item" href="/user/userInfo">1. 사용자정보</a></li>
+			                    <li><a class="dropdown-item" href="/webview/webviewForm">2. 메뉴정보</a></li>
+			                    <li><a class="dropdown-item" href="/common/codeForm">3. 코드정보</a></li>
+			                    <li><a class="dropdown-item" href="/common/envForm">4. 환경설정</a></li>
 			                </ul>
 			            </li>
-			            <li class="nav-item">
-			                <a class="nav-link text-white" href="/board/boardForm">게시판</a>
-			            </li>
-			            <li class="nav-item">
-			                <a class="nav-link text-white" href="/file/fileview">파일관리</a>
-			            </li>
-			            <li class="nav-item dropdown">
-			                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-			                    ETC.Page
-			                </a>
-			                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-			                    <li><a class="dropdown-item" href="/test">Sample Page</a></li>
-			                    <li><hr class="dropdown-divider"></li>
-			                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-			                    <li><a class="dropdown-item" href="/media">Media Test</a></li>
-			                </ul>
-			            </li>
+			            
 			        </ul>
 			        <form class="d-flex">
 			        	<div style="margin: auto 0 auto auto; padding:5px;">
@@ -53,7 +38,7 @@
 			    </div>
 			</div>
 		</nav>
-	</Header>
+	</Header>	
 </th:block>
 </html>
 

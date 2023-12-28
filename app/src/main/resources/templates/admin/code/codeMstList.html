@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#CodeMstGrid tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+<table class="table table-bordered" id="CodeMstGrid">
+    <thead class="table-dark">
+    	<tr align="center">
+    		<th width="5%" style="font-size: 11px;">No.</th>
+    		<th width="15%" style="font-size: 11px;">코드</th>
+    		<th width="15%" style="font-size: 11px;">이름</th>
+    		<th width="15%" style="font-size: 11px;">사용여부</th>
+    		<th width="20%" style="font-size: 11px;"></th>
+    	</tr>
+    </thead>
+    <tbody id="viewTableBody">
+    	<tr th:each="codeMst : ${codeMstList}" align="center" th:onclick="onCodeMstTableRowClick([[${codeMst.mstCd}]]);">
+	    	<td style="vertical-align: middle;">
+	    		<span th:text="${codeMst.rownum}"></span>
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<span th:text="${codeMst.mstCd}"></span>
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<span th:text="${codeMst.mstNm}"></span>
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<span th:if="${codeMst.useYn == 'Y'}">사용</span>
+				<span th:if="${codeMst.useYn == 'N'}">미사용</span>
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<button class="btn btn-info btn-sm" type="button" th:onclick="updateCodeMstInfo([[${codeMst.mstCd}]]);">수정</button>
+	    		<button class="btn btn-danger btn-sm" type="button" th:onclick="deleteCodeMstInfo([[${codeMst.mstCd}]]);">삭제</button>
+	    	</td>
+	    </tr>
+    </tbody>
+</table>
+<script type="text/javascript">
+//webviewMenu table row Click Event
+var onCodeMstTableRowClick = function(mstCd){
+	selectCodeDtlList(mstCd);
+}
+
+var selectCodeDtlList = function(mstCd){	
+	serviceParam.type = "GET";
+	serviceParam.url = "/common/selectCodeDtlList?mstCd=" + mstCd;
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = {};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
+	$("#codeDtlList").html(result.value);
+}
+
+//수정
+var updateCodeMstInfo = function(mstCd){
+	openModalPop("#codeMstModal", "/modals/codeMstModal", {"mstCd" : mstCd, "type" : "U"});
+}
+
+//삭제
+var deleteCodeMstInfo = function(mstCd){
+	var param = {
+		"mstCd" : mstCd	
+	};
+	
+	serviceParam.type = "DELETE";
+	serviceParam.url = "/common/deleteCodeMst";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify(param);
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	if(result.Status == "success"){
+		swAlert(result.Status, "대분류가 삭제 되었습니다.", "S", "OK");
+		setTimeout(function(){
+			selectMenuList();
+			swal.close();
+			$("#btn_close").click();
+		}, 1000);
+	}else{
+		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+		return;
+	}
+}
+
+</script>
+</html>

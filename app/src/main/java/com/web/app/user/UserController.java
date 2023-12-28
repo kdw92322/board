@@ -91,7 +91,7 @@ public class UserController {
     public String userInfo(@RequestParam Map<String, Object> paramMap, Model model) throws Exception {
     	List<Map<String, Object>> selectUserList = userService.selectUserList(paramMap);
     	model.addAttribute("userList", selectUserList);
-    	return "user/userInfo";
+    	return "admin/user/userInfo";
     }
     
     @PostMapping("/selectUserInfo")
@@ -110,7 +110,7 @@ public class UserController {
     	model.addAttribute("days", defaultdatautil.getDayList(selectUserInfo.getYear(), selectUserInfo.getMonth()));
     	model.addAttribute("userform", selectUserInfo);
     	
-		return "user/userInfo_form";
+		return "admin/user/userInfo_form";
 	}
     
     @PostMapping("/updateUserInfo")

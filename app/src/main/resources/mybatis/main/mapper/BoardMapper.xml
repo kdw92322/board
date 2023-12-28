@@ -3,13 +3,14 @@
 
 <mapper namespace="com.web.app.board.service.BoardMapper">
 	<select id="selectboardList" resultType="map">
-		select idx      as idx,
-			   title    as title,
-			   content  as content,
-               board_no as boardNo,
-               writer   as writer,
-               reg_date as regDate,
-               upt_date as uptDate
+		select row_number() over(order by idx) as rownum
+			  ,idx      as idx
+			  ,title    as title
+			  ,content  as content
+              ,board_no as boardNo
+              ,writer   as writer
+              ,reg_date as regDate
+              ,upt_date as uptDate
 		  from simpleboard
 		 where 1=1
 		 <if test="idx != '' and idx != null">
@@ -37,7 +38,7 @@
 	       select concat('B', lpad(ifnull(max(idx),0)+1, 4, '0')) as boardNo, 
 	       		  ifnull(max(idx),0) + 1 as idx 
 	       	 from simpleboard    
-	    </selectKey> 
+	    </selectKey>
 		insert simpleboard(
 			idx,
 			title,

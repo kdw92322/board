@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:each="review : ${reviewList}" style="text-align: center; width:100%;">
-	<div th:style="${review.revLevel == '1' ? 'display: flex; align-items: center; width:100%; text-align:left; margin:10px;' : 'display:none;'}">
+	<div th:style="${review.revLevel == '1' ? 'display: flex; align-items: center; width:100%; text-align:left; margin-top:10px;' : 'display:none;'}">
 		<div th:class="w2p" style="display: inline-block;">
 			<img src="/image/down-right-arrow.png" alt="down-right-arrow" height="25" style="float:right;">
 	    </div>
-	    <div th:class="w5p" style="text-align:right; display: inline-block; vertical-align: middle;">
+	    <div th:class="w4p" style="text-align:right; display: inline-block; vertical-align: middle;">
 	    	<span th:text="${review.loginId}" style="font-size: 12px; font-weight: bold; font-family: system-ui;"></span>	
 	    </div>
 	    <div th:class="w85p" style="display: flex; justify-content: left; align-items: center; padding-left:5px;">
@@ -31,15 +31,15 @@
 	    </div>
 	    <div th:class="w8p" style="display: inline-block;">
 	    	<div style="vertical-align: middle;">
-				<span th:text="${review.uptDate}" style="font-size: 14px; font-weight: bold; font-family: system-ui;"></span>
+				<span th:text="${review.uptDate}" style="font-size: 12px; font-family: system-ui;"></span>
 			</div>
 	    </div>
 	</div>
-	<div th:style="${review.revLevel != '1' ? 'display: flex; align-items: center; width:100%; text-align:left; margin:10px;' : 'display:none;'}">
+	<div th:style="${review.revLevel != '1' ? 'display: flex; align-items: center; width:100%; text-align:left; margin-top:10px;' : 'display:none;'}">
 	    <div th:class="w2p" style="display: inline-block;">
 	    	
 	    </div>
-	    <div th:class="w3p" style="display: inline-block;">
+	    <div th:class="w2p" style="display: inline-block;">
 	    	<img src="/image/down-right-arrow.png" alt="down-right-arrow" height="25" style="float:right;">
 	    </div>
 	    <div th:class="w2p" style="text-align:right; display: inline-block;">
@@ -69,7 +69,7 @@
 	    </div>
 	    <div th:class="w8p" style="display: inline-block;">
 	    	<div style="vertical-align: middle;">
-				<span th:text="${review.uptDate}" style="font-size: 14px; font-weight: bold; font-family: system-ui;"></span>
+				<span th:text="${review.uptDate}" style="font-size: 12px; font-family: system-ui;"></span>
 			</div>
 	    </div>
 	</div>

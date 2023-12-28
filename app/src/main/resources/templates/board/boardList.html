@@ -9,17 +9,19 @@
 <table class="table table-bordered">
     <thead class="table-dark">
     	<tr align="center">
+    		<th width="3%">No.</th>
     		<th style="display:none;">Index</th>
-    		<th width="8%">게시글 번호</th>
+    		<th width="7%">게시글 번호</th>
     		<th width="20%">제목</th>
     		<th width="35%">내용</th>
-    		<th width="17%">작성자</th>
+    		<th width="15%">작성자</th>
     		<th width="10%">등록일자</th>
     		<th width="10%">수정일자</th>
     	</tr>
     </thead>
     <tbody id="boardTableBody">
     	<tr th:each="board : ${boardList}" align="center" th:onclick="'javascript:onRowClick(\'' + ${board.idx} + '\');'" th:ondblclick="'javascript:onRowDblClick(\'' + ${board.idx} + '\');'">
+	    	<td th:text="${board.rownum}"></td>
 	    	<th scope="row" th:text="${board.idx}" style="display:none;"></th>
 	    	<th scope="row" th:text="${board.boardNo}"></th>
 	    	<td th:text="${board.title}"></td>

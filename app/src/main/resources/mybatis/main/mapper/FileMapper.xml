@@ -9,30 +9,39 @@
 	</select>
 
 	<select id="selectfileTypeList" parameterType="map" resultType="map">
-		 select row_number() over(order by refWord desc) as rownum
-		       ,refWord as fileType
-		       ,count(refWord) as cnt
-		   from tb_file_mng
+		 select row_number() over(order by a.refWord desc) as rownum
+		       ,a.refWord as fileType
+		       ,count(a.refWord) as cnt
+		   from tb_file_mng a
 		  where 1=1
+		  <if test="sch_fileName != '' and sch_fileName != null">	
+		    and a.originName like concat('%', #{sch_fileName}, '%')  
+		  </if>
+		  <if test="sch_fileType != '' and sch_fileType != null">	
+		    and a.refWord = #{sch_fileType}
+		  </if>
+		  <if test="sch_uploadBy != '' and sch_uploadBy != null">	
+		    and a.uploadBy like concat('%', #{sch_uploadBy}, '%')
+		  </if>
 		  <if test="sch_startDate != '' and sch_startDate != null">	
-		     and #{sch_startDate} <![CDATA[<=]]> DATE_FORMAT(uploadDt, '%Y-%m-%d')
+		    and #{sch_startDate} <![CDATA[<=]]> DATE_FORMAT(a.uploadDt, '%Y-%m-%d')
 		  </if>
 		  <if test="sch_endDate != '' and sch_endDate != null">   
-   		 	and DATE_FORMAT(uploadDt, '%Y-%m-%d') <![CDATA[<=]]> #{sch_endDate}
+   		 	and DATE_FORMAT(a.uploadDt, '%Y-%m-%d') <![CDATA[<=]]> #{sch_endDate}
    		  </if>
-		  group by refWord
+		  group by a.refWord
 	</select>
 
 	<select id="selectfilelist" parameterType="map" resultType="com.web.app.file.service.FileVo">
 		select row_number() over(order by a.uploadDt desc) as rownum
 			  ,a.uuid
 			  ,a.content
-			  ,a.originName
+			  ,substring_index(a.originName,'.',1) as originName
 			  ,a.fileExt
 			  ,a.storedFileNm
 			  ,a.filePath
 			  ,case 
-               when a.size  <![CDATA[<]]> 1024 then 1
+               when a.size <![CDATA[<]]> 1024 then 1
                else round(a.size/1024) end as size
               ,a.refWord
 			  ,a.refKey
@@ -49,6 +58,18 @@
 		 <if test="refKey != '' and refKey != null">
 		   and a.refKey = #{refKey}
 		 </if>
+		 <if test="sch_fileName != '' and sch_fileName != null">	
+		   and a.originName like concat('%', #{sch_fileName}, '%')  
+		 </if>
+		 <if test="sch_uploadBy != '' and sch_uploadBy != null">	
+		   and a.uploadBy like concat('%', #{sch_uploadBy}, '%')
+		 </if>
+		 <if test="sch_startDate != '' and sch_startDate != null">	
+		   and #{sch_startDate} <![CDATA[<=]]> DATE_FORMAT(a.uploadDt, '%Y-%m-%d')
+		 </if>
+		 <if test="sch_endDate != '' and sch_endDate != null">   
+   			and DATE_FORMAT(a.uploadDt, '%Y-%m-%d') <![CDATA[<=]]> #{sch_endDate}
+   		 </if>
 		 order by a.uploadDt desc
 	</select>
 

@@ -1,4 +1,4 @@
-package com.web.app.controller;
+package com.web.app.common.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,16 @@ public class FileController {
     private String uploadPath;
 	
 	@GetMapping("fileview")
-	public String fileview(Model model) {
+	public String fileview(@RequestParam Map<String, Object> paramMap, Model model) {
+		List<Map<String, Object>> selectfileTypeList = fileservice.selectfileTypeList(paramMap);
+		List<String> fileTypeList = new ArrayList<String>();
+		
+		for(int i=0; i<selectfileTypeList.size(); i++) {
+			String fileType = String.valueOf(selectfileTypeList.get(i).get("fileType"));
+			fileTypeList.add(fileType);
+		}
+		
+		model.addAttribute("fileTypeList", fileTypeList);
 		return "file/fileview";
 	}
 	

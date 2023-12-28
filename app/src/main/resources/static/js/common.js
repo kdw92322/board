@@ -16,7 +16,7 @@ var openModalPop = function(modalId, url, param){
         	$(modalId).modal('show');
         	rtnMap.result = 0;
 	    },error : function(xhr, ajaxSettings, thrownError){
-			rtnMap.result = 1
+			rtnMap.result = 1;
 		}
 	});
 	

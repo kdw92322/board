@@ -80,7 +80,6 @@ $(function(){
 });
 var selectLogMstList = function(){
 	var searchFormData = $("#searchForm").serializeObject();
-	console.log("searchFormData", searchFormData);
 	
 	serviceParam.type = "GET";
 	serviceParam.url = "/log/connectLogMstView";
@@ -100,7 +99,6 @@ var onRowClick = function(id){
 	    ,sch_startDate : $("#sch_startDate").val()  
 	    ,sch_endDate : $("#sch_endDate").val()
 	}
-	console.log("param", param);
 
 	serviceParam.type = "GET";
 	serviceParam.url = "/log/connectLogDtlView";

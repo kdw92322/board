@@ -1,0 +1,115 @@
+<div class="modal-header" style="background-color: #DCD776">
+	<h5 class="modal-title" th:text="${ModalTitle}" id="modalTitle"></h5>
+</div>
+<div class="modal-body">
+	<form id="modalBodyform">
+		<input type="hidden" th:id="saveBy" th:name="saveBy" th:value="${#authentication.name}">
+		<input type="hidden" th:id="type" th:name="type" th:value="${type}">
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+				<div class="col-md">
+					<div class="form-floating">
+						<input class="form-control" type="text" th:id="mstCd" th:name="mstCd" th:value="${mstCd}" th:disabled="${type == 'U'} ? 'disabled'" required>
+			            <label for="f_mstCd">대분류 코드</label>
+					</div>
+				</div>
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" type="text" th:id="mstNm" th:name="mstNm" th:value="${mstNm}" required>
+			            <label for="f_mstNm">대분류 이름</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <select class="form-select form-select-sm" id="useYn" name="useYn" required>
+				    		<option value="">선택</option>
+				    		<option value="Y" th:selected="${useYn} == 'Y'">사용</option>
+						    <option value="N" th:selected="${useYn} == 'N'">사용안함</option>						    
+			    		</select>
+			    		<label for="f_useYn">사용여부</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <!-- <input class="form-control" type="text" th:id="remark" th:name="remark" th:value="${remark}"> -->
+			            <textarea class="form-control" th:id="remark" th:name="remark" th:text="${remark}" th:value="${remark}" rows="10" style="height: 100px"></textarea>
+			            <label for="f_remark">비고</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" type="text" th:id="attr1" th:name="attr1" th:value="${attr1}">
+			            <label for="f_attr1">속성1</label>
+			        </div>
+			    </div>
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" type="text" th:id="attr2" th:name="attr2" th:value="${attr2}">
+			            <label for="f_attr2">속성2</label>
+			        </div>
+			    </div>
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" type="text" th:id="attr3" th:name="attr3" th:value="${attr3}">
+			            <label for="f_attr3">속성3</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer" style="background-color: #FBF8EF">
+	<button id="btn_save" type="button" class="btn btn-primary">저장</button>
+    <button id="btn_close" type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+</div>
+<script type="text/javascript">
+var type = $("#type").val();
+$(function(){
+	if(type == "I"){
+		serviceParam.type = "POST";
+		serviceParam.url = "/common/insertCodeMst";
+	}else if(type == "U"){
+		serviceParam.type = "PUT";	
+		serviceParam.url = "/common/updateCodeMst";
+	}
+});
+
+$("#btn_save").on("click", function() {
+	var formdata = $("#modalBodyform").serializeObject();
+	
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify(formdata);
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = true;
+	
+	var result = callService(serviceParam);
+
+	if(result.Status == "success"){
+		swAlert(result.Status, "저장 되었습니다.", "S", "OK");
+	}else{
+		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+	}
+	
+	setTimeout(function(){
+		selectCommonCdMstList();
+		swal.close();
+		$("#btn_close").click();
+	}, 500);
+});
+
+</script>
+	

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#viewgrid tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+<div class="col" style="height:65vh; max-height:65vh; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+	<input type="hidden" th:id="mstCd" th:value="${mstCd}">
+	<div class="col-12" style="margin-bottom: 20px;">
+	    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;대분류 >> 소분류</span>
+	    <div style="float:right;">
+			<button type="button" class="btn btn-success" th:id="btnAddDtlCode" th:onclick="insertCommonCdDtl([[${mstCd}]]);" style="margin-left:2px;"><i class="fa-solid fa-plus"></i></button>
+	    </div>
+	</div>
+	<div class="col-12" style="text-align:center; overflow-y: auto; overflow-x: auto;">
+			<table class="table table-bordered" id="codeDtlListGrid">
+			    <thead class="table-dark">
+			    	<tr align="center">
+			    		<th width="5%" style="font-size: 11px;">No.</th>
+			    		<th width="15%" style="font-size: 11px;">코드</th>
+			    		<th width="15%" style="font-size: 11px;">이름</th>
+			    		<th width="15%" style="font-size: 11px;">사용여부</th>
+			    		<th width="20%" style="font-size: 11px;"></th>
+			    	</tr>
+			    </thead>
+			    <tbody id="viewTableBody">
+			    	<tr th:each="codeDtl : ${codeDtlList}" align="center">
+				    	<td style="vertical-align: middle;">
+				    		<span th:text="${codeDtl.rownum}"></span>
+				    	</td>
+				    	
+				    	<td style="vertical-align: middle;">
+				    		<span th:text="${codeDtl.dtlCd}"></span>
+				    	</td>
+				    	
+				    	<td style="vertical-align: middle;">
+				    		<span th:text="${codeDtl.dtlNm}"></span>
+				    	</td>
+				    	
+				    	<td style="vertical-align: middle;">
+				    		<span th:if="${codeDtl.useYn == 'Y'}">사용</span>
+				    		<span th:if="${codeDtl.useYn == 'N'}">미사용</span>
+				    	</td>
+				    	
+				    	<td style="vertical-align: middle;">
+				    		<button class="btn btn-info btn-sm" type="button" th:onclick="updateCommonCdDtl([[${codeDtl.dtlCd}]]);">수정</button>
+				    		<button class="btn btn-danger btn-sm" type="button" th:onclick="deleteCommonCdDtl([[${codeDtl.dtlCd}]]);">삭제</button>
+				    	</td>
+				    </tr>
+			    </tbody>
+			</table>
+	</div>
+	<th:block th:replace="/fragments/_modals :: modal('codeDtlModal')">codeDtlModal</th:block>
+</div>
+<script type="text/javascript">
+$(function(){
+
+});
+
+var insertCommonCdDtl = function(mstCd){	
+	openModalPop("#viewModal", "/modals/codeDtlModal", {"type" : "I", "mstCd" : mstCd});
+}
+
+var updateCommonCdDtl = function(dtlCd){
+	openModalPop("#viewModal", "/modals/codeDtlModal", {"type" : "U", "dtlCd" : dtlCd});
+}
+
+var deleteCommonCdDtl = function(dtlCd){
+	serviceParam.type = "DELETE";
+	serviceParam.url = "/webview/deleteViewInfo";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify({"viewcode" : viewcode});
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
+	if(result.Status == "success"){
+		swAlert(result.Status, "화면이 삭제 되었습니다.", "S", "OK");
+		setTimeout(function(){
+			selectViewList($("#menucode").val() ,menutype);
+			swal.close();
+			$("#btn_close").click();
+		}, 1000);
+	}else{
+		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+		return;
+	}
+}
+
+
+</script>
+</html>

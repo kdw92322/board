@@ -1,24 +1,167 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.web.app.screen.service.WebViewMapper">
+<mapper namespace="com.web.app.webview.service.WebViewMapper">
+	<select id="selectMenuList" resultType="map">
+		 select a.menuorder
+			   ,a.menucode
+			   ,a.menuname
+			   ,a.menupath
+			   ,a.menutype
+		   from tb_webview_menu a
+		  where 1=1
+          <if test="menucode != '' and menucode != null">
+             and a.menucode = #{menucode}
+          </if>
+          <!-- 
+          <if test="sch_viewName != '' and sch_viewName != null">
+             and a.name like CONCAT('%', #{sch_viewName}, '%')
+          </if>
+          <if test="sch_useYn != '' and sch_useYn != null">
+             and a.useYn = #{sch_useYn}
+          </if>
+          <if test="sch_path != '' and sch_path != null">
+             and a.path like CONCAT('%', #{sch_path}, '%')
+          </if>
+          <if test="sch_level != '' and sch_level != null">
+             and a.level = #{sch_level}
+          </if>
+           -->
+          order by a.menuorder
+	</select>
+	
 	<select id="selectViewList" resultType="map">
-		select row_number() over(order by a.code) as rownum,
-			   a.code,
-			   a.name,
-			   a.useYn,
-			   a.url
-		   from tb_webview_mst a
+		 select row_number() over(order by a.viewcode) as rownum
+			  ,a.menucode
+			  ,a.viewcode
+			  ,a.name
+			  ,a.useYn
+			  ,a.path
+			  ,a.level
+		   from tb_webview_view a
+		  where 1=1
+		  <if test="menucode != '' and menucode != null">
+		    and a.menucode = #{menucode}
+		  </if>  
+          <if test="viewcode != '' and viewcode != null">
+            and a.viewcode = #{viewcode}
+          </if>
+          <if test="sch_viewName != '' and sch_viewName != null">
+            and a.name like CONCAT('%', #{sch_viewName}, '%')
+          </if>
+          <if test="sch_useYn != '' and sch_useYn != null">
+            and a.useYn = #{sch_useYn}
+          </if>
+          <if test="sch_path != '' and sch_path != null">
+            and a.path like CONCAT('%', #{sch_path}, '%')
+          </if>
+          <if test="sch_level != '' and sch_level != null">
+            and a.level = #{sch_level}
+          </if>
 	</select>
 	
-	<select id="selectViewAuthList" resultType="map">
-		select a.code
-			  ,a.auth
-			  ,a.searchYn
-			  ,a.saveYn
-			  ,a.deleteYn
-		  from tb_webview_userauth a
-		 where a.code = #{viewcode} 
+	<select id="selectAuthList" resultType="map">
+		<choose>
+			<!-- 메뉴별 권한 -->
+			<when test="type == 'menu'">
+				select a.menucode as code, a.auth
+				  from tb_webview_menuauth a
+				 where a.menucode = #{menucode} 
+			</when>
+			<!-- 화면별 권한 -->
+			<when test="type == 'view'">
+				select a.viewcode as code
+					  ,a.auth
+					  ,a.searchYn
+					  ,a.saveYn
+					  ,a.deleteYn
+				  from tb_webview_viewauth a
+				 where a.viewcode = #{viewcode}
+			</when>
+		</choose>
 	</select>
 	
+	<insert id="insertMenuInfo" parameterType="map">
+		<selectKey resultType="string" keyProperty="code" order="BEFORE">
+		    select concat('menu', lpad(ifnull(max(replace(menuCode ,'menu','')),0) + 1, 4,'0')) as code 
+		      from tb_webview_menu
+		</selectKey>
+		insert tb_webview_menu (
+			 menucode
+			,menuname
+			,menupath
+			,menutype
+			,menuorder
+			,createBy
+			,createDt
+		) values(
+			 #{code}
+			,#{menuname}
+			,#{menupath}
+			,#{menutype}
+			,#{menuorder}
+			,#{saveBy}
+			,sysdate()
+		)
+	</insert>
+	
+	<update id="updateMenuInfo" parameterType="map">
+		update tb_webview_menu
+		   set menuname  = #{menuname}
+		      ,menupath  = #{menupath}
+		      ,menutype  = #{menutype}
+		      ,menuorder = #{menuorder}
+			  ,updateBy = #{saveBy}
+			  ,updateDt = sysdate()
+		 where menucode = #{menucode}
+	</update>
+	
+	<delete id="deleteMenuInfo" parameterType="map">
+		delete
+		  from tb_webview_menu a
+		 where menucode = #{menucode}
+	</delete>
+	
+	<insert id="insertViewInfo" parameterType="map">
+		<selectKey resultType="string" keyProperty="viewcode" order="BEFORE">
+		    select concat('view', lpad(ifnull(max(replace(viewcode, 'view', '')),0) + 1, 4,'0')) as viewcode from tb_webview_view  
+		</selectKey>
+		insert tb_webview_view (
+			 menucode
+			,viewcode
+			,name
+			,useYn
+			,path
+			,level
+			,createBy
+			,createDt
+		) values(
+			 #{menucode}
+			,#{viewcode}
+			,#{viewname}
+			,#{useYn}
+			,#{viewpath}
+			,#{level}
+			,#{saveBy}
+			,sysdate()
+		)
+	</insert>
+	
+	<update id="updateViewInfo" parameterType="map">
+		update tb_webview_view
+		   set name     = #{viewname}
+			  ,useYn    = #{useYn}
+			  ,path     = #{viewpath}
+			  ,level    = #{level}
+			  ,updateBy = #{saveBy}
+			  ,updateDt = sysdate()
+		 where viewcode = #{viewcode}
+	</update>
+	
+	<delete id="deleteViewInfo" parameterType="map">
+		delete
+		  from tb_webview_view a
+		 where viewcode = #{viewcode}
+	</delete>
+
 </mapper>

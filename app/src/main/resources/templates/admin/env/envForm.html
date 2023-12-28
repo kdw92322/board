@@ -1,0 +1,106 @@
+ <!DOCTYPE html>
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
+<head>
+	<title>환경설정</title>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col">
+	        <h4 style="font-weight: bold;"><i class="fa-solid fa-gear"></i>&nbsp;환경설정</h4>
+	    </div>
+	    <div class="col" align="right" style="display:inline-block;">
+			<button type="button" class="btn btn-primary" th:onclick="selectConfigType();" style="margin-left:2px;">조회</button>
+	    </div>
+	</div>
+	<div class="row" style="margin-top:10px; margin-bottom:10px; border:groove; border-radius:10px; padding:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+		<div class="col-12">
+			<h6 style="font-weight: bold;"><i class="fa-solid fa-filter"></i>&nbsp;조회조건</h6>
+		</div>
+		<div class="col-12">
+			<form id="searchForm">
+				<table class="table table-bordered">
+					<colgroup>
+						 <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					</colgroup>
+					<tr>
+						<th><span>유형</span></th>
+						<td>
+							<select class="form-select form-select-sm" id="sch_EnvType" name="sch_EnvType" aria-label="EnvType">
+							    <option value="" selected>선택</option>
+							    <option value="S">System</option>
+							    <option value="U">User</option> 
+							</select>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-4">
+			<div class="row" style="height:65vh; max-height:65vh;">
+				<div class="col" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+					<div class="col-12" style="margin-bottom: 20px;">
+					    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;유형</span>
+					    <div style="float:right;">
+							<button type="button" class="btn btn-success" th:onclick="insertMenuInfo();" style="margin-left:2px;"><i class="fa-solid fa-plus"></i></button>
+					    </div>
+					</div>
+					<div class="col-12" style="text-align:center; overflow-y: auto; overflow-x: auto;">
+						<div id="menuList"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-8" id="viewList">
+			
+		</div>
+	</div>
+	<th:block th:replace="/fragments/_modals :: modal('envTypeModal')">envTypeModal</th:block>
+</div>
+</body>
+<script type="text/javascript">
+$(function(){
+	selectEnvTypeList();
+});
+
+/* 1. EnvTypeList function */
+//1-1. Env Type List select
+var selectEnvTypeList = function(){
+	var searchFormData = $("#searchForm").serializeObject();
+	console.log("searchFormData", searchFormData);
+	
+	return;
+	
+	serviceParam.type = "GET";
+	serviceParam.url = "/webview/menuList";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = searchFormData;
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
+	$("#divEnvTypeList").html(result.value);
+}
+
+//1-2. Menu 신규
+var insertEnvType = function(){
+	openModalPop("#menuModal", "/modals/menuModal", {"type" : "I"});
+}
+</script>
+</th:block>
+</html>

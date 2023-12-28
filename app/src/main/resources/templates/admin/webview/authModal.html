@@ -1,0 +1,47 @@
+<div class="modal-header" style="background-color: #DCD776">
+	<h5 class="modal-title" th:text="${ModalTitle}" id="modalTitle"></h5>
+</div>
+<div class="modal-body">
+	<form id="modalBodyform">
+		<input type="hidden" id="saveBy" name="saveBy" th:value="${#authentication.name}">
+		<input type="hidden" th:id="menucode" th:name="menucode" th:value="${menucode}">
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" type="text" th:id="menuname" th:name="menuname" th:value="${menuname}" required>
+			            <label for="f_menuname">Menu Name</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" type="text" th:id="menupath" th:name="menupath" th:value="${menupath}">
+			            <label for="f_menupath">Menu Path</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" type="text" th:id="menuorder" th:name="menuorder" th:value="${menuorder}" required>
+			            <label for="f_order">Order</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer" style="background-color: #FBF8EF">
+	<button id="btn_save" type="button" class="btn btn-primary">저장</button>
+    <button id="btn_close" type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+</div>
+<script type="text/javascript">
+
+</script>
+	

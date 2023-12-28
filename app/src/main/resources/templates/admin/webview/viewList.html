@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#viewgrid tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+<div class="col" style="height:65vh; max-height:65vh; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+	<input type="hidden" th:id="menucode" th:value="${menucode}">
+	<input type="hidden" th:id="menutype" th:value="${menutype}">
+	<div class="col-12" style="margin-bottom: 20px;">
+	    <span th:if="${menutype == 'view'}" style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;권한</span>
+	    <span th:if="${menutype == 'menu'}" style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;메뉴별 화면</span>
+	    <div style="float:right;">
+	    	<button type="button" class="btn btn-info" th:id="btnAddAuth" th:onclick="addAuth([[${menucode}]]);" style="display:none; margin-left:2px;">권한 추가</button>
+			<button type="button" class="btn btn-success" th:id="btnAddview" th:onclick="insertViewInfo([[${menucode}]]);" style="display:none; margin-left:2px;"><i class="fa-solid fa-plus"></i></button>
+	    </div>
+	</div>
+	<div class="col-12" style="text-align:center; overflow-y: auto; overflow-x: auto;">
+		<div th:style="${menutype == 'view' ? 'display:block;' : 'display:none;'}">
+			<table class="table table-bordered" id="authgrid" style="width:40%">
+			    <thead class="table-dark">
+			    	<tr align="center">
+			    		<th width="10%" style="font-size: 11px;">No.</th>
+			    		<th width="90%" style="font-size: 11px;">권한</th>
+			    	</tr>
+			    </thead>
+			    <tbody id="authTableBody">
+			    	<tr th:each="auth : ${authList}" align="center" th:onclick="onAuthTableRowClick([[${auth.menucode}]])">
+				    	<td style="vertical-align: middle;">
+				    		<span th:text="${auth.rownum}"></span>
+				    	</td>
+				    	<td style="vertical-align: middle;">
+				    		<span th:text="${auth.menucode}"></span>
+				    	</td>
+				    </tr>
+			    </tbody>
+			</table>
+		</div>
+		<div th:style="${menutype == 'menu' ? 'display:block;' : 'display:none;'}">
+			<table class="table table-bordered" id="viewgrid">
+			    <thead class="table-dark">
+			    	<tr align="center">
+			    		<th width="5%" style="font-size: 11px;">No.</th>
+			    		<th width="30%" style="font-size: 11px;">이름</th>
+			    		<th width="15%" style="font-size: 11px;">사용여부</th>
+			    		<th width="15%" style="font-size: 11px;">Level</th>
+			    		<th width="20%" style="font-size: 11px;">경로</th>
+			    		<th width="15%" style="font-size: 11px;"></th>
+			    	</tr>
+			    </thead>
+			    <tbody id="viewTableBody">
+			    	<tr th:each="view : ${viewList}" align="center" th:onclick="onViewTableRowClick([[${view.viewcode}]])">
+				    	<td style="vertical-align: middle;">
+				    		<span th:text="${view.rownum}"></span>
+				    	</td>
+				    	
+				    	<td style="vertical-align: middle;">
+				    		<span th:text="${view.name}"></span>
+				    	</td>
+				    	
+				    	<td style="vertical-align: middle;">
+				    		<span th:if="${view.useYn == 'Y'}">사용</span>
+				    		<span th:if="${view.useYn == 'N'}">미사용</span>
+				    	</td>
+				    	
+				    	<td style="vertical-align: middle;">
+				    		<span th:text="${view.level}"></span>
+				    	</td>
+				    	
+				    	<td style="vertical-align: middle;">
+				    		<span th:text="${view.path}"></span>
+				    		<!-- <input type="text" class="form-control form-control-sm" id="path" name="path" th:value="${view.path}"> -->
+				    	</td>
+				    	<td style="vertical-align: middle;">
+				    		<button class="btn btn-info btn-sm" type="button" th:onclick="updateViewInfo([[${view.viewcode}]]);">수정</button>
+				    		<button class="btn btn-danger btn-sm" type="button" th:onclick="deleteViewInfo([[${view.viewcode}]]);">삭제</button>
+				    	</td>
+				    </tr>
+			    </tbody>
+			</table>
+		</div>
+	</div>
+	<th:block th:replace="/fragments/_modals :: modal('viewModal')">viewModal</th:block>
+</div>
+<script type="text/javascript">
+var menutype;
+$(function(){
+	menutype = $("#menutype").val();
+	if(menutype == "menu"){
+		$("#btnAddview").show();
+		$("#btnAddAuth").hide();
+	}else if(menutype == "view"){
+		$("#btnAddview").hide();
+		$("#btnAddAuth").show();
+	}
+});
+
+var insertViewInfo = function(menucode){	
+	openModalPop("#viewModal", "/modals/viewModal", {"type" : "I", "menucode" : menucode});
+}
+
+var updateViewInfo = function(viewcode){
+	openModalPop("#viewModal", "/modals/viewModal", {"type" : "U", "viewcode" : viewcode});
+}
+
+var deleteViewInfo = function(viewcode){
+	serviceParam.type = "DELETE";
+	serviceParam.url = "/webview/deleteViewInfo";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify({"viewcode" : viewcode});
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
+	if(result.Status == "success"){
+		swAlert(result.Status, "화면이 삭제 되었습니다.", "S", "OK");
+		setTimeout(function(){
+			selectViewList($("#menucode").val() ,menutype);
+			swal.close();
+			$("#btn_close").click();
+		}, 1000);
+	}else{
+		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+		return;
+	}
+}
+
+var onViewTableRowClick = function(type, viewcode){
+	
+}
+
+var addAuth = function(menucode){
+	console.log("menucode", menucode);
+}
+
+</script>
+</html>

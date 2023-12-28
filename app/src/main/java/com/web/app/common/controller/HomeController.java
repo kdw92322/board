@@ -1,4 +1,4 @@
-package com.web.app.controller;
+package com.web.app.common.controller;
 
 import java.security.Principal;
 import java.util.Map;

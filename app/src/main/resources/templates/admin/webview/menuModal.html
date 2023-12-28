@@ -1,0 +1,106 @@
+<div class="modal-header" style="background-color: #DCD776">
+	<h5 class="modal-title" th:text="${ModalTitle}" id="modalTitle"></h5>
+</div>
+<div class="modal-body">
+	<form id="modalBodyform">
+		<input type="hidden" id="saveBy" name="saveBy" th:value="${#authentication.name}">
+		<input type="hidden" th:id="menucode" th:name="menucode" th:value="${menucode}">
+		<input type="hidden" th:id="type" th:name="type" th:value="${type}">
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" type="text" th:id="menuname" th:name="menuname" th:value="${menuname}" required>
+			            <label for="f_menuname">Menu Name</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <select class="form-select form-select-sm" id="menutype" name="menutype" required>
+				    		<option value="">선택</option>
+				    		<option value="view" th:selected="${menutype} == 'view'">화면</option>
+						    <option value="menu" th:selected="${menutype} == 'menu'">메뉴</option>						    
+			    		</select>
+			    		<label for="f_menutype">Menu Type</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" type="text" th:id="menupath" th:name="menupath" th:value="${menupath}" th:disabled="${menutype == 'view'} ? 'disabled'">
+			            <label for="f_menupath">Menu Path</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="form-floating mb-3">
+			<div class="row g-2">
+			    <div class="col-md">
+			        <div class="form-floating">
+			            <input class="form-control" type="text" th:id="menuorder" th:name="menuorder" th:value="${menuorder}" required>
+			            <label for="f_order">Order</label>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer" style="background-color: #FBF8EF">
+	<button id="btn_save" type="button" class="btn btn-primary">저장</button>
+    <button id="btn_close" type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+</div>
+<script type="text/javascript">
+var type = $("#type").val();
+$(function(){
+	if(type == "I"){
+		serviceParam.type = "POST";
+		serviceParam.url = "/webview/insertMenuInfo";
+	}else if(type == "U"){
+		serviceParam.type = "PUT";	
+		serviceParam.url = "/webview/updateMenuInfo";
+	}
+	
+	$("#menutype").on("change", function(){
+		var value = $(this).val();
+		if(value == 'view'){
+			$("#menupath").attr("disabled", true);
+		}else if(value == 'menu'){
+			$("#menupath").attr("disabled", false);
+		}
+	});
+});
+
+$("#btn_save").on("click", function() {
+	var formdata = $("#modalBodyform").serializeObject();
+
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify(formdata);
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = true;
+	
+	var result = callService(serviceParam);
+
+	if(result.Status == "success"){
+		swAlert(result.Status, "저장 되었습니다.", "S", "OK");
+	}else{
+		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+	}
+	
+	setTimeout(function(){
+		selectMenuList();
+		swal.close();
+		$("#btn_close").click();
+	}, 500);
+});
+
+</script>
+	

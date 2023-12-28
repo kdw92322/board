@@ -1,13 +1,15 @@
-package com.web.app.controller;
+package com.web.app.common.controller;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.web.app.board.service.BoardService;
 import com.web.app.calendar.service.CalendarService;
 import com.web.app.calendar.service.CalendarVO;
+import com.web.app.common.service.CommonService;
+import com.web.app.webview.service.WebViewService;
 
 /*
 	사용할 ModalView 입력 Controller
@@ -33,6 +37,12 @@ public class ModalController {
 	
 	@Autowired
 	private BoardService boardservice;
+	
+	@Autowired
+	private WebViewService webviewservice;
+	
+	@Autowired
+	private CommonService commonservice;
 	
 	@GetMapping("modal1")
     public String modal1() {
@@ -128,6 +138,113 @@ public class ModalController {
     	return "/board/boardReviewModal";
     }
     
+    @PostMapping("/menuModal")
+	public String webviewMenuSaveModal(@RequestBody Map<String, Object> paramMap, Model model) throws Exception {
+    	String type = String.valueOf(paramMap.get("type"));
+    	model.addAttribute("type", type);
+    	if(type.equals("I")) {
+    		//신규
+    		model.addAttribute("ModalTitle", "메뉴 신규 Modal");
+    	} else if(type.equals("U")) {
+    		//수정
+    		model.addAttribute("ModalTitle", "메뉴 수정 Modal");
+    		if(paramMap.get("menucode") != null) {
+        		List<Map<String,Object>> selectMenuList = webviewservice.selectMenuList(paramMap);
+        		model.addAttribute("menucode", paramMap.get("menucode"));
+            	model.addAttribute("menuname", selectMenuList.get(0).get("menuname"));
+            	model.addAttribute("menupath", selectMenuList.get(0).get("menupath"));
+            	model.addAttribute("menutype", selectMenuList.get(0).get("menutype"));
+            	model.addAttribute("menuorder", selectMenuList.get(0).get("menuorder"));
+        	}
+    	}
+    	
+    	return "/admin/webview/menuModal";
+	}
     
+    @PostMapping("/viewModal")
+	public String webviewSaveModal(@RequestBody Map<String, Object> paramMap, Model model) throws Exception {
+    	String type = String.valueOf(paramMap.get("type"));
+    	model.addAttribute("type", type);
+    	model.addAttribute("menucode", paramMap.get("menucode"));
+    	if(type.equals("I")) {
+    		//신규
+    		model.addAttribute("ModalTitle", "화면 신규 Modal");
+    	}else if(type.equals("U")) {
+    		//수정
+    		model.addAttribute("ModalTitle", "화면 수정 Modal");
+    		if(paramMap.get("viewcode") != null) {
+	    		List<Map<String,Object>> selectViewList = webviewservice.selectViewList(paramMap);
+	    	    if(selectViewList.size() > 0) {
+	    	    	model.addAttribute("viewcode", paramMap.get("viewcode"));
+	    	    	model.addAttribute("path", selectViewList.get(0).get("path"));
+	    	        model.addAttribute("level", selectViewList.get(0).get("level"));
+	    	        model.addAttribute("useYn", selectViewList.get(0).get("useYn"));
+	    	        model.addAttribute("name", selectViewList.get(0).get("name"));
+	    	    }
+    		}
+    	}
+    	
+    	return "/admin/webview/viewModal";
+	}
     
+    @PostMapping("/codeMstModal")
+	public String codeMstModal(@RequestBody Map<String, Object> paramMap, Model model) throws Exception {
+    	String type = String.valueOf(paramMap.get("type"));
+    	model.addAttribute("type", type);
+    	commonservice.selectCodeMstList(paramMap);
+    	if(type.equals("I")) {
+    		//신규
+    		model.addAttribute("ModalTitle", "대분류(CODE) 신규 Modal");
+    	}else if(type.equals("U")) {
+    		//수정
+    		model.addAttribute("ModalTitle", "대분류(CODE) 수정 Modal");
+    		
+    		if(paramMap.get("mstCd") != null) {
+	    		List<Map<String,Object>> codeMstList = commonservice.selectCodeMstList(paramMap);
+	    		if(codeMstList.size() > 0) {
+	    	    	Map<String,Object> codeMst = codeMstList.get(0);
+	    	    	model.addAttribute("mstCd", paramMap.get("mstCd"));
+	    	    	model.addAttribute("mstNm", codeMst.get("mstNm"));
+	    	    	model.addAttribute("useYn", codeMst.get("useYn"));
+	    	    	model.addAttribute("remark", codeMst.get("remark"));
+	    	    	model.addAttribute("attr1", codeMst.get("attr1"));
+	    	    	model.addAttribute("attr2", codeMst.get("attr2"));
+	    	    	model.addAttribute("attr3", codeMst.get("attr3"));
+	    	    }
+    		}
+    		
+    	}
+    	return "/admin/code/codeMstModal";
+	}
+    
+    @PostMapping("/codeDtlModal")
+	public String codeDtlModal(@RequestBody Map<String, Object> paramMap, Model model) throws Exception {
+    	String type = String.valueOf(paramMap.get("type"));
+    	model.addAttribute("type", type);
+    	commonservice.selectCodeMstList(paramMap);
+    	if(type.equals("I")) {
+    		//신규
+    		model.addAttribute("mstCd", paramMap.get("mstCd"));
+    		model.addAttribute("ModalTitle", "소분류(CODE) 신규 Modal");
+    	}else if(type.equals("U")) {
+    		//수정
+    		model.addAttribute("ModalTitle", "소분류(CODE) 수정 Modal");
+    		
+    		if(paramMap.get("dtlCd") != null) {
+	    		List<Map<String,Object>> codeMstList = commonservice.selectCodeMstList(paramMap);
+	    		if(codeMstList.size() > 0) {
+	    	    	Map<String,Object> codeMst = codeMstList.get(0);
+	    	    	model.addAttribute("mstCd", paramMap.get("mstCd"));
+	    	    	model.addAttribute("mstNm", codeMst.get("mstNm"));
+	    	    	model.addAttribute("useYn", codeMst.get("useYn"));
+	    	    	model.addAttribute("remark", codeMst.get("remark"));
+	    	    	model.addAttribute("attr1", codeMst.get("attr1"));
+	    	    	model.addAttribute("attr2", codeMst.get("attr2"));
+	    	    	model.addAttribute("attr3", codeMst.get("attr3"));
+	    	    }
+    		}
+    		
+    	}
+    	return "/admin/code/codeMstModal";
+	}
 }
