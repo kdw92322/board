@@ -4,9 +4,9 @@
 <div align= "center"> 
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> My Spring Private Project </h2>  
     <div style="font-weight: 700; font-size: 15px; text-align: center; color: #282d33;"> 
-	1. 꾸준하게<br>
-	2. 차근차근<br>
-	3. 해보자는 Mind!!<br>    
+	1. steadily!!<br>
+	2. Step by step<br>
+	3. I can Do It!!<br>    
     </div> 
 </div>
     <div align= "center">
