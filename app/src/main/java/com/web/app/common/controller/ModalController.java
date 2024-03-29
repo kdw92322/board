@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.web.app.board.service.BoardService;
 import com.web.app.calendar.service.CalendarService;
@@ -58,7 +59,6 @@ public class ModalController {
     //일정표 - 상세 View
     @PostMapping("dayInfo")
     public String dayInfo(@RequestBody Map<String, Object> paramObj, Model model) throws Exception {
-    	//System.out.println("paramObj : " + paramObj);
     	model.addAttribute("ModalTitle", "일정 Modal");
     	
 		if (paramObj.get("id") != null) { /* 기존일정 정보 조회 */
@@ -124,8 +124,6 @@ public class ModalController {
     //게시물 댓글 작성 Modal
     @PostMapping("boardReviewModal")
     public String boardReviewModal(@RequestBody Map<String, Object> paramObj, Model model) throws Exception {
-    	System.out.println("paramObj : " + paramObj);
-    	
     	List<Map<String,Object>> selectboardList = boardservice.selectboardList(paramObj);
     	Map<String,Object> boardInfo = selectboardList.get(0);
     	String boardNo = String.valueOf(boardInfo.get("boardNo"));
@@ -191,7 +189,6 @@ public class ModalController {
 	public String codeMstModal(@RequestBody Map<String, Object> paramMap, Model model) throws Exception {
     	String type = String.valueOf(paramMap.get("type"));
     	model.addAttribute("type", type);
-    	commonservice.selectCodeMstList(paramMap);
     	if(type.equals("I")) {
     		//신규
     		model.addAttribute("ModalTitle", "대분류(CODE) 신규 Modal");
@@ -221,7 +218,6 @@ public class ModalController {
 	public String codeDtlModal(@RequestBody Map<String, Object> paramMap, Model model) throws Exception {
     	String type = String.valueOf(paramMap.get("type"));
     	model.addAttribute("type", type);
-    	commonservice.selectCodeMstList(paramMap);
     	if(type.equals("I")) {
     		//신규
     		model.addAttribute("mstCd", paramMap.get("mstCd"));
@@ -229,22 +225,22 @@ public class ModalController {
     	}else if(type.equals("U")) {
     		//수정
     		model.addAttribute("ModalTitle", "소분류(CODE) 수정 Modal");
-    		
     		if(paramMap.get("dtlCd") != null) {
-	    		List<Map<String,Object>> codeMstList = commonservice.selectCodeMstList(paramMap);
-	    		if(codeMstList.size() > 0) {
-	    	    	Map<String,Object> codeMst = codeMstList.get(0);
+	    		List<Map<String,Object>> CodeDtlList = commonservice.selectCodeDtlList(paramMap);
+	    		if(CodeDtlList.size() > 0) {
+	    	    	Map<String,Object> codeDtl = CodeDtlList.get(0);
 	    	    	model.addAttribute("mstCd", paramMap.get("mstCd"));
-	    	    	model.addAttribute("mstNm", codeMst.get("mstNm"));
-	    	    	model.addAttribute("useYn", codeMst.get("useYn"));
-	    	    	model.addAttribute("remark", codeMst.get("remark"));
-	    	    	model.addAttribute("attr1", codeMst.get("attr1"));
-	    	    	model.addAttribute("attr2", codeMst.get("attr2"));
-	    	    	model.addAttribute("attr3", codeMst.get("attr3"));
+	    	    	model.addAttribute("dtlCd", codeDtl.get("dtlCd"));
+	    	    	model.addAttribute("dtlNm", codeDtl.get("dtlNm"));
+	    	    	model.addAttribute("useYn", codeDtl.get("useYn"));
+	    	    	model.addAttribute("remark", codeDtl.get("remark"));
+	    	    	model.addAttribute("attr1", codeDtl.get("attr1"));
+	    	    	model.addAttribute("attr2", codeDtl.get("attr2"));
+	    	    	model.addAttribute("attr3", codeDtl.get("attr3"));
 	    	    }
     		}
     		
     	}
-    	return "/admin/code/codeMstModal";
+    	return "/admin/code/codeDtlModal";
 	}
 }

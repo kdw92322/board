@@ -42,6 +42,7 @@ public class BoardController {
 	@GetMapping("/selectBoardList")
 	@ResponseBody
 	public List<Map<String, Object>> selectboardList(Map<String, Object> paramMap, Model model) throws Exception {
+		System.out.println("paramMap : " + paramMap);
 		List<Map<String, Object>> selectboardList = boardservice.selectboardList(paramMap);
 		return selectboardList;
 	}

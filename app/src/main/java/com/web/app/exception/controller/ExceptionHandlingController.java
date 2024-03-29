@@ -27,13 +27,17 @@ public class ExceptionHandlingController implements ErrorController{
 		// return 할 page
 		String rtnPage = "";
 		
+		String path = request.getServletPath();
+		System.out.println("path : " + path);
+		
 		// 에러 코드를 획득한다.
 		Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-
-		// 에러 코드에 대한 상태 정보
-		HttpStatus httpStatus = HttpStatus.valueOf(Integer.valueOf(status.toString()));
-        
 		if (status != null) {
+			System.out.println("status : " + status.toString());
+		
+			// 에러 코드에 대한 상태 정보
+			HttpStatus httpStatus = HttpStatus.valueOf(Integer.valueOf(status.toString()));
+
 			// HttpStatus와 비교해 페이지 분기를 나누기 위한 변수
 			int statusCode = Integer.valueOf(status.toString());
 			// 로그로 상태값을 기록 및 출력

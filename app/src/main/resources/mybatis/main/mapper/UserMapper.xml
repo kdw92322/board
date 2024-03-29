@@ -3,8 +3,8 @@
 
 <mapper namespace="com.web.app.user.UserMapper">
 	<select id="selectUserList" resultType="map">
-		select user_id   as userId
-			  ,username  as username	
+		select id   as userId
+			  ,name  as username	
 			  ,email     as email
 			  ,date_format(str_to_date(birth,'%Y%m%d'), '%Y-%m-%d') as birth
 			  ,phone     as phone
@@ -13,33 +13,37 @@
 		  from user_info
 		 where 1=1
 		 <if test="id != '' and id != null">
-		   and user_id = #{id}
+		   and id = #{id}
 		 </if> 
 	</select>
 	
+	<select id="chkDupUserCnt" resultType="int">
+		select count(*) as cnt from user_info where id = #{newID}
+	</select>
+	
 	<select id="selectUserInfo" resultType="com.web.app.user.UserForm">
-		select a.user_id                       as userId
-			  ,a.username                      as username	
-			  ,SUBSTRING_INDEX(a.email,'@',1)  as emailId
-              ,concat('@', SUBSTRING_INDEX(a.email,'@',-1)) as emailAddr
-              ,concat('@', SUBSTRING_INDEX(a.email,'@',-1)) as txtEmailAddr
+		select a.id as userId
+		      ,a.name as username
+		      ,SUBSTRING_INDEX(a.email,'@',1)  as emailId
+		      ,concat('@', SUBSTRING_INDEX(a.email,'@',-1)) as emailAddr
+		      ,concat('@', SUBSTRING_INDEX(a.email,'@',-1)) as txtEmailAddr
 			  ,SUBSTR(a.birth,1,4)             as year
-              ,SUBSTR(a.birth,5,2)             as month
-              ,SUBSTR(a.birth,7,2)             as day
-              ,SUBSTR(a.phone,1,3)             as serial
-              ,SUBSTR(a.phone,4,4)             as phoneNum1
-              ,SUBSTR(a.phone,8,4)             as phoneNum2
-			  ,a.join_date                     as joinDate
-			  ,a.user_role                     as userRole
-			  ,a.upt_dt                        as uptDt
-			  ,convert(ifnull(DATEDIFF(sysdate(), a.upt_dt), 0), char) as lastupdatediff
-			  ,ifnull(b.storedFileNm,'-') as fileNm
+		      ,SUBSTR(a.birth,5,2)             as month
+		      ,SUBSTR(a.birth,7,2)             as day
+		      ,SUBSTR(a.phone,1,3)             as serial
+		      ,SUBSTR(a.phone,4,4)             as phoneNum1
+		      ,SUBSTR(a.phone,8,4)             as phoneNum2
+		      ,a.join_date as joinDate
+		      ,a.role as userRole
+		      ,a.upt_dt
+		      ,convert(ifnull(DATEDIFF(sysdate(), a.upt_dt), 0), char) as lastupdatediff
+		      ,ifnull(b.storedFileNm,'-') as fileNm
 		  from user_info a
-		  left outer join tb_file_mng b on a.user_id = b.refKey
-		  							   and b.refWord = 'USER'		
+		  left outer join tb_file_mng b on a.id = b.refKey
+				  					   and b.refWord = 'USER'	
 		 where 1=1
 		 <if test="userId != '' and userId != null">
-		   and user_id = #{userId}
+		   and a.id = #{userId}
 		 </if>   	
 	</select>	   
 	
@@ -59,7 +63,7 @@
 		  group by ID, date_format(CONNECT_DT, '%Y-%m-%d')
 	</select>
 	
-	<select id="getConnUserLogData" parameterType="map" resultType="map">
+	<select id="getConnUserLogData1" parameterType="map" resultType="map">
 		with temp1 as (
 		    select DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -6 DAY),'%Y-%m-%d') as DT, count(*) as CNT from user_connect_log_history where DATE_FORMAT(CONNECT_DT,'%Y-%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -6 DAY),'%Y-%m-%d') and ID = #{userId} union all
 		    select DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -5 DAY),'%Y-%m-%d') as DT, count(*) as CNT from user_connect_log_history where DATE_FORMAT(CONNECT_DT,'%Y-%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -5 DAY),'%Y-%m-%d') and ID = #{userId} union all
@@ -75,6 +79,24 @@
 		select DT, CNT, DAYCODE
 		  from temp2
 		 order by DT
+	</select>
+	
+	<select id="getConnUserLogData2" parameterType="map" resultType="map">
+		<!-- 재귀쿼리 사용 -->
+		with recursive MonthByDay as (
+			<!-- 1.Anchor -->
+		    select last_day(now() - interval 1 month) + interval 1 day as DT 
+		    union all
+		    <!-- 2.recursive --> 
+		    select DT + interval 1 day 
+		      from MonthByDay
+		     where DT <![CDATA[<]]> last_day(now()) <!-- Termination Condition --> 
+		),
+		LogCount as (
+			select DATE_FORMAT(a.DT, '%d') as DT, (select count(id) from user_connect_log_history where a.DT = DATE_FORMAT(CONNECT_DT ,'%Y-%m-%d') and id = #{userId}) as CNT
+			  from MonthByDay a
+		)
+		select * from LogCount;
 	</select>
 	
 	

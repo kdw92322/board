@@ -10,9 +10,9 @@
 		<setting name="jdbcTypeForNull" value="NULL" /> <!-- null parameter 허용 -->
 		<setting name="mapUnderscoreToCamelCase" value="true"/> <!-- camelCase 적용 -->
 	</settings>
-	
+ 	<!-- 
 	<plugins>
 		<plugin interceptor="com.web.app.MybatisInterceptor"></plugin>
 	</plugins>
-	
+	-->
 </configuration>

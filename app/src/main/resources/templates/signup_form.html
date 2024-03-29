@@ -8,106 +8,109 @@
 	<title>회원가입</title>
 </head>
 <body>
-	<div class="wrap_container">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col">
+	<form th:id="signup_form">
+		<div class="wrapper">
+			<div class="inner_wrapper">
+				<div class="mb-3 row">
 					<div class="my-3 border-bottom">
-					    <h1>회원가입</h1>
+					    <h3>회원가입</h3>
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="txt_userId" class="form-label"><span class="req">*</span> 아이디</label>
+					<div class="col-sm-12">
+						<div style="display: flex;">
+				  			<input type="text" id="txt_userId" th:name="userId" class="form-control" aria-describedby="emailHelp" style="width:50%; display:inline-block; margin-right:10px;" required>
+							<button type="button" class="btn btn-primary" th:onclick="chk_dupid()">중복체크</button>
+							<span id="dupFlag" th:text="0" style="display:none;"></span>
+						</div>
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="username" class="form-label"><span class="req">*</span> 이름</label>
+					<div class="col-sm">
+						<input type="text" th:name="username" class="form-control" style="display:inline-block;" required>
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="password1" class="form-label"><span class="req">*</span> 비밀번호</label>
+					<div class="col-sm">
+						<input type="password" th:id="password1" th:name="password1" class="form-control" style="display:inline-block;" required>
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="password2" class="form-label"><span class="req">*</span> 비밀번호 확인</label>
+					<div class="col-sm">
+						<input type="password" th:id="password2" th:name="password2" class="form-control" style="display:inline-block;" oninput="chkPwd();" required>
+						<span id="isMatchPwd" th:text="0" style="display:none;"></span>
+					</div>
+				</div>
+				<div class="mb-3 row">
+				    <label for="emailId" class="form-label">이메일</label>
+				    <div class="col-sm-4">
+				    	<input type="text" class="form-control" id="emailId" th:name="emailId" placeholder="이메일" th:value="${emailId}">
+				    </div>
+				    <div class="col-sm-4">
+				        <select class="form-select" id="emailAddr" th:name="emailAddr" aria-label="selectDomain">
+				    		<option value="" selected>직접입력</option>
+				    		<option th:each="emailAddr : ${emailAddrs}" th:value="${emailAddr}" th:text="${emailAddr}" ></option>
+				    	</select>
+					</div>
+					<div class="col-sm-4">
+				    	<input type="text" class="form-control" id="txtEmailAddr" th:name="txtEmailAddr" placeholder="주소직접입력">
+				    </div>
+				</div> 
+				<div class="mb-3 row">
+				    <label for="birth" class="form-label">생년월일</label>
+				    <div class="col-sm-4">
+				        <select class="form-select" id="year" th:name="year" aria-label="년도">
+				 		    <option value="" selected>년도</option>
+				 		    <option th:each="year : ${years}" th:value="${year}" th:text="${year}"></option>
+				 	    </select>
+				    </div>
+				    <div class="col-sm-4">
+				    	<select class="form-select" id="month" th:name="month" aria-label="월">
+				 		    <option value="" selected>월</option>
+				 		    <option th:each="month : ${months}" th:value="${month}" th:text="${month}"></option>
+				 	    </select>
+				    </div>
+				    <div class="col-sm-4">
+				    	<select class="form-select" id="day" th:name="day" aria-label="일">
+				 		    <option value="" selected>일</option>
+				 		    <option th:each="day : ${days}" th:value="${day}" th:text="${day}"></option>
+				 	    </select>
+				    </div>
+				</div>
+				<div class="mb-3 row">
+				    <label for="phone" class="form-label">Phone Number</label>
+				    <div class="col-sm-4">
+				 		<select class="form-select" id="serial" th:name="serial">
+				            <option value="">선택</option>
+				            <option th:each="serial : ${serials}" th:value="${serial}" th:text="${serial}"></option>
+				 		</select>
+				    </div>
+				    <div class="col-sm-4">
+				 		<input type="text" class="form-control" th:id="phoneNum1" th:name ="phoneNum1" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="4">
+				    </div>
+				    <div class="col-sm-4">
+				 		<input type="text" class="form-control" th:id="phoneNum2" th:name="phoneNum2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="4">
+				    </div>
+				</div>
+				<div class="mb-3 row">
+					<div style="display: inline-block; text-align: right;">
+						<button type="button" class="btn btn-success" style="margin-top: 5px;" th:onclick="signup();">회원가입</button>
+						<button type="button" class="btn btn-info" style="margin-top: 5px;" th:onclick="location.href='http://localhost:9000/formlogin'">로그인</button>
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col">
-					<form th:action="@{/user/signup}" th:object="${userForm}" method="post">
-				        <label for="username" class="form-label"><span class="req">*</span> 아이디/이름</label>
-				        <div class="mb-3 row" style="padding-top:5px;">
-				        	<div class="col-sm-6">
-				        		<input type="text" th:field="*{userId}" class="form-control" style="display:inline-block;" required>
-				        	</div>
-				        	<div class="col-sm-6">
-				        		<input type="text" th:field="*{username}" class="form-control" style="display:inline-block;" required>
-				        	</div>
-				        </div>
-		                
-				        <label for="password1" class="form-label"><span class="req">*</span> 비밀번호/확인</label>
-				        <div class="mb-3 row" style="padding-top:5px;">
-				        	<div class="col-sm-6">
-				        		<input type="password" th:field="*{password1}" class="form-control" style="display:inline-block;" required>
-				        	</div>
-				        	<div class="col-sm-6">
-				        		<input type="password" th:field="*{password2}" class="form-control" style="display:inline-block;" required>
-				        	</div>
-				        </div>
-	                    
-				        <label for="staticEmail" class="form-label">이메일</label>
-				        <div class="mb-3 row" style="padding-top:5px;">
-				            <div class="col-sm-4">
-				            	<input type="text" class="form-control" id="emailId" th:field="*{emailId}" placeholder="이메일 ID" th:value="${emailId}">
-				            </div>
-				            <div class="col-sm-4">
-					            <select class="form-select" id="emailAddr" th:field="*{emailAddr}" aria-label="selectDomain">
-					        		<option value="" selected>직접입력</option>
-					        		<option th:each="emailAddr : ${emailAddrs}" th:value="${emailAddr}" th:text="${emailAddr}" ></option>
-					        	</select>
-				        	</div>
-				        	<div class="col-sm-4">
-				            	<input type="text" class="form-control" id="txtEmailAddr" th:field="*{txtEmailAddr}" placeholder="주소직접입력">
-				            </div>
-				        </div> 
-		         
-				        <label for="birth" class="form-label">생년월일</label>
-				        <div class="mb-3 row" style="padding-top:5px;">
-				            <div class="col-sm-4">
-				                <select class="form-select" id="year" th:field="*{year}" aria-label="년도">
-				         		    <option value="" selected>년도</option>
-				         		    <option th:each="year : ${years}" th:value="${year}" th:text="${year}"></option>
-				         	    </select>
-				            </div>
-				            <div class="col-sm-4">
-				            	<select class="form-select" id="month" th:field="*{month}" aria-label="월">
-				         		    <option value="" selected>월</option>
-				         		    <option th:each="month : ${months}" th:value="${month}" th:text="${month}"></option>
-				         	    </select>
-				            </div>
-				            <div class="col-sm-4">
-				            	<select class="form-select" id="day" th:field="*{day}" aria-label="일">
-				         		    <option value="" selected>일</option>
-				         		    <option th:each="day : ${days}" th:value="${day}" th:text="${day}"></option>
-				         	    </select>
-				            </div>
-				        </div>
-		        
-				        <label for="phone" class="form-label">휴대폰번호</label>
-				        <div class="mb-3 row" style="padding-top:5px;">
-				            <div class="col-sm-4">
-				         		<select class="form-select" id="serial" th:field="*{serial}">
-				                    <option value="">선택</option>
-				                    <option th:each="serial : ${serials}" th:value="${serial}" th:text="${serial}"></option>
-				         		</select>
-				            </div>
-				            <div class="col-sm-4">
-				         		<input type="text" class="form-control" id="phoneNum1" th:field="*{phoneNum1}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="4">
-				            </div>
-				            <div class="col-sm-4">
-				         		<input type="text" class="form-control" id="phoneNum2" th:field="*{phoneNum2}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="4">
-				            </div>
-				        </div>
-				        
-		        		<button type="submit" class="btn btn-primary" style="margin-top: 5px;">계정등록</button>
-		        	    <button type="button" class="btn btn-primary" style="margin-top: 5px;" th:onclick="location.href='http://localhost:9000/user/login'">로그인 이동</button>
-		    		</form>
-				</div>
-			</div>
-	    </div>
-    </div>
+		</div>
+	</form>
 </body>
 <script type="text/javascript">
 $(function(){
 	var today = new Date();
 	var convert = DateToStringFormat(today);
 	$("#joinDate").val(convert);
-	
 	//월이 바뀔때마다 일수가 다르므로 추가
 	$("#month").on("change", function(){
 		var year = $("#year").val();
@@ -115,5 +118,165 @@ $(function(){
 		bindSelectOption("day", getYearMonthByDay(year, month));
 	});
 });
+
+//ID 중복체크 처리
+var chk_dupid = function(){
+	var newID = $("#txt_userId").val();
+	
+	//ID 유효성 체크가 true일때만 실행
+	if(chkValidationID(newID, "txt_userId")){
+		var saveObj = {"newID" : newID};
+		
+		serviceParam.type = "POST";
+		serviceParam.url = "/user/chkDupId";
+		serviceParam.async = false;
+		serviceParam.dataType = "json";
+		serviceParam.data = JSON.stringify(saveObj);
+		serviceParam.isReturnValue = true;
+		serviceParam.timeout = 0;
+		serviceParam.isLoadingBar = true;
+		var result = callService(serviceParam);
+		
+		var cnt = result.value.CNT;
+		if(cnt != 0){
+			swAlert("ID 중복 체크", "해당 ID가 중복됩니다.", "W", "확인");
+			setTimeout(function(){
+				swal.close();
+				$("#txt_userId").val("");
+				$("#txt_userId").focus();
+			}, 1000);
+		}else{
+			swAlert("ID 중복 체크", "사용가능한 ID 입니다.", "I", "확인");
+			setTimeout(function(){
+				swal.close();
+				$("#txt_userId").attr("readonly",true);
+				$("#txt_userId").focus();
+				$("#dupFlag").text("1");
+			}, 1000);
+		}	
+	}
+}
+
+var chkPwd = function(){
+	let pwd1 = $("#password1").val();
+	let pwd2 = $("#password2").val();
+    
+	if(pwd1 != ""){
+		if(pwd1 == pwd2){
+			$("#isMatchPwd").val("1");
+		}else {
+			$("#isMatchPwd").val("0");
+		}	
+	}
+}
+
+//로그인, 회원가입 ID 유효성 체크 function
+var chkValidationID = function(userId, textID){
+	var isChk = true;
+
+	if(userId == "") {
+		isChk = false;
+		swAlert("ID 유효성 체크", "ID를 입력하세요.", "W", "확인");
+		setTimeout(function(){
+			swal.close();
+			$("#" + textID).focus();
+		}, 1000);
+		
+		return isChk;
+	}
+	
+	var firstChar = userId.charAt(0);
+	//false면 1글자는 숫자
+	if(!isNaN(firstChar)){
+		isChk = false;	
+		swAlert("ID 유효성 체크", "ID 첫글자는 숫자가 될 수 없습니다.", "W", "확인");
+		setTimeout(function(){
+			swal.close();
+			$("#" + textID).focus();
+		}, 1000);
+		
+		return isChk;
+	}
+	
+	//공백 혹은 특수문자가 있는 경우
+	if(userId.search(/\W|\s/g) > -1){
+		isChk = false;
+		swAlert("ID 유효성 체크", "특수문자 또는 공백이 입력되었습니다.", "W", "확인");
+		setTimeout(function(){
+			swal.close();
+			$("#" + textID).focus();
+		}, 1000);
+		
+		return isChk;
+	}
+	
+	return isChk;
+}
+
+var signup = function(){
+	let confirm = true;
+	
+	let chkDup = $("#dupFlag").text();
+	if(chkDup == "0"){
+		swAlert("ID 중복 체크", "ID 중복체크를 먼저 진행하세요", "W", "확인");
+		setTimeout(function(){
+			swal.close();
+		}, 1000);
+		confirm = false;
+		return;
+	}
+	
+	let matchPwd = $("#isMatchPwd").val();
+	if(matchPwd == "0"){
+		swAlert("PassWord Check", "Password가 불일치 합니다.", "W", "확인");
+		setTimeout(function(){
+			swal.close();
+		}, 1000);
+		confirm = false;
+		return;
+	}
+	
+	if(confirm){
+		//유저정보 저장 처리 Process
+		var formData = $("#signup_form").serializeObject();
+		
+		serviceParam.type = "POST";
+		serviceParam.url = "/user/signup";
+		serviceParam.async = false;
+		serviceParam.dataType = "json";
+		serviceParam.data = JSON.stringify(formData);
+		serviceParam.isReturnValue = true;
+		serviceParam.timeout = 0;
+		serviceParam.isLoadingBar = true;
+
+		var result = callService(serviceParam);
+		console.log("result", result);
+		if(result.Status == "success"){
+			completeAlert(result.value);
+		} else{
+			swAlert("Error", "회원가입 처리 중 에러가 발생하였습니다.\n 시스템 관리자에게 문의하세요.", "E", "확인");
+			return;
+		}
+	}	
+}
+
+var completeAlert = function(userObj) {
+	var txt_userinfo = "";
+	
+	txt_userinfo += "가입이 완료되었습니다. " + "\n";
+	txt_userinfo += "아이디 : " + userObj.id + "\n";
+	txt_userinfo += "이름 : " + userObj.name + "\n";
+	txt_userinfo += "생일 : " + userObj.birth + "\n";
+	txt_userinfo += "이메일 : " + userObj.email + "\n";
+	txt_userinfo += "전화번호 : " + userObj.phone + "\n\n";
+	txt_userinfo += "**신규 유저는 우선 GUEST 권한이 부여됩니다.**" + "\n" + "(권한 변경 요청은 관라자에게 문의하세요.)";
+	
+	swAlert("Test Alert", txt_userinfo, "I", "확인");
+	setTimeout(function(){
+		swal.close();
+		window.location.href = "/";
+	}, 3000);
+}
+
 </script>
 </html>

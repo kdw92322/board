@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.web.app.calendar.service.CalendarService;
 import com.web.app.calendar.service.CalendarVO;
 
-@Controller
+@RestController
 @RequestMapping("/calendar")
 public class CalendarController {
 	
@@ -25,7 +27,6 @@ public class CalendarController {
 	
 	//1.SELECT
 	@GetMapping("/selectCalendarList")
-	@ResponseBody
 	public List<CalendarVO> selectCalendarList(@RequestParam Map<String, Object> paramMap) throws Exception {
 		List<CalendarVO> list = calendarservice.selectCalendarList(paramMap);
 		return list;
@@ -33,7 +34,6 @@ public class CalendarController {
 	
 	//2.INSERT
 	@PostMapping("/insertCalendarInfo")
-	@ResponseBody
 	public int insertCalendarInfo(@RequestBody Map<String, Object> saveMap) throws Exception {
 		int result = calendarservice.insertCalendarInfo(saveMap);
 		return result;
@@ -41,7 +41,6 @@ public class CalendarController {
 	
 	//3.UPDATE
 	@PutMapping("/updateCalendarInfo")
-	@ResponseBody
 	public int updateCalendarInfo(@RequestBody Map<String, Object> saveMap) throws Exception {
 		int result = calendarservice.updateCalendarInfo(saveMap);
 		return result;
@@ -49,7 +48,6 @@ public class CalendarController {
 	
 	//4.DELETE
 	@DeleteMapping("/deleteCalendarInfo")
-	@ResponseBody
 	public int deleteCalendarInfo(@RequestBody Map<String, Object> saveMap) throws Exception {
 		int result = calendarservice.deleteCalendarInfo(saveMap);
 		return result;

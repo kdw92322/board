@@ -10,6 +10,7 @@
 	<input type="hidden" th:id="mstCd" th:value="${mstCd}">
 	<div class="col-12" style="margin-bottom: 20px;">
 	    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;대분류 >> 소분류</span>
+	    <span style="font-weight: bold;" th:text="'(' + ${mstCd} + ')'"></span>
 	    <div style="float:right;">
 			<button type="button" class="btn btn-success" th:id="btnAddDtlCode" th:onclick="insertCommonCdDtl([[${mstCd}]]);" style="margin-left:2px;"><i class="fa-solid fa-plus"></i></button>
 	    </div>
@@ -56,32 +57,39 @@
 </div>
 <script type="text/javascript">
 $(function(){
-
+	
 });
 
-var insertCommonCdDtl = function(mstCd){	
-	openModalPop("#viewModal", "/modals/codeDtlModal", {"type" : "I", "mstCd" : mstCd});
+var insertCommonCdDtl = function(mstCd){
+	if(mstCd == "" || mstCd == null || mstCd == undefined){
+		return;		
+	}
+	
+	openModalPop("#codeDtlModal", "/modals/codeDtlModal", {"type" : "I", "mstCd" : mstCd});
 }
 
 var updateCommonCdDtl = function(dtlCd){
-	openModalPop("#viewModal", "/modals/codeDtlModal", {"type" : "U", "dtlCd" : dtlCd});
+	openModalPop("#codeDtlModal", "/modals/codeDtlModal", {"type" : "U", "dtlCd" : dtlCd});
 }
 
 var deleteCommonCdDtl = function(dtlCd){
+	var mstCd = $("#mstCd").val();
+
 	serviceParam.type = "DELETE";
-	serviceParam.url = "/webview/deleteViewInfo";
+	serviceParam.url = "/common/deleteCodeDtl";
 	serviceParam.async = false;
 	serviceParam.dataType = "json";
-	serviceParam.data = JSON.stringify({"viewcode" : viewcode});
+	serviceParam.data = JSON.stringify({"mstCd" : mstCd, "dtlCd" : dtlCd});
 	serviceParam.isReturnValue = true;
 	serviceParam.timeout = 0;
 	serviceParam.isLoadingBar = false;
-	
+
 	var result = callService(serviceParam);
+	
 	if(result.Status == "success"){
-		swAlert(result.Status, "화면이 삭제 되었습니다.", "S", "OK");
+		swAlert(result.Status, "삭제 되었습니다.", "S", "OK");
 		setTimeout(function(){
-			selectViewList($("#menucode").val() ,menutype);
+			selectCodeDtlList(mstCd);
 			swal.close();
 			$("#btn_close").click();
 		}, 1000);

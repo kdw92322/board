@@ -8,22 +8,22 @@
 	<title>로그인</title>
 </head>
 <body>
-	<div class="wrap_container">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col">
+	<div class="wrapper">
+		<div class="inner_wrapper">
+			<div class="mb-3 row">
+				<div class="col-sm-12">
 					<div class="my-3 border-bottom">
 					    <h1>로그아웃</h1>
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col">
+			<div class="mb-3 row">
+				<div class="col-sm-12">
 					로그아웃 되었습니다.<br>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col">
+			<div class="mb-3 row">
+				<div class="col-sm-12">
 					<span id="countDown" style="font-weight: bold;"></span>초 후에 로그인 화면으로 돌아갑니다.
 				</div>
 			</div>
@@ -39,7 +39,7 @@ $(function(){
 	setInterval(() => {
 		console.log(timeoutCnt);
 		if(timeoutCnt < 1){
-			window.location.href = 'http://localhost:9000/user/login';
+			window.location.href = '/';
 		}else{
 			timeoutCnt -= 1
 			$("#countDown").text(timeoutCnt);

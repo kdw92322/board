@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,11 +17,12 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserSecurityService implements UserDetailsService{
+
 	private final UserRepository userRepository;
 	
 	@Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        Optional<UserInfo> _userInfo = this.userRepository.findByUserId(userId);
+	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        Optional<UserInfo> _userInfo = this.userRepository.findById(userId);
 
         if (!_userInfo.isPresent()) {
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
@@ -30,7 +30,7 @@ public class UserSecurityService implements UserDetailsService{
         
         UserInfo userInfo = _userInfo.get();        
         List<GrantedAuthority> authorities = new ArrayList<>();
-        String userRole = userInfo.getUserRole();
+        String userRole = userInfo.getRole();
         
         if(userRole.equals("ROLE_ADMIN")) {
         	authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
@@ -40,6 +40,7 @@ public class UserSecurityService implements UserDetailsService{
         	authorities.add(new SimpleGrantedAuthority(UserRole.GUEST.getValue()));
         }
 
-        return new User(userInfo.getUserId(), userInfo.getPassword(), authorities);
+        return new User(userInfo.getId(), userInfo.getPassword(), authorities);
     }
+	
 }

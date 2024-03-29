@@ -23,69 +23,59 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true) 
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class);
-
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-
         http.authorizeHttpRequests()
-                .requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/css/**"), new AntPathRequestMatcher("/images/**"), new AntPathRequestMatcher("/js/**")).permitAll()
-                .antMatchers("/user/userInfo").authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/css/**"), new AntPathRequestMatcher("/images/**"), new AntPathRequestMatcher("/js/**"), new AntPathRequestMatcher("/favicon.ico")).permitAll()
+                .antMatchers("/user/userInfo").hasRole("ADMIN")
+                .antMatchers().authenticated()
                 .and()
                 .formLogin(login -> login
-                        .loginPage("/user/login")
-                        .defaultSuccessUrl("/")
-                        .usernameParameter("username")
-                        .passwordParameter("password")
-                        .loginProcessingUrl("/user/loginProcess")
-                        .successHandler(successHandler())
-                        .failureHandler( 
-                                new AuthenticationFailureHandler() { 
-                                    @Override
-                                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-                                        System.out.println("exception : " + exception.getMessage());
-                                        response.sendRedirect("/user/login?error");
-                                    }
-                                })
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutUrl("/user/logout")
-                        .addLogoutHandler((request, response, authentication) -> {
-                            HttpSession session = request.getSession();
-                            if (session != null) {
-                                session.invalidate();
-                            }
-                        })
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                        .logoutSuccessUrl("/user/logoutProcess")
-                        .invalidateHttpSession(true))
-                .sessionManagement(session -> session
-                                .invalidSessionUrl("/")
-                )
+                    .loginPage("/")
+                    .defaultSuccessUrl("/")
+                    .usernameParameter("username")
+                    .passwordParameter("password")
+                    .loginProcessingUrl("/user/loginProcess")
+                    .successHandler(successHandler())
+                    .failureHandler( 
+                            new AuthenticationFailureHandler() { 
+                                @Override
+                                public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+                                    System.out.println("exception : " + exception.getMessage());
+                                    response.sendRedirect("/?error");
+                                }
+                            })
+                    .permitAll())
+                .logout()
+                	.logoutUrl("/logout") //로그아웃 처리 URL	
+                	.deleteCookies("JSESSIONID","Remember-me")//로그아웃 할때, 삭제할 쿠키
+                	.logoutSuccessHandler((request, response, authentication) -> response.sendRedirect("/user/logoutProcess")) //로그아웃 성공 후 핸들러, 추가기능이 있을 경우 추가하면 된다.
+                	.addLogoutHandler((request, response, authentication) -> { //로그아웃 할 때, 사용자가 지정한 행동을 하고 싶을 때
+                		System.out.println("logout Success!!");
+                		HttpSession session = request.getSession();
+                		session.invalidate();
+                	})
+                .and()
 	        	.csrf().disable() 
-	        	.anonymous().disable()
-	        	
-            ;
-        
+	        	.anonymous().disable();
         return http.build();
     }
 
 	@Bean
-    PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 	
 	@Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    CustomSuccessHandler successHandler() {
-	    return new CustomSuccessHandler();
+    protected CustomSuccessHandler successHandler() {
+	    return new CustomSuccessHandler("/");
 	}
 }

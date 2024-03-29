@@ -1,7 +1,7 @@
 @media (min-width:1024px) {
 	/* Desktop */
 	.w-btn-title{ font-size:30px; }
-	.w-btn-element{ font-size:14px; }
+	.w-btn-element{ font-size:15px; margin-top: 5px; }
 	.chart{ min-width:100%; }
 	.screenTitle{ font-size: 1.5em; font-weight:bold; }
 	.footerTitle{ font-size: 1em; }
@@ -11,7 +11,7 @@
 @media screen and (min-width:768px) and (max-width: 1023px) {
 	/* Tablet */
 	.w-btn-title{ font-size:25px; }
-	.w-btn-element{ font-size:12px; }
+	.w-btn-element{ font-size:13px; margin-top: 4px;}
 	.chart{ min-width:768px; }
 	.screenTitle{ font-size: 1.25em; font-weight:bold; }
 	.footerTitle{ font-size: 0.8em; }
@@ -23,7 +23,7 @@
 @media screen and (min-width:598px) and (max-width:767px){
 	/* Mobile */
 	.w-btn-title{ font-size:15px; }
-	.w-btn-element{ font-size:10px; }
+	.w-btn-element{ font-size:11px; margin-top: 3px;}
 	.chart{ max-width:767px; }
 	.screenTitle{ font-size: 1.0em; font-weight:bold; }
 	.footerTitle{ font-size: 0.6em; }
@@ -35,7 +35,7 @@
 @media screen and (min-width:281px) and (max-width:597px){
 	/* Mobile */
 	.w-btn-title{ font-size:10px; }
-	.w-btn-element{ font-size:7px; }
+	.w-btn-element{ font-size:9px; margin-top: 2px;}
 	.chart{ max-width:597px; }
 	.screenTitle{ font-size: 0.75em; font-weight:bold; }
 	.footerTitle{ font-size: 0.4em; }
@@ -47,7 +47,7 @@
 @media screen and (max-width:280px){
 	/* Mobile(Galaxy Fold) */
 	.w-btn-title{ font-size:7px; }
-	.w-btn-element{ font-size:5px; }
+	.w-btn-element{ font-size:5px; margin-top: 1px;}
 	.chart{ max-width:280px; }
 	.screenTitle{ font-size: 0.5em; font-weight:bold; }
 	.footerTitle{ font-size: 0.2em; }

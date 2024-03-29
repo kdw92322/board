@@ -1,5 +1,6 @@
 package com.web.app.common.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,5 +54,42 @@ public class CommonServiceImpl implements CommonService{
 		// TODO Auto-generated method stub
 		return commonmapper.selectCodeDtlList(param);
 	}
+	
+	@Override
+	public int insertCodeDtl(Map<String, Object> saveMap) throws Exception {
+		// TODO Auto-generated method stub
+		return commonmapper.insertCodeDtl(saveMap);
+	}
 
+	@Override
+	public int updateCodeDtl(Map<String, Object> saveMap) throws Exception {
+		// TODO Auto-generated method stub
+		return commonmapper.updateCodeDtl(saveMap);
+	}
+
+	@Override
+	public int deleteCodeDtl(Map<String, Object> saveMap) throws Exception {
+		// TODO Auto-generated method stub
+		return commonmapper.deleteCodeDtl(saveMap);
+	}
+
+	@Override
+	public String getCodeName(String mstCd, String dtlCd) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("mstCd", mstCd);
+		paramMap.put("dtlCd", dtlCd);
+		
+		
+		List<Map<String, Object>> codeInfoList = commonmapper.selectCodeDtlList(paramMap);
+		Map<String, Object> codeInfo = codeInfoList.get(0);
+		String dtlNm = String.valueOf(codeInfo.get("dtlNm"));
+		return dtlNm;
+	}
+
+	@Override
+	public List<Map<String, Object>> indexFileViewerList(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		return commonmapper.indexFileViewerList(paramMap);
+	}
+	
 }

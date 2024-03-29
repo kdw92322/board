@@ -37,9 +37,9 @@ import com.google.gson.Gson;
 /* 
  * MybatisInterceptor
  * Mybatis로 SQL 실행 전 처리되는 서비스
+ * mybatis-config에서 설정
  * ***기능***
  * 1. 실행한 SQL 이력을 저장하는 서비스 추가
- * 
  * 
  */
 
@@ -50,7 +50,8 @@ public class MybatisInterceptor implements Interceptor{
 	public Object intercept(Invocation invocation) throws Throwable {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 		UserDetails userDetails = (UserDetails)principal; 
-		String username = userDetails.getUsername(); 
+		String username = userDetails.getUsername();
+
 		//System.err.println("======> username : " + username);
 		
 		//QueryId
@@ -133,6 +134,12 @@ public class MybatisInterceptor implements Interceptor{
 		String exec_query = String.valueOf(saveMap.get("exec_query")).trim();
 		InputStream IsExecQuery = new ByteArrayInputStream(exec_query.getBytes());
 		String username   = String.valueOf(saveMap.get("username")).trim();
+		
+		//System.out.println("queryID     : " + queryID    );   
+		//System.out.println("param       : " + param      );   
+		//System.out.println("exec_query  : " + exec_query );   
+		//System.out.println("IsExecQuery : " + IsExecQuery);   
+		//System.out.println("username    : " + username   );   
 		
 		try {
 			//로그관련 Service는 제외 하고 로그기록

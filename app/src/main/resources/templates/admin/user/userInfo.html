@@ -10,23 +10,55 @@
 <body>
 <div class="container-fluid">
 	<div class="row">
-    	<h4 style="font-weight: bold;"><i class="fa-solid fa-users"></i>&nbsp;사용자 정보</h4>
+    	<div class="col">
+	        <h4 style="font-weight: bold;"><i class="fa-solid fa-users"></i>&nbsp;사용자 정보</h4>
+	    </div>
+	  	<div class="col" align="right" style="display:inline-block;">
+			<button type="button" class="btn btn-primary" style="margin-left:2px;" th:onclick="selectMenuList()">조회</button>
+		</div>
     </div>
+    <div class="row" style="margin-top:10px; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+		<div class="col-12">
+			<h6 style="font-weight: bold;"><i class="fa-solid fa-filter"></i>&nbsp;조회조건</h6>
+		</div>
+		<div class="col-12">
+			<form id="searchForm">
+				<table class="table table-bordered">
+					<colgroup>
+						 <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					</colgroup>
+					<tr>			
+						<th><span>이름</span></th>
+						<td>
+							<input type="text" class="form-control form-control-sm" id="sch_name" name="sch_name">
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
 	<div class="row">
-	    <div id="div_userList" class="col-sm-12">
+	    <div id="div_userList" class="col-sm-12" style="height:65vh; max-height:65vh; margin-top:10px; margin-bottom:10px; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
 	        <div class="card">
 	    	  	<div class="card-header">
 	    	  		<i class="fa-solid fa-list"></i>&nbsp;사용자 목록
 	    	  	</div>
-	  		    <ul id="userList" class="list-group" th:each="user : ${userList}">
+	  		    <ul id="userList" class="list-group" th:each="user : ${userList}" style="overflow-y: auto;">
 	  		  	    <!-- user테이블에서 List 조회후 binding -->
 	  		  	    <li class="list-group-item" th:id=${user.userId} th:text=${user.userId} th:onclick="selectUserInfo([[${user.userId}]])"></li>
 	  		    </ul>
 	    	</div>
 	    </div>
-	    <div class="col-sm-6">
+	    <div id="divUserInfoform" class="col-sm-6">
 	  	    <div id="divUserInfo">
-	  	    	
+
 	  	    </div>
 	    </div>
 	</div>
@@ -41,17 +73,24 @@ $(function(){
     });
 });
 
-var selectUserInfo = function(param){
+var selectUserInfo = function(userID){
 	serviceParam.type = "POST";
 	serviceParam.url = "/user/selectUserInfo";
 	serviceParam.async = false;
 	serviceParam.dataType = "text";
-	serviceParam.data = param;
+	serviceParam.data = userID;
 	serviceParam.isReturnValue = true;
 	serviceParam.timeout = 0;
 	serviceParam.isLoadingBar = false;
 	
 	var result = callService(serviceParam);
+	$("#divUserInfoform").css("margin-top", "10px");
+	$("#divUserInfoform").css("margin-bottom", "10px");
+	$("#divUserInfoform").css("border", "groove");
+	$("#divUserInfoform").css("border-radius", "10px");
+	$("#divUserInfoform").css("padding", "10px");
+	$("#divUserInfoform").css("box-shadow", "0 15px 35px rgba(0, 0, 0, 0.1)");
+
 	$("#div_userList").attr('class', 'col-sm-6');
 	$("#divUserInfo").html(result.value);
 }

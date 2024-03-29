@@ -43,8 +43,14 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
     
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     
+    private String defaultSuccessUrl = "/";
+    
     @Autowired
     private LogService logservice;
+    
+    public CustomSuccessHandler(String defaultSuccessUrl) {
+        this.defaultSuccessUrl = defaultSuccessUrl;
+    }
     
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -62,7 +68,7 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
             LOG.info("Redirecting customer to the following location {} ",targetUrl);
             redirectStrategy.sendRedirect(request, response, targetUrl);
             
-            //HttpSession session = request.getSession();
+			/********************* 접속정보 로그 저장 처리 Process **********************/	
             Object principal = authentication.getPrincipal();
             UserDetails userdetails = (UserDetails)principal;
             InetAddress inetaddress;
@@ -71,7 +77,6 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 			String loginId  = userdetails.getUsername();
 			String ip       = inetaddress.getHostAddress();
 	        String hostName = inetaddress.getHostName();
-	        String logType  = "LOGIN";
             
 	        HttpSession session = request.getSession();
 			/* session.setMaxInactiveInterval(5); */
@@ -82,17 +87,18 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 	        LOG.info("loginId  : " + loginId );
 	        LOG.info("ip       : " + ip      );
 	        LOG.info("hostName : " + hostName);
-	        LOG.info("logType  : " + logType );
+	        LOG.info("logType  : " + "LOGIN" );
 	        LOG.info("**************************************************************************");
 	        
             Map<String, Object> connUserInfo = new HashMap<String, Object>();
 	        connUserInfo.put("loginId" , loginId);
 	        connUserInfo.put("ip"      , ip);
 	        connUserInfo.put("hostName", hostName);
-	        connUserInfo.put("logType" , logType);
+	        connUserInfo.put("logType" , "LOGIN");
 	        session.setAttribute("connUserInfo", connUserInfo);
-	        
 	        logservice.saveUserLog(connUserInfo);
+	        /***********************************************************************/
+	        
             //You can let Spring security handle it for you.
             // super.onAuthenticationSuccess(request, response, authentication);
         }

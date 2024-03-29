@@ -101,8 +101,9 @@ th, td {
     background-color: #58D3F7;                    
     color: #FFFFFF;                               
     width:100%;
-    height:200px;
+    height:300px;
     margin-top:10px;
+    margin-bottom:10px;
 }                                                 
 .w-btn:hover {                                    
     letter-spacing: 1px;

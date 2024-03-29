@@ -1,6 +1,8 @@
 package com.web.app.user;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.web.app.file.service.FileService;
 import com.web.app.file.service.FileVo;
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class UserService {
+	
 	@Autowired
 	private UserMapper usermapper;
 	
@@ -32,8 +36,8 @@ public class UserService {
 	
     public UserInfo create(UserForm userform) {
     	UserInfo user = new UserInfo();
-    	user.setUserId(userform.getUserId());
-    	user.setUsername(userform.getUsername());
+    	user.setId(userform.getUserId());
+    	user.setName(userform.getUsername());
     	
     	String email = userform.getEmailId();
     	if(userform.getEmailAddr() != null && !"".equals(userform.getEmailAddr())) {
@@ -47,15 +51,24 @@ public class UserService {
         String birth = userform.getYear() + userform.getMonth() + userform.getDay();
         user.setBirth(birth);
         
-        String phone = userform.getSerial() + userform.getPhoneNum1() + userform.getPassword2();
+        String phone = userform.getSerial() + userform.getPhoneNum1() + userform.getPhoneNum2();
         user.setPhone(phone);
         
         Date nowDate = new Date();
-        user.setJoinDate(nowDate);
-        user.setUserRole(UserRole.GUEST.getValue());
+        user.setJoin_date(nowDate);
+        user.setRole(UserRole.GUEST.getValue());
+        user.setAuthorities(UserRole.GUEST.getValue());
+
         this.userRepository.save(user);
         return user;
     }
+    
+    public Map<String, Object> chkDupId(@RequestBody Map<String, Object> ParamMap) throws Exception {
+    	int cnt = usermapper.chkDupUserCnt(ParamMap);
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	resultMap.put("CNT", cnt);
+		return resultMap;
+	}
     
     public List<Map<String,Object>> selectUserList(Map<String,Object> paramMap) throws Exception {
 		return usermapper.selectUserList(paramMap);
@@ -65,10 +78,12 @@ public class UserService {
 		return usermapper.selectUserInfo(paramMap);
 	}
     
+    //UserForm userform
     public void update(UserForm userform) {
-    	Optional<UserInfo> userInfo = this.userRepository.findByUserId(userform.getUserId());
-    	userInfo.ifPresent(selectUser -> {
-    		selectUser.setUsername(userform.getUsername());
+    	Optional<UserInfo> _userInfo = this.userRepository.findById(userform.getUserId());
+    	
+    	_userInfo.ifPresent(selectUser -> {
+    		selectUser.setName(userform.getUsername());    
     		
     		String email = userform.getEmailId();
         	if(userform.getEmailAddr() != null && !"".equals(userform.getEmailAddr())) {
@@ -83,14 +98,14 @@ public class UserService {
     		
     		String phone = userform.getSerial() + userform.getPhoneNum1() + userform.getPhoneNum2();
     		selectUser.setPhone(phone);
-    		selectUser.setUserRole(userform.getUserRole());
+    		selectUser.setRole(userform.getUserRole());
     		selectUser.setUptDt(new Date());
     		userRepository.save(selectUser);
     	});
+    	
     }
     
     public int delete(Map<String, Object> paramMap) {
-    	//첨부파일 제거
     	List<FileVo> fileList = fileservice.selectfilelist(paramMap);
     	if(fileList.size() == 1) {
     		FileVo filevo = fileList.get(0);
@@ -98,14 +113,22 @@ public class UserService {
     	}else {
     		LOG.info("첨부사진 없음");
     	}
-    	LOG.info("parameter ==============>", paramMap);
+    	LOG.info("parameter ==============>{}", paramMap);
     	fileservice.delete(paramMap);
     	return usermapper.deleteUser(paramMap);
     }
 
     public List<Map<String, Object>> getConnUserLogData(Map<String,Object> paramMap){
-		return usermapper.getConnUserLogData(paramMap);
-    }
-    
-    
+
+    	List<Map<String,Object>> resultList = new ArrayList<Map<String,Object>>();
+    	String graphType = String.valueOf(paramMap.get("type"));
+    	
+    	if(graphType.equals("W")) {
+    		resultList = usermapper.getConnUserLogData1(paramMap);
+    	}else if(graphType.equals("M")){
+    		resultList = usermapper.getConnUserLogData2(paramMap);
+    	}
+    	
+		return resultList;
+    }    
 }

@@ -24,7 +24,8 @@
         Authenticated username:
         <strong><div sec:authentication="name"></div></strong>
         Authenticated user roles:
-        <strong><div sec:authentication="principal.authorities"></div></strong>
+        <strong><div sec:authentication="Authorities"></div></strong>
+        <div th:value="${header}"></div>
     </body>
 </th:block>
 </html>

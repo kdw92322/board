@@ -5,18 +5,19 @@
 	<form id="modalBodyform">
 		<input type="hidden" th:id="saveBy" th:name="saveBy" th:value="${#authentication.name}">
 		<input type="hidden" th:id="type" th:name="type" th:value="${type}">
+		<input type="hidden" th:id="mstCd" th:name="mstCd" th:value="${mstCd}">
 		<div class="form-floating mb-3">
 			<div class="row g-2">
 				<div class="col-md">
 					<div class="form-floating">
-						<input class="form-control" type="text" th:id="mstCd" th:name="mstCd" th:value="${mstCd}" th:disabled="${type == 'U'} ? 'disabled'" required>
-			            <label for="f_mstCd">소분류 코드</label>
+						<input class="form-control" type="text" th:id="dtlCd" th:name="dtlCd" th:value="${dtlCd}" required>
+			            <label for="f_dtlCd">소분류 코드</label>
 					</div>
 				</div>
 			    <div class="col-md">
 			        <div class="form-floating">
-			            <input class="form-control" type="text" th:id="mstNm" th:name="mstNm" th:value="${mstNm}" required>
-			            <label for="f_mstNm">소분류 이름</label>
+			            <input class="form-control" type="text" th:id="dtlNm" th:name="dtlNm" th:value="${dtlNm}" required>
+			            <label for="f_dtlNm">소분류 이름</label>
 			        </div>
 			    </div>
 			</div>
@@ -87,11 +88,13 @@ $(function(){
 });
 
 $("#btn_save").on("click", function() {
-	var formdata = $("#modalBodyform").serializeObject();
+	var formData = $("#modalBodyform").serializeObject();
+	var mstCd = formData.mstCd;
+	console.log("mstCd", mstCd);
 	
 	serviceParam.async = false;
 	serviceParam.dataType = "json";
-	serviceParam.data = JSON.stringify(formdata);
+	serviceParam.data = JSON.stringify(formData);
 	serviceParam.isReturnValue = true;
 	serviceParam.timeout = 0;
 	serviceParam.isLoadingBar = true;
@@ -100,15 +103,13 @@ $("#btn_save").on("click", function() {
 
 	if(result.Status == "success"){
 		swAlert(result.Status, "저장 되었습니다.", "S", "OK");
+		setTimeout(function(){
+			swal.close();
+			$("#btn_close").click();
+		}, 1000);
 	}else{
 		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
 	}
-	
-	setTimeout(function(){
-		selectCommonCdMstList();
-		swal.close();
-		$("#btn_close").click();
-	}, 500);
 });
 
 </script>

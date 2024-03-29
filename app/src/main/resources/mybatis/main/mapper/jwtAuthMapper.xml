@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.web.app.security.jwt.JwtAuthMapper">
+	<select id="isTokenIssue" parameterType="map" resultType="map">
+		select token
+		  from tb_authtoken
+		 where userId = #{userId}
+	</select>
+	
+	<insert id="insertTokenInfo" parameterType="map">
+		insert into tb_authtoken (
+			 userId
+			,token
+			,updateDt
+		) values (
+			 #{userId}
+			,#{token}
+			,now()
+		)
+	</insert>
+	
+	<update id="updateTokenInfo" parameterType="map">
+		update tb_authtoken
+		   set token = #{token}
+			  ,updateDt = now()
+		 where userId = #{userId}
+	</update>
+</mapper>

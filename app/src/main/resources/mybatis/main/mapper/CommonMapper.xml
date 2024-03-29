@@ -47,7 +47,7 @@
 	</select>
 	
 	<insert id="insertCodeMst" parameterType="map" >
-			insert tb_common_code_mst(
+			insert into tb_common_code_mst(
 				 mst_cd
 				,mst_nm
 				,use_yn
@@ -58,7 +58,7 @@
 				,createBy
 				,createDt
 			) values(
-				 #{mstCd}
+				 LOWER(#{mstCd})
 				,#{mstNm}
 				,#{useYn}
 				,#{remark}
@@ -80,28 +80,91 @@
 			  ,attr3  = #{attr3}
 			  ,updateBy = #{saveBy}
 			  ,updateDt = sysdate()
-		 where mst_cd = #{mstCd}
+		 where mst_cd = LOWER(#{mstCd})
 	</update>
 	
 	<delete id="deleteCodeMst" parameterType="map">
 		delete 
 		  from tb_common_code_mst 
-		 where mst_cd = #{mstCd} 
+		 where mst_cd = LOWER(#{mstCd})
 	</delete>
 	
 	<select id="selectCodeDtlList" parameterType="map" resultType="map">
 		select row_number() over(order by createDt) as rownum
-	          ,mst_cd
-	          ,dtl_cd
-	          ,dtl_nm
-	          ,use_yn
+	          ,mst_cd as mstCd
+	          ,dtl_cd as dtlCd
+	          ,dtl_nm as dtlNm
+	          ,use_yn as useYn
 	          ,remark
 	          ,attr1
 	          ,attr2
 	          ,attr3
 	      from tb_common_code_dtl
 	     where 1=1
-	       and mst_cd = #{mstCd} 
+	     <if test="mstCd != '' and mstCd != null"> 
+	       and mst_cd = LOWER(#{mstCd})
+	     </if>  
+	      <if test="dtlCd != '' and dtlCd != null"> 
+	       and dtl_cd = #{dtlCd}
+	     </if> 
+	</select>
+	
+	<insert id="insertCodeDtl" parameterType="map" >
+	  	insert into tb_common_code_dtl (
+			 mst_cd
+			,dtl_cd
+			,dtl_nm
+			,use_yn
+			,remark
+			,attr1
+			,attr2
+			,attr3
+			,createBy
+			,createDt
+		)values(
+			 LOWER(#{mstCd})
+			,#{dtlCd}
+			,#{dtlNm}
+			,#{useYn}
+			,#{remark}
+			,#{attr1}
+			,#{attr2}
+			,#{attr3}
+			,#{saveBy}
+			,sysdate()
+		)
+	</insert>
+	
+	<update id="updateCodeDtl" parameterType="map">
+		update tb_common_code_dtl
+		   set dtl_nm   = #{dtlNm}
+	          ,use_yn   = #{useYn}
+	          ,remark   = #{remark}
+	          ,attr1    = #{attr1}
+	          ,attr2    = #{attr2}
+	          ,attr3    = #{attr3}
+	          ,updateBy = #{saveBy}
+			  ,updateDt = sysdate()
+		 where 1=1
+		   and dtl_cd = #{dtlCd}
+	</update>
+	
+	<delete id="deleteCodeDtl" parameterType="map">
+		delete 
+		  from tb_common_code_dtl
+		 where 1=1
+		   and mst_cd = LOWER(#{mstCd})
+		   and dtl_cd = #{dtlCd}  
+	</delete>
+	
+	<select id="indexFileViewerList" parameterType="map" resultType="map">
+		select storedFileNm as fileName
+			  ,originName 	
+		  from tb_file_mng
+		 where 1=1
+		   and refWord = 'COMMON'
+		   and content like concat('%','image','%') 
+		   and uploadBy = #{loginUserId}
 	</select>
 	
 </mapper>

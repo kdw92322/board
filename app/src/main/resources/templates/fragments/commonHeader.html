@@ -3,7 +3,7 @@
 <th:block th:fragment="commonHeader">
 	<!-- ========================== Header ============================ -->
 	<Header>
-		<nav class="navbar navbar-expand-lg navbar-light bg-primary text-white">
+		<nav class="navbar navbar-expand-lg navbar-light bg-dark text-white">
 			<div class="container-fluid">
 			    <a class="navbar-brand text-white" href="/">
 			    	<i class="fa-solid fa-house"></i>
@@ -22,7 +22,6 @@
 			                    <li><a class="dropdown-item" href="/user/userInfo">1. 사용자정보</a></li>
 			                    <li><a class="dropdown-item" href="/webview/webviewForm">2. 메뉴정보</a></li>
 			                    <li><a class="dropdown-item" href="/common/codeForm">3. 코드정보</a></li>
-			                    <li><a class="dropdown-item" href="/common/envForm">4. 환경설정</a></li>
 			                </ul>
 			            </li>
 			            
@@ -32,7 +31,7 @@
 			        		<span th:id="userAuth" sec:authentication="principal.authorities" style="display:none;"></span>
 			        		<strong><span th:id="loginUserId" sec:authentication="name"></span></strong>
 				    		<span>님이 로그인 하셨습니다.</span>
-				    		<i id="logout_icon" class="fa-solid fa-right-from-bracket fa-xl" style="cursor: pointer" onclick="location.href='/user/logoutProcess';"></i>
+				    		<i id="logout_icon" class="fa-solid fa-right-from-bracket fa-xl" style="cursor: pointer" onclick="location.href='/logout';"></i>
 				    	</div>
 			        </form>
 			    </div>

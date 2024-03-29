@@ -2,6 +2,8 @@
 	Modal 생성
 	result : html 호출
 */
+var tokenIndex = "Bearer ";
+
 var openModalPop = function(modalId, url, param){
     var rtnMap = new Object();
     $.ajax({
@@ -240,7 +242,8 @@ var callService = function(param){
 		data: data,
 		contentType: ContentType,
 		timeout : timeout,
-		beforeSend:function(){
+		beforeSend:function(xhr){
+			xhr.setRequestHeader("Authorization", tokenIndex + localStorage.getItem("access-Token"));
 			if(isLoadingBar){
 				$('.layout_loader').show(); // loading bar show	
 			}
@@ -294,3 +297,25 @@ var getfileCommonKey = function(){
 	var returnValue = result.value;
 	return returnValue;
 }
+
+/*
+var getJwtTokenKey = function(){
+	var userId = $("#loginUserId").val();
+	var token = null;
+	
+	$.ajax({
+		type: "get",
+		url: "/jwt/selectJwtToken",
+		data:{"userId" : "ADMIN"},
+		async: false,
+		dataType : "json",
+		contentType: "application/json; charset=utf-8",
+		success: function(data, textStatus, xhr){
+			//console.log(data);
+			token = data["token"];
+		}
+	});
+	
+	return token;
+}
+*/

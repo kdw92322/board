@@ -89,7 +89,7 @@
 	<delete id="deleteBoardReview" parameterType="map">
 	  	delete 
 		  from boardreview
-		 where idx = 1
+		 where idx = #{idx}
 		   and rev_no in (
 		       select a.rev_no 
 		         from (SELECT rev_no, parent_rev_no FROM boardreview) a

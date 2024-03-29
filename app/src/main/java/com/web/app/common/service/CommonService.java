@@ -12,4 +12,11 @@ public interface CommonService {
 	int deleteCodeMst(Map<String, Object> saveMap) throws Exception;
 	
 	List<Map<String, Object>> selectCodeDtlList(Map<String, Object> param) throws Exception;
+	int insertCodeDtl(Map<String, Object> saveMap) throws Exception;
+	int updateCodeDtl(Map<String, Object> saveMap) throws Exception;
+	int deleteCodeDtl(Map<String, Object> saveMap) throws Exception;
+	
+	String getCodeName(String mstCd, String dtlCd) throws Exception;
+	
+	List<Map<String, Object>> indexFileViewerList(Map<String, Object> paramMap) throws Exception;
 }

@@ -52,6 +52,9 @@
 		 <if test="uuid != '' and uuid != null">
 		   and a.uuid = #{uuid}
 		 </if>
+		 <if test="content != '' and content != null">	
+		   and a.content like concat('%', #{content}, '%')  
+		 </if>
 		 <if test="refWord != '' and refWord != null">
 		   and a.refWord = #{refWord}
 		 </if>

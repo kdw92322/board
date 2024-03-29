@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.web.app.common.service.CommonService;
 
@@ -40,15 +41,7 @@ public class CommonController {
     }
 	
 	/*
-	 * 2. 환경설정
-	 */
-	@GetMapping("/envForm")
-    public String environment(@RequestParam Map<String, Object> param) throws Exception {
-    	return "/admin/env/envForm";
-    }
-	
-	/*
-	 * 3. 코드등록
+	 * 2. 코드등록
 	 */
 	@GetMapping("/codeForm")
     public String code(@RequestParam Map<String, Object> param) throws Exception {
@@ -56,7 +49,7 @@ public class CommonController {
     }
 	
 	/*
-	 * 3-1. 대분류(CODE) List Select View
+	 * 2-1. 대분류(CODE) List Select View
 	 */
 	@GetMapping("/selectCodeMstList")
     public String selectCodeMstList(@RequestParam Map<String, Object> paramMap, Model model) throws Exception {
@@ -66,7 +59,7 @@ public class CommonController {
     }
 	
 	/*
-	 * 3-2. 대분류(CODE) Insert
+	 * 2-2. 대분류(CODE) Insert
 	 */
 	@PostMapping("/insertCodeMst")
 	@ResponseBody
@@ -75,7 +68,7 @@ public class CommonController {
     }
 	
 	/*
-	 * 3-3. 대분류(CODE) Update
+	 * 2-3. 대분류(CODE) Update
 	 */
 	@PutMapping("/updateCodeMst")
 	@ResponseBody
@@ -84,7 +77,7 @@ public class CommonController {
     }
 	
 	/*
-	 * 3-4. 대분류(CODE) Delete
+	 * 2-4. 대분류(CODE) Delete
 	 */
 	@DeleteMapping("/deleteCodeMst")
 	@ResponseBody
@@ -93,11 +86,10 @@ public class CommonController {
     }
 	
 	/*
-	 * 3-5. 소분류(CODE) List Select View
+	 * 2-5. 소분류(CODE) List Select View
 	 */
 	@GetMapping("/selectCodeDtlList")
     public String selectCodeDtlList(@RequestParam Map<String, Object> paramMap, Model model) throws Exception {
-		System.out.println("paramMap : " + paramMap);
 		List<Map<String, Object>> selectCodeDtlList = commonservice.selectCodeDtlList(paramMap);
 		model.addAttribute("mstCd", paramMap.get("mstCd"));
 		model.addAttribute("codeDtlList", selectCodeDtlList);
@@ -105,29 +97,35 @@ public class CommonController {
     }
 	
 	/*
-	 * 3-6. 소분류(CODE) Insert
+	 * 2-6. 소분류(CODE) Insert
 	 */
 	@PostMapping("/insertCodeDtl")
 	@ResponseBody
     public int insertCodeDtl(@RequestBody Map<String, Object> saveMap) throws Exception {
-    	return commonservice.insertCodeMst(saveMap);
+    	return commonservice.insertCodeDtl(saveMap);
     }
 	
 	/*
-	 * 3-7. 소분류(CODE) Update
+	 * 2-7. 소분류(CODE) Update
 	 */
 	@PutMapping("/updateCodeDtl")
 	@ResponseBody
 	public int updateCodeDtl(@RequestBody Map<String, Object> saveMap) throws Exception {
-    	return commonservice.updateCodeMst(saveMap);
+    	return commonservice.updateCodeDtl(saveMap);
     }
 	
 	/*
-	 * 3-8. 소분류(CODE) Delete
+	 * 2-8. 소분류(CODE) Delete
 	 */
 	@DeleteMapping("/deleteCodeDtl")
 	@ResponseBody
 	public int deleteCodeDtl(@RequestBody Map<String, Object> saveMap) throws Exception {
-    	return commonservice.updateCodeMst(saveMap);
+    	return commonservice.deleteCodeDtl(saveMap);
+	}
+	
+	@GetMapping("/indexFileViewerList")
+	@ResponseBody
+    public List<Map<String, Object>> indexFileViewerList(@RequestParam Map<String, Object> paramMap) throws Exception {
+    	return commonservice.indexFileViewerList(paramMap);
     }
 }
