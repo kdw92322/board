@@ -1,0 +1,2 @@
+INSERT INTO board.tb_common_code_mst (mst_cd,mst_nm,use_yn,remark,attr1,attr2,attr3,createBy,createDt,updateBy,updateDt) VALUES ('filetype','파일유형','Y','파일유형 입니다~~!!!','1','2','3','USER1','2023-12-28 10:47:54',NULL,NULL);
+INSERT INTO board.tb_common_code_mst (mst_cd,mst_nm,use_yn,remark,attr1,attr2,attr3,createBy,createDt,updateBy,updateDt) VALUES ('role','권한','Y','사용자 권한 유형코드','','','','ADMIN','2024-02-20 10:01:30',NULL,NULL);
