@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.web.app.menu.service.MenuMapper">
+	<select id="selectMenuList" resultType="map">
+		select row_number() over(order by `order`) as rowNo
+		      ,code as menucode
+		      ,parentcode as parentcode
+		      ,name as menuname
+		      ,`path` as menupath
+		      ,`level` as menulevel
+		      ,`order` as menuorder
+		      ,createBy
+		      ,updateBy
+		      ,str_to_date(date_format(createDt,'%Y-%m-%d') ,'%Y-%m-%d') as createDt
+		      ,str_to_date(date_format(updateDt,'%Y-%m-%d'), '%Y-%m-%d') as updateDt
+		  from tb_menu
+		 where 1=1
+		 <if test="level != '' and level != null">
+		   and `level` = #{level}
+		 </if>  
+		 <if test="menucode != '' and menucode != null">
+		   and code = #{menucode}
+		 </if>
+		 <if test="parentcode != '' and parentcode != null">
+		   and parentcode = #{parentcode}
+		 </if>
+		 order by `level`
+	</select>
+	
+	<select id="getMenuMaxlevel" resultType="int">
+		select max(`level`) as maxlevel from tb_menu 
+	</select>
+	
+	<select id="selectSideMenuList" resultType="Map">
+		with recursive sidemenu as  (
+			select nullif(parentcode,'') as parentcode,
+				   code as menucode,
+				   name as menuname,
+				   nullif(`path`,'') as menupath,
+				   `level` as menulevel,
+				   `order` as menuorder
+			  from tb_menu
+			 where `level` = 1
+		
+			 union all 
+		
+			select nullif(a.parentcode,'') as parentcode,
+				   a.code as menucode, 
+				   a.name as menuname, 
+				   nullif(a.`path`,'') as menupath, 
+				   a.`level` as menulevel, 
+				   a.`order` as menuorder 
+			  from tb_menu a
+			  inner join sidemenu b on a.parentcode = b.menucode
+		)	
+		select * 
+		  from sidemenu
+		 order by menucode
+	</select>
+	
+	<select id="levelByMenuList" parameterType="string" resultType="Map">
+			select nullif(parentcode,'') as parentcode,
+				   code as menucode,
+				   name as menuname,
+				   nullif(`path`,'') as href,
+				   `level` as menulevel,
+				   `order` as menuorder
+			  from tb_menu
+			 where `level` = 1
+	</select>
+	
+	<insert id="insertMenuInfo" parameterType="map">
+		<selectKey resultType="string" keyProperty="menucode" order="BEFORE">
+		     select concat('menu',lpad(ifnull(max(replace(code,'menu','')),0) + 1, 4, '0')) as code 
+		       from tb_menu
+		</selectKey>
+		insert into tb_menu(
+			 code
+			,parentcode
+			,`name`
+			,`path`
+			,`order`
+			,`level`
+			,createBy
+			,createDt
+		)values(
+		     #{menucode}
+		    ,#{parentcode} 
+			,#{menuname}
+			,#{menupath}
+			,#{menuorder}
+			,#{level}
+			,#{saveBy}
+			,sysdate()
+		)
+	</insert>
+	
+	<update id="updateMenuInfo" parameterType="map">
+		update tb_menu
+		   set `name`   = #{menuname}   
+			  ,`path`   = #{menupath} 
+			  ,`order`  = #{menuorder}
+			  ,updateBy = #{saveBy}
+			  ,updateDt = sysdate()
+		 where 1=1
+		   and code = #{menucode}
+	</update>
+	
+	<delete id="deleteMenuInfo" parameterType="map">
+		delete
+		  from tb_menu
+		 where code = #{menucode}
+	</delete>
+	
+</mapper>

@@ -1,43 +1,128 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:fragment="commonHeader">
-	<!-- ========================== Header ============================ -->
-	<Header>
-		<nav class="navbar navbar-expand-lg navbar-light bg-dark text-white">
-			<div class="container-fluid">
-			    <a class="navbar-brand text-white" href="/">
-			    	<i class="fa-solid fa-house"></i>
-			    </a>
-			    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-			        <span class="navbar-toggler-icon"></span>
-			    </button>
-			    <div class="collapse navbar-collapse" id="navbarScroll">
-			        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" id="ul_menulist" style="--bs-scroll-height: 100px;">
-			            <!-- 관리자 Menu는 Default -->
-			            <li class="nav-item dropdown" id="administratorDropdown">
-			            	<a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-			                    관리자
-			                </a>
-			                <ul class="dropdown-menu" aria-labelledby="administratorDropdown">
-			                    <li><a class="dropdown-item" href="/user/userInfo">1. 사용자정보</a></li>
-			                    <li><a class="dropdown-item" href="/webview/webviewForm">2. 메뉴정보</a></li>
-			                    <li><a class="dropdown-item" href="/common/codeForm">3. 코드정보</a></li>
-			                </ul>
-			            </li>
-			            
-			        </ul>
-			        <form class="d-flex">
-			        	<div style="margin: auto 0 auto auto; padding:5px;">
-			        		<span th:id="userAuth" sec:authentication="principal.authorities" style="display:none;"></span>
-			        		<strong><span th:id="loginUserId" sec:authentication="name"></span></strong>
-				    		<span>님이 로그인 하셨습니다.</span>
-				    		<i id="logout_icon" class="fa-solid fa-right-from-bracket fa-xl" style="cursor: pointer" onclick="location.href='/logout';"></i>
-				    	</div>
-			        </form>
-			    </div>
-			</div>
-		</nav>
-	</Header>	
+<!-- ========================== Header ============================ -->
+<Header>
+	<nav class="navbar navbar-expand-lg navbar-light bg-dark text-white">
+		<div class="container-fluid">
+		    <a class="navbar-brand text-white" href="/">
+		    	<i class="fa-solid fa-house"></i>
+		    </a>
+		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+		        <span class="navbar-toggler-icon"></span>
+		    </button>
+		    <div class="collapse navbar-collapse" id="navbarScroll">
+		        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" id="ul_menulist" style="--bs-scroll-height: 100px;">
+		            <!-- 관리자 Menu는 Default -->
+		            <li class="nav-item dropdown" id="administratorDropdown">
+		            	<a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+		                    관리자
+		                </a>
+		                <ul class="dropdown-menu" aria-labelledby="administratorDropdown">
+		                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="htmlLoad('/user/userInfo', '사용자관리');">1. 사용자관리</a></li>
+		                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="htmlLoad('/menu/menuForm', '메뉴관리');">2. 메뉴관리</a></li>
+		                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="htmlLoad('/common/codeForm', '코드관리');">3. 코드관리</a></li>
+		                    <!-- <li><a class="dropdown-item" href="javascript:void(0);" onclick="htmlLoad('/common/codeForm', '테이블관리');">4. 테이블관리</a></li> -->
+		                </ul>
+		            </li>
+		            
+		            <!-- 메뉴는 메뉴리스트 데이터로 동적으로 추가 -->
+		            
+		        </ul>
+		        <form class="d-flex">
+		        	<div style="margin: auto 0 auto auto; padding:5px;">
+		        		<span th:id="userAuth" sec:authentication="principal.authorities" style="display:none;"></span>
+		        		<strong><span th:id="loginUserId" sec:authentication="name"></span></strong>
+			    		<span>님이 로그인 하셨습니다.</span>
+			    		<i id="logout_icon" class="fa-solid fa-right-from-bracket fa-xl" style="cursor: pointer" onclick="location.href='/logout';"></i>
+			    	</div>
+		        </form>
+		    </div>
+		</div>
+	</nav>
+</Header>
+<script>
+$(function(){
+	var Authenticated = $("#userAuth").text();
+	//관리자 권한이 없으면 관리자 메뉴를 숨김
+	if(Authenticated.indexOf('ADMIN') < 0){
+		$("#administratorDropdown").hide();	
+	}
+	
+	menuList();
+});
+
+/*
+ * 메뉴 List 조회
+ */
+var menuList = function(){
+	serviceParam.type = "GET";
+	serviceParam.url = "/menu/getTopMenuList?level=1";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = {};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	
+	var menuHtml = "";
+	var menuList = result.value;
+	if(menuList.length > 0){
+		for(var i=0; i<menuList.length; i++){
+			var menuInfo = menuList[i];
+			console.log("menuInfo", menuInfo);
+			
+			if(menuInfo.menupath != ""){
+				var param = "&#39;" + menuInfo.menupath + "&#39;" + ", " + "&#39;" + menuInfo.menuname + "&#39;";
+				menuHtml += "<li class='nav-item'><a class='nav-link text-white' href='javascript:void(0);' onclick='htmlLoad(" + param + ")'>" + menuInfo.menuname + '</a></li>' + '\n';
+			}else { 
+				menuHtml += '<li class="nav-item dropdown">' + '\n';
+				menuHtml += '<a class="nav-link dropdown-toggle text-white" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">' + '\n';
+				menuHtml += menuInfo.menuname + '\n';
+				menuHtml += '</a>' + '\n';
+				
+				//메뉴에 따른 화면목록 조회
+				serviceParam.type = "GET";
+				serviceParam.url = "/menu/getTopMenuList?parentcode=" + menuInfo.menucode + "&level=2";
+				serviceParam.async = false;
+				serviceParam.dataType = "json";
+				serviceParam.data = {};
+				serviceParam.isReturnValue = true;
+				serviceParam.timeout = 0;
+				serviceParam.isLoadingBar = false;
+				var result = callService(serviceParam);
+				var subMenuList = result.value;
+				
+				menuHtml += '<ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">' + '\n';
+				var subMenuHtml = "", currentLevel = "";
+				if(subMenuList.length > 0){
+					for(var j=0; j<subMenuList.length; j++){
+						subMenuInfo = subMenuList[j];
+						if(j == 0){
+							currentLevel = subMenuInfo.menulevel;
+						}else{
+							if(currentLevel != subMenuInfo.menulevel){
+								currentLevel = subMenuInfo.menulevel;
+								subMenuHtml += '<li><hr class="dropdown-divider"></li>';
+							}
+						}
+						var param = "&#39;" + subMenuInfo.menupath + "&#39;" + ", " + "&#39;" + subMenuInfo.menuname + "&#39;";
+						subMenuHtml += "<li><a class='dropdown-item' href='javascript:void(0);' onclick='htmlLoad("+ param +")'>" + subMenuInfo.menuname + "</a></li>" + "\n";
+					}
+
+				}
+				menuHtml += subMenuHtml;
+				menuHtml += '</ul>' + '\n';
+				menuHtml += '</li>' + '\n';
+			}
+				
+		}
+	}
+	$("#ul_menulist").append(menuHtml);
+}
+
+</script>	
 </th:block>
 </html>
 

@@ -2,10 +2,9 @@
 <html lang="en"
 	  xmlns:th="http://www.thymeleaf.org" 
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-	  layout:decorate="~{layout/layout}">
+	  layout:decorate="~{layout/innerTabLayout}">
 <th:block layout:fragment="content">
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Home</title>
 </head>
 <body>
@@ -170,27 +169,29 @@
 var chart_data_cnt = 7;
 var calendar;
 var myChart;
+var toDayInfo;
 
 $(function(){
-	initToday(); //오늘일자 Init
-	initTimer(); //현재시간 Init
+	setTimeout(function(){
+		toDayInfo = initToday(); //오늘일자 Init
+		initTimer(); //현재시간 Init
+		
+		initCalendar(toDayInfo.year, toDayInfo.month, toDayInfo.day);
+	}, 1000);
 	
-	//날씨정보 setUp
-	let apiurl = "http://api.openweathermap.org/data/2.5/weather?lat=35.2281&lon=128.6811&units=metric&cnt=5&appid=076b2699669346332a018f57695532e9";
-	//GET방식
-	fetch(apiurl)
-	  .then((response) =>  response.json())
-	  .then((data) => initWeatherInfo(data))
-	/*  
-	setInterval(() => {function() }, 2000);
-	*/
-	setGraphType('W');
-	
+	//Image Viewer Load
 	setImageViewer();
-
-	$(window).on('resize', function(){
-	    myChart.resize();
-	});
+	
+	//날씨정보 load
+	let apiurl = "http://api.openweathermap.org/data/2.5/weather?lat=35.2281&lon=128.6811&units=metric&cnt=5&appid=076b2699669346332a018f57695532e9";
+	fetch(apiurl)
+	.then((response) =>  response.json())
+	.then((data) => initWeatherInfo(data))
+	
+	setGraphType('W');
+	setTimeout(function(){
+		myChart.resize();
+	}, 1000);
 });
 
 $('input[type=radio][name=connectLogTypeOption]').change(function(){
@@ -229,8 +230,9 @@ var initWeatherInfo = function(info){
 	$("#weatherInfo").append(Wind_Flaw);
 }
 
-//Today 일자 표시
+//Today 일자 표시(년,월, 일 정보 객체 return)
 var initToday = function(){
+	
 	const now = new Date();
     var year = now.getFullYear();
     var month = ("0" + (1 + now.getMonth())).slice(-2);
@@ -242,7 +244,14 @@ var initToday = function(){
     var today =  year + "년 " + month + "월 " + day + "일, " + weekDay + "요일";
     $("#today").text(today);
     
-    initCalendar(year, month, day);
+    var rtnObj = {
+    	year : year,
+    	month : month,
+    	day : day
+    };
+
+    return rtnObj;
+    //initCalendar(year, month, day);
 }
 
 //현재시간 표시
@@ -504,24 +513,27 @@ var setImageViewer = function(){
 
 	//2. append
 	var html = "";
+	/*
 	if(indexFileList.length > 0){
 		for(var i=0; i<indexFileList.length; i++){
 			var indexfile = indexFileList[i];
-			//console.log("indexfile", indexfile);
 			if(i == 0){
 				html += '<div class="carousel-item active">';
 			}else{
 				html += '<div class="carousel-item">';
 			}
-		    html += '    <img alt="' + indexfile["originName"] + '" src="http://localhost:9000/upload/files/' + indexfile["fileName"] + '" width="410" height="314">';
+		    html += '    <img alt="' + indexfile["originName"] + '" src="http://localhost:9000/upload/files/' + indexfile["fileName"] + '" width="410" height="281">';
 		    html += '</div>';
 		}
 	}else{
 		html += '<div class="carousel-item active">';
-		html += '    <img alt="No Image!!" src="http://localhost:9000/upload/files/no-image.png" width="410" height="314">';
+		html += '    <img alt="No Image!!" src="http://localhost:9000/upload/files/no-image.png" width="410" height="284">';
 	    html += '</div>';
 	}
-	
+	*/
+	html += '<div class="carousel-item active">';
+	html += '    <img alt="No Image!!" src="http://localhost:9000/upload/files/no-image.png" width="352" height="284">';
+    html += '</div>';
 
 	$(".carousel-inner").append(html);
 }

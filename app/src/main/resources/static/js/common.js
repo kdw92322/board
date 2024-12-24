@@ -5,6 +5,7 @@
 var tokenIndex = "Bearer ";
 
 var openModalPop = function(modalId, url, param){
+	
     var rtnMap = new Object();
     $.ajax({
 		type:'post',	
@@ -16,6 +17,7 @@ var openModalPop = function(modalId, url, param){
 	    success : function(resultHtml) {
 	        $(modalId).find('.modal-content').html(resultHtml);
         	$(modalId).modal('show');
+        	//$('.modal-backdrop').removeClass('modal-backdrop');
         	rtnMap.result = 0;
 	    },error : function(xhr, ajaxSettings, thrownError){
 			rtnMap.result = 1;
@@ -23,6 +25,7 @@ var openModalPop = function(modalId, url, param){
 	});
 	
 	return rtnMap;
+	
 };
 
 /*

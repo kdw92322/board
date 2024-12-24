@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#viewgrid tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+<input type="hidden" th:id="parentcode" th:name="parentcode" th:value="${parentcode}">
+<input type="hidden" th:id="parentname" th:name="parentname" th:value="${parentname}">
+<input type="hidden" th:id="level" th:name="level" th:value="${level}">
+<table class="table table-bordered" id="subMenuList">
+    <thead class="table-dark">
+    	<tr align="center">
+    		<th width="5%">No.</th>
+    		<th width="20%">이름</th>
+    		<th width="45%">경로</th>
+    		<th width="5%">순서</th>
+    		<th width="10%"></th>
+    	</tr>
+    </thead>
+    <tbody id="menuTableBody">
+    	<tr th:each="submenu : ${subMenuList}" align="center">
+    		<td style="vertical-align: middle;">
+	    		<span th:text="${submenu.rowNo}"></span>
+	    	</td>
+    		<td style="vertical-align: middle;">
+	    		<span th:text="${submenu.menuname}"></span>
+	    	</td>
+	    	<td style="text-align: left;">
+	    		<span th:text="${submenu.menupath}"></span>
+	    	</td>
+    		<td style="vertical-align: middle;">
+	    		<span th:text="${submenu.menuorder}"></span>
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<button class="btn btn-info btn-sm" type="button" th:onclick="updateMenuInfo([[${submenu.menucode}]]);">수정</button>
+	    		<button class="btn btn-danger btn-sm" type="button" th:onclick="deleteMenuInfo([[${submenu.menucode}]]);">삭제</button>
+	    	</td>
+    	</tr>
+    </tbody>
+</table>
+<script type="text/javascript">
+
+var addSubMenu = function(level) {
+	var parentcode = $("#parentcode").val();
+	openModalPop("#menuModal", "/modals/subMenuModal", {"type" : "I", "parentcode" : parentcode, "level" : level});
+}
+
+</script>
+</html>

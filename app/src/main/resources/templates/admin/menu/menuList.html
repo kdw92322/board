@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#menuGrid tr:hover{
+		cursor: pointer; 
+		background: #E6E6E6;
+	}
+</style>
+<table class="table table-bordered" id="menuGrid">
+    <thead class="table-dark">
+    	<tr align="center">
+    		<th width="5%">No.</th>
+    		<th width="20%">이름</th>
+    		<th width="45%">경로</th>
+    		<th width="5%">순서</th>
+    		<th width="10%"></th>
+    	</tr>
+    </thead>
+    <tbody id="menuTableBody">
+    	<tr th:each="menu : ${menuList}" align="center" th:onclick="onMenuTableRowClick([[${menu}]])">
+    		<td style="vertical-align: middle;">
+	    		<span th:text="${menu.rowNo}"></span>
+	    	</td>
+    		<td style="vertical-align: middle;">
+	    		<span th:text="${menu.menuname}"></span>
+	    	</td>
+	    	<td style="text-align: left;">
+	    		<span th:text="${menu.menupath}"></span>
+	    	</td>
+    		<td style="vertical-align: middle;">
+	    		<span th:text="${menu.menuorder}"></span>
+	    	</td>
+	    	<td style="vertical-align: middle;">
+	    		<button class="btn btn-info btn-sm" type="button" th:onclick="updateMenuInfo([[${menu.menucode}]]);">수정</button>
+	    		<button class="btn btn-danger btn-sm" type="button" th:onclick="deleteMenuInfo([[${menu.menucode}]]);">삭제</button>
+	    	</td>
+    	</tr>
+    </tbody>
+</table>
+<script type="text/javascript">
+
+//Menu 수정
+var updateMenuInfo = function(menucode){
+	openModalPop("#menuModal", "/modals/menuModal", {"menucode" : menucode, "type" : "U"});
+}
+
+//Menu 삭제
+var deleteMenuInfo = function(menucode){
+	var param = {
+		"menucode" : menucode	
+	};
+	
+	serviceParam.type = "DELETE";
+	serviceParam.url = "/menu/deleteMenuInfo";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify(param);
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	if(result.Status == "success"){
+		swAlert(result.Status, "메뉴가 삭제 되었습니다.", "S", "OK");
+		setTimeout(function(){
+			selectMenuList();
+			swal.close();
+			$("#btn_close").click();
+		}, 1000);
+	}else{
+		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+		return;
+	}
+}
+
+//menu table click function
+var onMenuTableRowClick = function(menu){
+	$("#parentname").text("(" + menu.menuname + ")");
+	
+	//상위메뉴의 경로(path)가 없는 경우에만, 하위메뉴 등록 가능.
+	if(menu.menupath == "") {
+		$("#submenuTitle").show();
+		$("#btn_addSubMenu").show();
+		//하위메뉴 목록 조회
+		selectSubMenuList(menu.menucode, menu.menuname);	
+	} else {
+		$("#submenuTitle").hide();
+		$("#btn_addSubMenu").hide();
+		$("#divSubMenuList").empty();
+	}
+}
+
+var selectSubMenuList = function(parentcode, parentname){
+	var paramObj = {"parentcode" : parentcode, "parentname" : parentname, "level" : "2"};
+	
+	serviceParam.type = "GET";
+	serviceParam.url = "/menu/subMenuList";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = paramObj;
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
+	$("#divSubMenuList").html(result.value);
+}
+
+</script>
+</html>

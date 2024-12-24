@@ -16,7 +16,7 @@
 	    	</tr>
 	    </thead>
 	    <tbody id="mstLogTableBody">
-	    	<tr th:each="mst : ${mstLogList}" align="center" th:onclick="'javascript:onRowClick(\'' + ${mst.seq} + '\');'">
+	    	<tr th:each="mst : ${mstLogList}" align="center" th:onclick="'javascript:onServiceLogTblRowClick(\'' + ${mst.seq} + '\');'">
 		    	<th scope="row" th:text="${mst.seq}" style="display:none;"></th>
 		    	<td th:text="${mst.rowNum}"></td>
 		    	<td th:text="${mst.username}"></td>

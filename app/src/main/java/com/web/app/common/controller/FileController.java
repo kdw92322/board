@@ -101,7 +101,7 @@ public class FileController {
 		fileservice.save(files, uploadPath, userId, refWord, refKey);
 	}
 	
-	@GetMapping("download/{uuid}")
+	@GetMapping(value = "download/{uuid}")
 	public ResponseEntity<Resource> FileDownload(@PathVariable String uuid) throws IOException {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("uuid", uuid);
@@ -113,8 +113,13 @@ public class FileController {
 		}else {
 			FileVo fileInfo = fileList.get(0);
 			String originFileName = fileInfo.getOriginName();
+			String fileExt = fileInfo.getFileExt();
+			
+			//파일이름 + 확장자
+			originFileName = originFileName + "." + fileExt;
 			//Encoding(안해주면 에러남...)
 			originFileName = URLEncoder.encode(originFileName, "UTF-8");
+			
 			
 			File file = new File(fileInfo.getFilePath()); 
 			InputStreamResource resource = new InputStreamResource(new FileInputStream(file)); 

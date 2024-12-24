@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout/innerTabLayout}">
+<th:block layout:fragment="content">
+<head>
+    <title>메뉴관리</title>
+    <style>
+		#boardTableBody tr:hover{
+			cursor: pointer; 
+			background: #E6E6E6;
+		}
+	</style>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col">
+		    <h5 style="font-weight: bold;"><i class="fa-solid fa-display"></i>&nbsp;메뉴정보</h5>
+		</div>
+		<div class="col" align="right" style="display:inline-block;">
+			
+		</div>
+	</div>
+	<div class="row" style="margin-top:5px; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);"> 
+		<div class="col">
+			<span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;메뉴</span>
+		</div>
+		<div class="col" align="right" style="display:inline-block;">
+			<button type="button" class="btn btn-primary" style="margin-left:2px;" th:onclick="addMenu(1)"><i class="fa-solid fa-plus"></i></button>	
+		</div>
+		<div class="col-12" style="margin-top:5px; height:28vh; max-height:28vh; overflow-y: auto; overflow-x: auto;">
+			<div id="divMenuList">
+					
+			</div>
+		</div>
+	</div>
+	<div class="row" style="margin-top:5px; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+		<div class="col" id="submenuTitle">
+			<span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;하위메뉴</span>
+			<span style="font-weight: bold;" th:id="parentname"></span>
+		</div>
+		<div class="col" align="right" style="display:inline-block;">
+			<button type="button" id="btn_addSubMenu" class="btn btn-primary" style="margin-left:2px;" th:onclick="addSubMenu('2')"><i class="fa-solid fa-plus"></i></button>	
+		</div>
+		<div class="col-12">
+			<div class="row" style="margin-top:5px; height:30vh; max-height:30vh;">
+				<div id="divSubMenuList">
+				
+				</div>
+			</div>
+		</div>	
+	</div>
+	<th:block th:replace="/fragments/_modals :: modal('menuModal')">menuModal</th:block>
+</div>
+</body>
+<script type="text/javascript">
+$(function(){
+	selectMenuList();
+});
+
+var selectMenuList = function(){
+	serviceParam.type = "GET";
+	serviceParam.url = "/menu/menuList";
+	serviceParam.async = false;
+	serviceParam.dataType = "text";
+	serviceParam.data = {"level" : "1"};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var list = callService(serviceParam);
+	$("#divMenuList").html(list.value);
+}
+
+var addMenu = function(level) {
+	openModalPop("#menuModal", "/modals/menuModal", {"type" : "I", "level" : level});
+}
+
+</script>
+</th:block>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="commonTab">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<style>
+  #tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
+  #add_tab { cursor: pointer; }
+</style>
+<div class="container-fluid">
+	<div id="tabs">
+	    <ul>
+			<!-- li laod -->
+	    </ul>
+	    <!-- 호출한 tab의 html load -->
+	</div>	
+</div>
+<script type="text/javascript">
+var tabs;
+
+$(function(){
+    tabs = $("#tabs").tabs();
+ 
+    tabs.on("click", "span.ui-icon-close", function() {
+        var panelId = $(this).closest("li").remove().attr("aria-controls");
+        $("#" + panelId).remove();
+        
+        //console.log("panelId", panelId);
+        
+        tabs.tabs( "refresh" );
+    });
+ 
+    tabs.on("keyup", function( event ) {
+        if (event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE) {
+            var panelId = tabs.find(".ui-tabs-active").remove().attr("aria-controls");
+            $("#" + panelId).remove();
+            tabs.tabs( "refresh" );
+        }
+    });
+    
+    tabs.on("tabsactivate", function( event, ui ) {
+    	/* console.log(event); */
+    	//console.log(ui.oldPanel[0]);
+    	//console.log(ui.newPanel[0]);    	
+    });
+    
+    //초기 home 화면 setting
+    htmlLoad('/index', 'Index');
+});
+
+var addTab = function(tabLabel, htmlData, keyword) {
+	var activIndex = $('#tabs > ul > li').length + 1;
+	
+	//var tabs = $("#tabs").tabs();
+    var tabTemplate = "<li><a href='#{href}'>#{label}</a><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>";
+    var label = activIndex + ". " + tabLabel;
+    var id = "tabs-" + activIndex + "-" + keyword;
+    var li = $(tabTemplate.replace( /#\{href\}/g, "#" + id ).replace( /#\{label\}/g, label ));
+    //var tabContentHtml = tabContent || "Tab " + activIndex + " content.";
+    tabs.find(".ui-tabs-nav").append(li);
+    
+  	//html load
+    tabs.append( "<div id='" + id + "'>" + htmlData + "</div>" );
+    tabs.tabs("refresh");
+   	
+    //setTimeout(function(){
+    $("#tabs").tabs({"active" :  activIndex-1});	
+	//}, 500);
+    
+}
+
+</script>
+</th:block>
+</html>

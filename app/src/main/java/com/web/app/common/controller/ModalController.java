@@ -24,7 +24,7 @@ import com.web.app.board.service.BoardService;
 import com.web.app.calendar.service.CalendarService;
 import com.web.app.calendar.service.CalendarVO;
 import com.web.app.common.service.CommonService;
-import com.web.app.webview.service.WebViewService;
+import com.web.app.menu.service.MenuService;
 
 /*
 	사용할 ModalView 입력 Controller
@@ -40,7 +40,7 @@ public class ModalController {
 	private BoardService boardservice;
 	
 	@Autowired
-	private WebViewService webviewservice;
+	private MenuService menuservice;
 	
 	@Autowired
 	private CommonService commonservice;
@@ -137,9 +137,13 @@ public class ModalController {
     }
     
     @PostMapping("/menuModal")
-	public String webviewMenuSaveModal(@RequestBody Map<String, Object> paramMap, Model model) throws Exception {
+	public String MenuSaveModal(@RequestBody Map<String, Object> paramMap, Model model) throws Exception {
     	String type = String.valueOf(paramMap.get("type"));
     	model.addAttribute("type", type);
+    	
+    	String level = String.valueOf(paramMap.get("level"));
+    	model.addAttribute("level", level);
+    	
     	if(type.equals("I")) {
     		//신규
     		model.addAttribute("ModalTitle", "메뉴 신규 Modal");
@@ -147,7 +151,7 @@ public class ModalController {
     		//수정
     		model.addAttribute("ModalTitle", "메뉴 수정 Modal");
     		if(paramMap.get("menucode") != null) {
-        		List<Map<String,Object>> selectMenuList = webviewservice.selectMenuList(paramMap);
+        		List<Map<String,Object>> selectMenuList = menuservice.selectMenuList(paramMap);
         		model.addAttribute("menucode", paramMap.get("menucode"));
             	model.addAttribute("menuname", selectMenuList.get(0).get("menuname"));
             	model.addAttribute("menupath", selectMenuList.get(0).get("menupath"));
@@ -156,33 +160,38 @@ public class ModalController {
         	}
     	}
     	
-    	return "/admin/webview/menuModal";
+    	return "/admin/menu/menuModal";
 	}
     
-    @PostMapping("/viewModal")
-	public String webviewSaveModal(@RequestBody Map<String, Object> paramMap, Model model) throws Exception {
+    @PostMapping("/subMenuModal")
+	public String subMenuSaveModal(@RequestBody Map<String, Object> paramMap, Model model) throws Exception {
     	String type = String.valueOf(paramMap.get("type"));
+    	String parentcode = String.valueOf(paramMap.get("parentcode"));
+    	String level = String.valueOf(paramMap.get("level"));
+    	
     	model.addAttribute("type", type);
-    	model.addAttribute("menucode", paramMap.get("menucode"));
+    	model.addAttribute("parentcode", parentcode);
+    	model.addAttribute("level", level);
+    	
     	if(type.equals("I")) {
     		//신규
-    		model.addAttribute("ModalTitle", "화면 신규 Modal");
+    		model.addAttribute("ModalTitle", "하위메뉴 신규 Modal");
     	}else if(type.equals("U")) {
     		//수정
-    		model.addAttribute("ModalTitle", "화면 수정 Modal");
-    		if(paramMap.get("viewcode") != null) {
-	    		List<Map<String,Object>> selectViewList = webviewservice.selectViewList(paramMap);
-	    	    if(selectViewList.size() > 0) {
-	    	    	model.addAttribute("viewcode", paramMap.get("viewcode"));
-	    	    	model.addAttribute("path", selectViewList.get(0).get("path"));
-	    	        model.addAttribute("level", selectViewList.get(0).get("level"));
-	    	        model.addAttribute("useYn", selectViewList.get(0).get("useYn"));
-	    	        model.addAttribute("name", selectViewList.get(0).get("name"));
+    		model.addAttribute("ModalTitle", "하위메뉴 수정 Modal");
+    		if(paramMap.get("menucode") != null) {
+	    		List<Map<String,Object>> selectSubmeniList = menuservice.selectMenuList(paramMap);
+	    	    if(selectSubmeniList.size() > 0) {
+	    	    	model.addAttribute("menucode", paramMap.get("menucode"));
+	            	model.addAttribute("menuname", selectSubmeniList.get(0).get("menuname"));
+	            	model.addAttribute("menupath", selectSubmeniList.get(0).get("menupath"));
+	            	model.addAttribute("menutype", selectSubmeniList.get(0).get("menutype"));
+	            	model.addAttribute("menuorder", selectSubmeniList.get(0).get("menuorder"));
 	    	    }
     		}
     	}
     	
-    	return "/admin/webview/viewModal";
+    	return "/admin/menu/menuModal";
 	}
     
     @PostMapping("/codeMstModal")

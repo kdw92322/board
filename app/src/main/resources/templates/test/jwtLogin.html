@@ -1,55 +1,37 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta charset="UTF-8">
-	<title>JWT LOGIN TEST</title>
-	<th:block th:replace="fragments/config"></th:block>
-</head>
-<body>
-	<div id="mainDiv">
-		<div class="container-sm" style="padding:15px;">
-			<div class="mb-3 row">
-			  <label for="staticEmail" class="col-sm-2 col-form-label">ID</label>
-			  <div class="col-sm-10">
-			    <input type="text" class="form-control" id="inputID">
-			  </div>
-			</div>
-			<div class="mb-3 row">
-			  <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
-			  <div class="col-sm-10">
-			    <input type="password" class="form-control" id="inputPassword">
-			  </div>
-			</div>
-			<div class="mb-3 row">
-				<div class="col-sm-12">
-					<button type="button" id="btn_ok" class="btn btn-primary" onclick="funcBtnOk();">OK</button>
+<th:block th:fragment="loginPage">
+	<head>
+		<meta charset="UTF-8">
+		<title>JWT LOGIN TEST</title>
+		<th:block th:replace="fragments/config"></th:block>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<div class="container-sm" style="padding:15px;">
+				<div class="mb-3 row">
+				  <label for="staticEmail" class="col-sm-2 col-form-label">ID</label>
+				  <div class="col-sm-10">
+				    <input type="text" class="form-control" id="inputID">
+				  </div>
+				</div>
+				<div class="mb-3 row">
+				  <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+				  <div class="col-sm-10">
+				    <input type="password" class="form-control" id="inputPassword">
+				  </div>
+				</div>
+				<div class="mb-3 row">
+					<div class="col-sm-12">
+						<button type="button" th:id="btn_ok" class="btn btn-primary" th:onclick="funcBtnOk();">OK</button>
+						<button type="button" th:id="btn_re" class="btn btn-secondary" th:onclick="redirectTest();">리다이렉트 test</button>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</body>
-<script type="text/javascript">
-
-var funcBtnOk = function(){
-	var id = document.getElementById("inputID").value;
-	var pw = document.getElementById("inputPassword").value;
+	</body>
+	<script type="text/javascript">
 	
-	$.ajax({
-		type: 'POST',
-		url: "/jwt/login",
-		async: false,
-		dataType: 'json',
-		data: JSON.stringify({
-		    "userId" : id,
-		    "password" : pw
-		}),
-		contentType: "application/json; charset=utf-8",
-		/* beforeSend:function(xhr){}, */
-		success : function(data, status, xhr) {
-			
-		}
-	});
-}
-
-</script>
+	</script>
+</th:block>
 </html>

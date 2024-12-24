@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class AppApplication extends SpringBootServletInitializer{
@@ -23,6 +24,5 @@ public class AppApplication extends SpringBootServletInitializer{
 	@Bean(name = "sqlSession")
 	SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) throws Exception {
 	    return new SqlSessionTemplate(sqlSessionFactory);
-	}
-	
+	}	
 }

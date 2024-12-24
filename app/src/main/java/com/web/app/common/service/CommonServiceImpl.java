@@ -12,19 +12,7 @@ public class CommonServiceImpl implements CommonService{
 	
 	@Autowired
 	private CommonMapper commonmapper;
-	
-	@Override
-	public List<Map<String, Object>> topMenuList() throws Exception {
-		// TODO Auto-generated method stub
-		return commonmapper.topMenuList();
-	}
 
-	@Override
-	public List<Map<String, Object>> topViewList(Map<String, Object> param) throws Exception {
-		// TODO Auto-generated method stub
-		return commonmapper.topViewList(param);
-	}
-	
 	@Override
 	public List<Map<String, Object>> selectCodeMstList(Map<String, Object> param) throws Exception {
 		// TODO Auto-generated method stub

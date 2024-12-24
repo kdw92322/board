@@ -1,48 +1,47 @@
 package com.web.app.security.jwt;
 
 import java.io.IOException;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	
-	private final AuthenticationManager authenticationManager;
-	
+	public static final String AUTHORIZATION_HEADER = "Authorization";
+	private final JwtTokenProvider jwtTokenProvider;
+
 	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-		// TODO Auto-generated method stub
-		UsernamePasswordAuthenticationToken token = null;
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
 		
-		try {
-			LoginViewModel loginDto = new ObjectMapper().readValue(request.getInputStream(), LoginViewModel.class);
-			token =	new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getPassword(),null);
-		}  catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String authToken = resolveToken(request);
+		System.out.println("authToken : " + authToken);
+		if(authToken != null && jwtTokenProvider.validateToken(authToken)) {
+	        Authentication authentication = jwtTokenProvider.getAuthentication(authToken);
+	        SecurityContext context = SecurityContextHolder.getContext();
+	        context.setAuthentication(authentication);
+	    }
 		
-		return getAuthenticationManager().authenticate(token);
+		filterChain.doFilter(request, response);
 	}
 	
-	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-			Authentication authResult) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		
-	}
+	// Request Header 에서 토큰 정보를 꺼내오기 위한 메소드
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+
+        return null;
+    }
+	
 }

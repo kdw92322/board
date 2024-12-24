@@ -2,7 +2,7 @@
 <html lang="en" 
 	  xmlns:th="http://www.thymeleaf.org" 
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-	  layout:decorate="~{layout/layout}">
+	  layout:decorate="~{layout/innerTabLayout}">
 <th:block layout:fragment="content">
 <head>
 	<title>접속로그 조회</title>
@@ -10,14 +10,14 @@
 <body>
 <div class="container-fluid">
 	<div class="row">
-		<div class="col" style="margin-top:10px;">
+		<div class="col">
 	        <h4 style="font-weight: bold;"><i class="fa-solid fa-tablet"></i>&nbsp;접속로그 조회</h4>
 	    </div>
 	    <div class="col" align="right" style="display:inline-block; margin-top:10px;">
-			<button type="button" class="btn btn-primary" th:onclick="selectLogMstList();" style="margin-left:2px;">조회</button>
+			<button type="button" class="btn btn-primary" th:onclick="selectConnectLogMstList();" style="margin-left:2px;">조회</button>
 	    </div>
 	</div>
-	<div class="row" style="margin-top:10px; border:groove; border-radius:10px; padding-top:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+	<div class="row" style="border:groove; border-radius:10px; padding-top:10px; background-color: #F5F5F5; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
 		<div class="row">
 			<div class="col">
 				<h6 style="font-weight: bold;"><i class="fa-solid fa-filter"></i>&nbsp;조회조건</h6>
@@ -55,8 +55,8 @@
 			<div class="col">
 			    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;목록</span>
 		    </div>
-		    <div class="col" style="text-align:center; height:60vh; max-height:60vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
-				<div id="divMstLogList">
+		    <div class="col" style="text-align:center; height:58vh; max-height:58vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+				<div id="divMstConnectLogList">
 					<!-- connectLogMstView -->
 				</div>
 			</div>
@@ -65,8 +65,8 @@
 			<div class="col">
 			    <span style="font-weight: bold;"><i class="fa-solid fa-check"></i>&nbsp;접속 기록</span>
 		    </div>
-		    <div class="col" style="text-align:center; height:60vh; max-height:60vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
-				<div id="divDtlLogInfo">
+		    <div class="col" style="text-align:center; height:58vh; max-height:58vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+				<div id="divDtlConnectLogInfo">
 					<!-- connectLogDtlView -->
 				</div>
 			</div>
@@ -76,9 +76,9 @@
 </body>
 <script type="text/javascript">
 $(function(){
-	selectLogMstList();
+	selectConnectLogMstList();
 });
-var selectLogMstList = function(){
+var selectConnectLogMstList = function(){
 	var searchFormData = $("#searchForm").serializeObject();
 	
 	serviceParam.type = "GET";
@@ -90,10 +90,10 @@ var selectLogMstList = function(){
 	serviceParam.timeout = 0;
 	serviceParam.isLoadingBar = false;
 	var result = callService(serviceParam);
-	$("#divMstLogList").html(result.value);
+	$("#divMstConnectLogList").html(result.value);
 };
 
-var onRowClick = function(id){
+var onConnectLogTblRowClick = function(id){
 	var param = {
 		 id : id
 	    ,sch_startDate : $("#sch_startDate").val()  
@@ -109,7 +109,7 @@ var onRowClick = function(id){
 	serviceParam.timeout = 0;
 	serviceParam.isLoadingBar = false;
 	var result = callService(serviceParam);
-	$("#divDtlLogInfo").html(result.value);
+	$("#divDtlConnectLogInfo").html(result.value);
 }
 
 </script>

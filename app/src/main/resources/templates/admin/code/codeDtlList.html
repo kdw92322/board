@@ -6,7 +6,7 @@
 		background: #E6E6E6;
 	}
 </style>
-<div class="col" style="height:65vh; max-height:65vh; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+<div class="col" style="height:58vh; max-height:58vh; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
 	<input type="hidden" th:id="mstCd" th:value="${mstCd}">
 	<div class="col-12" style="margin-bottom: 20px;">
 	    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;대분류 >> 소분류</span>
@@ -53,52 +53,8 @@
 			    </tbody>
 			</table>
 	</div>
-	<th:block th:replace="/fragments/_modals :: modal('codeDtlModal')">codeDtlModal</th:block>
 </div>
 <script type="text/javascript">
-$(function(){
-	
-});
-
-var insertCommonCdDtl = function(mstCd){
-	if(mstCd == "" || mstCd == null || mstCd == undefined){
-		return;		
-	}
-	
-	openModalPop("#codeDtlModal", "/modals/codeDtlModal", {"type" : "I", "mstCd" : mstCd});
-}
-
-var updateCommonCdDtl = function(dtlCd){
-	openModalPop("#codeDtlModal", "/modals/codeDtlModal", {"type" : "U", "dtlCd" : dtlCd});
-}
-
-var deleteCommonCdDtl = function(dtlCd){
-	var mstCd = $("#mstCd").val();
-
-	serviceParam.type = "DELETE";
-	serviceParam.url = "/common/deleteCodeDtl";
-	serviceParam.async = false;
-	serviceParam.dataType = "json";
-	serviceParam.data = JSON.stringify({"mstCd" : mstCd, "dtlCd" : dtlCd});
-	serviceParam.isReturnValue = true;
-	serviceParam.timeout = 0;
-	serviceParam.isLoadingBar = false;
-
-	var result = callService(serviceParam);
-	
-	if(result.Status == "success"){
-		swAlert(result.Status, "삭제 되었습니다.", "S", "OK");
-		setTimeout(function(){
-			selectCodeDtlList(mstCd);
-			swal.close();
-			$("#btn_close").click();
-		}, 1000);
-	}else{
-		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
-		return;
-	}
-}
-
 
 </script>
 </html>

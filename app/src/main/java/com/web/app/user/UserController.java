@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -72,7 +73,6 @@ public class UserController {
     }
     
     @GetMapping("/userInfo")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String userInfo(@RequestParam Map<String, Object> paramMap, Model model) throws Exception {
     	List<Map<String, Object>> selectUserList = userService.selectUserList(paramMap);
     	model.addAttribute("userList", selectUserList);
@@ -105,21 +105,26 @@ public class UserController {
 		return "admin/user/userInfo_form";
 	}
     
-    @PostMapping("/updateUserInfo")
-	public String updateUserInfo(UserForm userform) throws Exception {
-		userService.update(userform);
-		Thread.sleep(2000);//2초 후 redirect 실행
-		return "redirect:/user/userInfo";
+    @PutMapping("/updateUserInfo")
+    @ResponseBody
+	public Map<String, Object> updateUserInfo(@RequestBody UserForm userform) throws Exception {
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	userService.update(userform);
+    	resultMap.put("result", "1");
+		return resultMap;
 	}
     
-	@DeleteMapping("/deleteUserInfo/{userId}")
+	@DeleteMapping("/deleteUserInfo")
 	@ResponseBody
-	public int deleteBoardList(@PathVariable("userId") String userId) throws Exception {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("userId", userId);
-		paramMap.put("refKey", userId);
-		paramMap.put("refWord", "USER");
-		int rescnt = userService.delete(paramMap);
+	public int deleteBoardList(@RequestBody Map<String, Object> paramMap) throws Exception {
+		Map<String, Object> deleteMap = new HashMap<String, Object>();
+		String userId = String.valueOf(paramMap.get("userId"));
+		
+		/* 유저정보 및 관련 image도 같이 delete하기 위한 parameter */
+		deleteMap.put("userId", userId);
+		deleteMap.put("refKey", userId);
+		deleteMap.put("refWord", "USER");
+		int rescnt = userService.delete(deleteMap);
 		return rescnt;
 	}
 	

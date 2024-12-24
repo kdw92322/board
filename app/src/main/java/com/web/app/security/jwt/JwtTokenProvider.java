@@ -36,6 +36,17 @@ public class JwtTokenProvider {
 	    this.key = Keys.hmacShaKeyFor(keyBytes);
 	}
 	
+	/**
+     * Header 내에 토큰을 추출합니다.
+     *
+     * @param header 헤더
+     * @return String
+     */
+    public static String getTokenFromHeader(String header) {
+        return header.split(" ")[1];
+    }
+
+	
 	// 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
 	public TokenInfo generateToken(UserDetails userDetails) {
 	    Date now = new Date();

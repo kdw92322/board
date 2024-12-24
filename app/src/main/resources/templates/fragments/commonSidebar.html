@@ -1,103 +1,166 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="commonSidebar">
+<div id="treeview1" class="treeview"></div>
 <style>
-	.dropdown-toggle { outline: 0; }
-	.nav-flush .nav-link {
-	  border-radius: 0;
+	.treeview .list-group-item {
+	    cursor: pointer
 	}
-	.btn-toggle {
-	  display: inline-flex;
-	  align-items: center;
-	  padding: .25rem .5rem;
-	  font-weight: 600;
-	  color: rgba(0, 0, 0, .65);
-	  background-color: transparent;
-	  border: 0;
+	
+	.treeview span.indent {
+	    margin-left: 10px;
+	    margin-right: 10px
 	}
-	.btn-toggle:hover,
-	.btn-toggle:focus {
-	  color: rgba(0, 0, 0, .85);
-	  background-color: #d2f4ea;
+	
+	.treeview span.icon {
+	    width: 12px;
+	    margin-right: 5px
 	}
-	.btn-toggle::before {
-	  width: 1.25em;
-	  line-height: 0;
-	  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
-	  transition: transform .35s ease;
-	  transform-origin: .5em 50%;
+	
+	.treeview .node-disabled {
+	    color: silver;
+	    cursor: not-allowed
 	}
-	.btn-toggle[aria-expanded="true"] {
-	  color: rgba(0, 0, 0, .85);
+	
+	.node-treeview1 {
+	
 	}
-	.btn-toggle[aria-expanded="true"]::before {
-	  transform: rotate(90deg);
+	
+	.node-treeview1:not(.node-disabled):hover {
+	        background-color: #F5F5F5;
 	}
-	.btn-toggle-nav a {
-	  display: inline-flex;
-	  padding: .1875rem .5rem;
-	  margin-top: .125rem;
-	  margin-left: 1.25rem;
-	  text-decoration: none;
-	}
-	.btn-toggle-nav a:hover,
-	.btn-toggle-nav a:focus {
-	  background-color: #d2f4ea;
-	}
-	.scrollarea {
-	  overflow-y: auto;
-	}
-	.fw-semibold { font-weight: 600; }
-	.lh-tight { line-height: 1.25; }
 </style>
-<div class="flex-shrink-0 p-3">
-    <ul class="list-unstyled ps-0">
-        <li class="mb-1">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
-                COMMON
-            </button>
-            <div class="collapse" id="home-collapse">
-                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="/user/userInfo" class="link-dark rounded">사용자 관리</a></li>
-                    <li><a href="/screen/screenInfo" class="link-dark rounded">화면 관리</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="mb-1">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                게시판
-            </button>
-            <div class="collapse" id="dashboard-collapse">
-                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                	<li><a href="/board/boardList" class="link-dark rounded">게시판</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="mb-1">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                Sample
-            </button>
-            <div class="collapse" id="orders-collapse">
-                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="/test" class="link-dark rounded">Sample Page</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="border-top my-3"></li>
-        <li class="mb-1">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                Account
-            </button>
-            <div class="collapse" id="account-collapse">
-                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="#" class="link-dark rounded">New...</a></li>
-                    <li><a href="#" class="link-dark rounded">Profile</a></li>
-                    <li><a href="#" class="link-dark rounded">Settings</a></li>
-                    <li><a href="#" class="link-dark rounded">Sign out</a></li>
-                </ul>
-            </div>
-        </li>
-    </ul>
-  </div>
+<script type="text/javascript">
+$(function(){
+	
+	var menuList = new Array();
+	//메뉴 전체 조회
+	serviceParam.type = "GET";
+	serviceParam.url = "/menu/getSideMenuList";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = {"type" : "B"};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	
+	if(result.xhr.status == 200){
+		menuList = result.value;
+	}
+	
+	var nodeList = convertTreeViewData(menuList);
+	
+	$('#treeview1').treeview({
+		data: nodeList,
+		collapseIcon:'fas fa-minus',
+		expandIcon:'fas fa-plus',
+		
+		onNodeSelected: function(event, data) {
+			console.log("event", event);
+			console.log("data", data);
+		}
+		
+	});
+});
+
+function convertTreeViewData(menuList) {
+	//node base
+	var nodeList = new Array();
+	for(var i=0; i<menuList.length; i++){
+		var node = new Object();
+		
+		var menu = menuList[i];
+		node["text"] = menu.menuname;
+		node["href"] = menu.menupath;
+		node["icon"] = "glyphicon glyphicon-stop";
+		node["selectedIcon"] = "glyphicon glyphicon-stop";
+		
+		if(menu["_attributes"] != null){
+			node["state"] = {
+				expanded : menu["_attributes"]["expanded"]		
+			};
+		}
+		
+		if(menu["_children"] != null){
+			var children = menu["_children"];
+			var node_child_list = new Array();
+			for(var j=0; j<children.length; j++){
+				var childNode = {
+					"text" : children[j]["menuname"],	
+					"href" : children[j]["menupath"],
+					"icon" : "glyphicon glyphicon-stop",
+				    "selectedIcon" : "glyphicon glyphicon-stop"
+				}
+				node_child_list.push(childNode);
+			}
+			node["nodes"] = node_child_list;
+		}
+		nodeList.push(node);
+	}
+	
+	return nodeList;
+}
+
+
+
+
+
+/* 
+var defaultData = [
+    {
+        text: 'Parent 1',
+        href: '#parent1',
+        tags: ['4'],
+        nodes: [
+            {
+                text: 'Child 1',
+                href: '#child1',
+                tags: ['2'],
+                nodes: [
+                    {
+                        text: 'Grandchild 1',
+                        href: '#grandchild1',
+                        tags: ['0']
+                    },
+                    {
+                        text: 'Grandchild 2',
+                        href: '#grandchild2',
+                        tags: ['0']
+                    }
+                ]
+            },
+            {
+                text: 'Child 2',
+                href: '#child2',
+                tags: ['0']
+            }
+        ]
+    },
+    {
+        text: 'Parent 2',
+        href: '#parent2',
+        tags: ['0']
+    },
+    {
+        text: 'Parent 3',
+        href: '#parent3',
+        tags: ['0']
+    },
+    {
+        text: 'Parent 4',
+        href: '#parent4',
+        tags: ['0']
+    },
+    {
+        text: 'Parent 5',
+        href: '#parent5'  ,
+        tags: ['0']
+    }
+];
+ */
+ 
+
+</script>
 </th:block>
 </html>

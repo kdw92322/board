@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout/innerTabLayout}">
+<th:block layout:fragment="content">
+<head>
+<meta charset="UTF-8">
+<title>Toast Test2</title>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col">
+		    <h5 style="font-weight: bold;"><i class="fa-solid fa-display"></i>&nbsp;메뉴 Tree 변경</h5>
+		</div>
+	</div>
+	<div class="row" style="height:65vh; max-height:65vh;">
+		<div class="col-4" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<div class="row">
+				<div class="col-6">
+				    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;목록</span>
+			    </div>
+			</div>
+			<div class="row" style="margin-top:10px;">
+				<div id="treeGrid"></div>
+			</div>
+		</div>
+		<div class="col-8" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<div class="row">
+				<div class="col-6">
+			    	<span style="font-weight: bold;"><i class="fa-solid fa-circle-info"></i>&nbsp;메뉴 상세</span>
+			    </div>
+			    <div class="col-6">
+			    	<button class="btn btn-primary float-end" type="button" onclick="saveMenu()" style="margin-left:2px;">저장</button>
+			    </div>
+		    </div>
+		    <div class="row" style="text-align:center; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+				<div class="col">
+					<table class="table table-bordered">
+						<colgroup>
+						    <col width="20%"/>
+						    <col width="80%"/>
+						</colgroup>
+						<tr>
+							<th>이름</th>
+							<td>
+								<input type="hidden" id="menucode" name="menucode">
+								<input class="form-control" type="text" id="menuname" name="menuname">
+							</td>
+						</tr>
+						<tr>
+							<th>경로</th>
+							<td>
+								<input class="form-control" type="text" id="menupath" name="menupath">
+							</td>
+						</tr>
+						<tr>
+							<th>순서</th>
+							<td>
+								<input class="form-control" type="text" id="menuorder" name="menuorder">
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+			    	<span style="font-weight: bold;"><i class="fa-solid fa-circle-info"></i>&nbsp;메뉴 권한</span>
+			    </div>
+		    </div>
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+var treeGrid;
+var childGrid;
+
+//init
+$(function(){
+	var treeData = new Array();
+	
+	//메뉴 전체 조회
+	serviceParam.type = "GET";
+	serviceParam.url = "/menu/getSideMenuList";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = {"type" : "G"};
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	var result = callService(serviceParam);
+	
+	if(result.xhr.status == 200){
+		treeData = result.value;
+	}
+	
+	treeGrid = new tui.Grid({
+	    el: document.getElementById('treeGrid'),
+	    data: treeData,
+	    rowHeight:21,
+	    //rowHeaders: ['checkbox'],
+	    treeColumnOptions: {name: 'menuname', useIcon: true, useCascadingCheckbox: true},
+	    columns: [{header: 'Menu', name: 'menuname'}]
+	});
+
+	treeGrid.setBodyHeight(500);
+	
+	treeGrid.on('expand', ev => {
+	    const { rowKey } = ev;
+	    const descendantRows = treeGrid.getDescendantRows(rowKey);
+
+	    //console.log('rowKey: ' + rowKey);
+	    //console.log(descendantRows);
+	    if (!descendantRows.length) {
+	        grid.appendRow(
+	            {
+	                name: 'dynamic loading data',
+	                _children: [
+	                    {
+	                        name: 'leaf row'
+	                    },
+	                    {
+	                        name: 'internal row',
+	                        _children: []
+	                    }
+	                ]
+	            },
+	            { parentRowKey: rowKey }
+	        );
+	    }
+	});
+
+	treeGrid.on('collapse', ev => {
+	    const { rowKey } = ev;
+	    const descendantRows = treeGrid.getDescendantRows(rowKey);
+		
+	    //console.log('rowKey: ' + rowKey);
+	    //console.log('descendantRows: ' + descendantRows);
+	});
+
+	treeGrid.on('click', ev => {
+	    const { rowKey } = ev;
+	    var row = treeGrid.getRow(rowKey);
+	    
+	    if(row != null){
+	    	$("#menuname").val(row.menuname);
+		    $("#menucode").val(row.menucode);
+		    $("#menupath").val(row.menupath);
+		    $("#menuorder").val(row.menuorder);
+		    
+		    var childrenList = row._children;
+		     
+		    if(childrenList.length > 0){
+		    	$("#menupath").attr("disabled", true); 
+		    }else{
+		    	$("#menupath").attr("disabled", false);
+		    }
+	    }
+	});
+});
+
+var saveMenu = function(){
+	var saveMap = new Object();
+	
+	var f = treeGrid.getFocusedCell();
+	var row = treeGrid.getRow(f.rowKey);
+	var level = 1;
+	
+	console.log("row", row);
+	if(row != null) { 
+		level = row.menulevel; 
+		
+	}else {
+		
+	}
+}
+
+</script>
+</html>

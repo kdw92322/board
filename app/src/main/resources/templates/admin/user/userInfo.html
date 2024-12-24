@@ -2,7 +2,7 @@
 <html lang="en" 
 	  xmlns:th="http://www.thymeleaf.org" 
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-	  layout:decorate="~{layout/layout}">
+	  layout:decorate="~{layout/innerTabLayout}">
 <th:block layout:fragment="content">
 <head>
     <title>사용자정보</title>
@@ -13,9 +13,6 @@
     	<div class="col">
 	        <h4 style="font-weight: bold;"><i class="fa-solid fa-users"></i>&nbsp;사용자 정보</h4>
 	    </div>
-	  	<div class="col" align="right" style="display:inline-block;">
-			<button type="button" class="btn btn-primary" style="margin-left:2px;" th:onclick="selectMenuList()">조회</button>
-		</div>
     </div>
     <div class="row" style="margin-top:10px; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
 		<div class="col-12">
@@ -45,7 +42,7 @@
 		</div>
 	</div>
 	<div class="row">
-	    <div id="div_userList" class="col-sm-12" style="height:65vh; max-height:65vh; margin-top:10px; margin-bottom:10px; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+	    <div id="div_userList" class="col-sm-12" style="height:58vh; max-height:58vh; margin-top:10px; margin-bottom:10px; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
 	        <div class="card">
 	    	  	<div class="card-header">
 	    	  		<i class="fa-solid fa-list"></i>&nbsp;사용자 목록
@@ -72,6 +69,8 @@ $(function(){
         $(this).addClass("active");
     });
 });
+
+
 
 var selectUserInfo = function(userID){
 	serviceParam.type = "POST";

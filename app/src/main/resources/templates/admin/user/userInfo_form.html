@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<form id="userInfoForm" th:action="@{/user/updateUserInfo}" onsubmit="return chkUserInfo();" th:object="${userform}" method="post">
+<form id="userInfoForm" onsubmit="return chkUserInfo();" th:object="${userform}">
 	<div class="card" style="max-width: 100%;">
 	    <div class="row g-0">
 	        <div class="card-header">
@@ -90,8 +90,8 @@
 	            </div>
 	        </div>
 	        <div class="card-footer" style="text-align: right;">
-		        <button type="submit" class="btn btn-secondary">수정</button>
-		        <button type="button" class="btn btn-danger" th:onclick="deleteUserInfo([[${userform.userId}]])">삭제</button>
+		        <button type="button" class="btn btn-secondary" th:onclick=updateUserInfo();>수정</button>
+		        <button type="button" class="btn btn-danger" th:onclick="deleteUserInfo([[${userform.userId}]]);">삭제</button>
 		  	</div>
 		  	<div class="card-footer text-muted" th:text="|Last updated ${userform.lastupdatediff} days ago|">
 		  		<small class="text-muted">Last updated 3 mins ago</small>
@@ -118,12 +118,38 @@ $(function(){
 	});
 });
 
-var deleteUserInfo = function(userId){
-	serviceParam.type = "DELETE";
-	serviceParam.url = "/user/deleteUserInfo/" + userId;
+var updateUserInfo = function(){
+	var userFormObj = $("#userInfoForm").serializeObject();
+
+	serviceParam.type = "PUT";
+	serviceParam.url = "/user/updateUserInfo";
 	serviceParam.async = false;
-	serviceParam.dataType = "text";
-	serviceParam.data = {};
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify(userFormObj);
+	serviceParam.isReturnValue = true;
+	serviceParam.timeout = 0;
+	serviceParam.isLoadingBar = false;
+	
+	var result = callService(serviceParam);
+	if(result.Status == "success"){
+		swAlert("Success", "사용자 정보가 수정되었습니다.", "S", "OK");
+		setTimeout(function(){
+			swal.close();
+			$("#btn_close").click();
+		}, 1000);
+	}else{
+		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
+	}
+}
+
+var deleteUserInfo = function(userId){
+	//console.log("userId", userId);
+	
+	serviceParam.type = "DELETE";
+	serviceParam.url = "/user/deleteUserInfo";
+	serviceParam.async = false;
+	serviceParam.dataType = "json";
+	serviceParam.data = JSON.stringify({"userId" : userId});
 	serviceParam.isReturnValue = true;
 	serviceParam.timeout = 0;
 	serviceParam.isLoadingBar = false;
@@ -131,6 +157,10 @@ var deleteUserInfo = function(userId){
 	var result = callService(serviceParam);
 	if(result.Status == "success"){
 		swAlert(result.Status, "사용자 정보가 삭제 되었습니다.", "S", "OK");	
+		setTimeout(function(){
+			swal.close();
+			$("#btn_close").click();
+		}, 1000);
 	}else{
 		swAlert(result.Status, "서비스 실행 중 에러가 발생하였습니다.", "E", "OK");
 	}
@@ -154,8 +184,6 @@ var chkUserInfo = function(){
 		swAlert("이메일 주소", "이메일 주소를 입력하세요.", "W", "OK");
 		return false;	
 	};
-	
-	swAlert("Success", "사용자 정보가 수정되었습니다.", "S", "OK");
 }
 
 var userimgupload = function(userId){

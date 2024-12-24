@@ -2,34 +2,6 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.web.app.common.service.CommonMapper">
-	<select id="topMenuList" parameterType="map" resultType="map">
-		select a.menucode as menucode
-		      ,a.menuname as menuname
-			  ,a.menupath as menupath
-			  ,a.menutype as menutype
-			  ,b.auth     as menuauth
-		  from tb_webview_menu a
-		  left outer join tb_webview_menuauth b on a.menucode = b.menucode
-		 where 1=1
-		   <!-- and (b.auth = 'ROLE_ADMIN' or d.auth = 'ROLE_ADMIN') --> 
-		 order by a.menuorder 
-	</select>
-	
-	<select id="topViewList" parameterType="map" resultType="map">
-		select a.viewcode             as viewcode
-			  ,a.name                 as viewname
-			  ,a.useYn                as useYn
-			  ,a.`path`               as viewpath
-			  ,a.`level`              as viewlevel
-			  ,b.auth                 as viewauth
-			  ,IFNULL(b.searchYn,'N') as searchYn
-			  ,IFNULL(b.saveYn,'N')   as saveYn
-			  ,IFNULL(b.deleteYn,'N') as deleteYn
-		  from tb_webview_view a
-		  left outer join tb_webview_viewauth b on a.viewcode = b.viewcode
-		 where a.menucode = #{menucode}
-	</select>
-	
 	<select id="selectCodeMstList" parameterType="map" resultType="map">
 		select row_number() over(order by createDt) as rownum
 			  ,mst_cd as mstCd

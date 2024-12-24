@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<style>
-</style>
 	<table class="table table-bordered">
 	    <thead class="table-dark">
 	    	<tr align="center">
@@ -11,7 +9,7 @@
 	    	</tr>
 	    </thead>
 	    <tbody id="mstLogTableBody">
-		    <tr th:each="mst : ${mstLogList}" align="center" th:onclick="onRowClick([[${mst.id}]])">
+		    <tr th:each="mst : ${mstLogList}" align="center" th:onclick="onConnectLogTblRowClick([[${mst.id}]])">
 		    	<td th:text="${mst.rowNum}"></td>
 		    	<td th:text="${mst.id}"></td>
 		    	<td th:text="${mst.cnt}"></td>

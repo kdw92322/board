@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Toast Test1</title>
+</head>
+<body>
+<div class="container-fluid">
+<div class="row">
+    <div class="col">
+	    <h4 style="font-weight: bold;"><i class="fa-solid fa-users"></i>&nbsp;사용자 정보</h4>
+	</div>
+    </div>
+    <div class="row" style="margin-top:10px; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+		<div class="col-12">
+			<h6 style="font-weight: bold;"><i class="fa-solid fa-filter"></i>&nbsp;조회조건</h6>
+		</div>
+		<div class="col-12">
+			<form id="searchForm">
+				<table class="table table-bordered">
+					<colgroup>
+						 <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					     <col width="10%" style="background: #E3E3E1"/>
+					     <col width="15%" style="background: #FFFFFF"/>
+					</colgroup>
+					<tr>			
+						<th><span>이름</span></th>
+						<td>
+							<input type="text" class="form-control form-control-sm" id="sch_name" name="sch_name">
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+	<div class="row" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+		<div class="col-12">
+		    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;목록</span>
+		</div>
+		<div class="col-12" style="text-align:center; height:22.5vh; max-height:22.5vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+			<div id="grid"></div>
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+
+$(function(){
+
+});	
+
+var gridData = [
+    {name:"1", artist:"A", type:"B", release:"C", genre: "D"},
+    {name:"2", artist:"E", type:"F", release:"G", genre: "H"},
+    {name:"3", artist:"I", type:"J", release:"K", genre: "L"},
+    {name:"4", artist:"M", type:"N", release:"O", genre: "P"},
+    {name:"5", artist:"Q", type:"R", release:"S", genre: "T"},
+    {name:"6", artist:"U", type:"V", release:"W", genre: "X"},
+    {name:"7", artist:"Y", type:"Z", release:"가", genre: "나"}
+];
+	
+    const grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      data: gridData,
+      scrollX: false,
+      scrollY: false,
+      rowHeaders: ['rowNum'],
+      rowHeight: 21,
+      header: {
+          height: 24
+      },
+      columns: [
+        {
+          header: 'Name',
+          name: 'name'
+        },
+        {
+          header: 'Artist',
+          name: 'artist'
+        },
+        {
+          header: 'Type',
+          name: 'type'
+        },
+        {
+          header: 'Release',
+          name: 'release'
+        },
+        {
+          header: 'Genre',
+          name: 'genre'
+        }
+      ],
+      contextMenu: ({ rowKey, columnName }) => [
+          [
+            {
+              name: 'export',
+              label: 'Export',
+              subMenu: [
+                {
+                  name: 'default',
+                  label: 'Default',
+                  subMenu: [
+                    {
+                      name: 'csvExport',
+                      label: 'CSV export',
+                      action: () => {
+                        grid.export('csv');
+                      },
+                    },
+                    {
+                      name: 'excelExport',
+                      label: 'Excel export(xlsx)',
+                      action: () => {
+                        grid.export('xlsx');
+                      },
+                    },
+                    {
+                      name: 'excelExport',
+                      label: 'Excel export(xls)',
+                      action: () => {
+                        grid.export('xls');
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+      ],
+    });
+</script>
+</html>

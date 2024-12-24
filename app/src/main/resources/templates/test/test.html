@@ -2,10 +2,10 @@
 <html lang="en" 
 	  xmlns:th="http://www.thymeleaf.org" 
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-	  layout:decorate="~{layout/layout}">
+	  layout:decorate="~{layout/innerTabLayout}">
 <th:block layout:fragment="content">
-	<head>
-        <title>Welcome to Spring Security Thymeleaf tutorial</title>
+    <head>
+        <title>test1</title>
     </head>
     <body>
         <h2>Welcome</h2>
@@ -27,5 +27,6 @@
         <strong><div sec:authentication="Authorities"></div></strong>
         <div th:value="${header}"></div>
     </body>
+    
 </th:block>
 </html>

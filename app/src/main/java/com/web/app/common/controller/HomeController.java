@@ -29,17 +29,15 @@ public class HomeController {
 	private CommonService commonservice;
 	
 	@GetMapping("/")
-	public String home(Principal principal) throws Exception {
+	public String home(Principal principal, Model model) throws Exception {
 		String path = "";
-		System.out.println("Principal : " + principal);
+		
 		if(principal == null) {
-			path = "redirect:/formlogin";
-			//path = "redirect:/jwtLogin";
+			path = "login_form";
 		}else {
-			System.out.println("name : " + principal.getName());
-	    	path = "redirect:/index";
+	    	path = "/fragments/frame";
 		}
-
+		
 		return path;
 	}
 	
@@ -75,15 +73,5 @@ public class HomeController {
     	model.addAttribute("JoinDate", dateutil.DateToString(userInfo.getJoin_date(), "yyyy-MM-dd"));
     	model.addAttribute("Auth", authName);
 		return "index";
-	}
-	
-	@GetMapping("/test")
-	public String test() {
-		return "/test/test";
-	}
-	
-	@GetMapping("media")
-	public String testDiagram1() {
-		return "test/media";
 	}
 }

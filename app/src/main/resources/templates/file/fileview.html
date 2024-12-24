@@ -2,7 +2,7 @@
 <html lang="en" 
 	  xmlns:th="http://www.thymeleaf.org" 
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-	  layout:decorate="~{layout/layout}">
+	  layout:decorate="~{layout/innerTabLayout}">
 <th:block layout:fragment="content">
 <head>
 	<meta charset="UTF-8">
@@ -65,12 +65,12 @@
 				</form>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row" style="height:58vh; max-height:58vh;">
 			<div class="col-4" style="border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
 				<div class="col">
 				    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;파일분류 List</span>
 			    </div>
-			    <div class="col" style="text-align:center; height:60vh; max-height:60vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+			    <div class="col" style="text-align:center; margin-top:10px; overflow-y: auto; overflow-x: auto;">
 					<div class="table-responsive" id="divFileTypeList">
 						<!-- fileThemeList html bind -->
 					</div>
@@ -80,7 +80,7 @@
 				<div class="col">
 				    <span style="font-weight: bold;"><i class="fa-solid fa-list"></i>&nbsp;분류별 파일 List( ※ 파일이름을 누르면 다운로드 됩니다.)</span>
 			    </div>
-			    <div class="col" style="text-align:center; height:60vh; max-height:60vh; margin-top:10px; overflow-y: auto; overflow-x: auto;">
+			    <div class="col" style="text-align:center; margin-top:10px; overflow-y: auto; overflow-x: auto;">
 					<div class="table-responsive" id="divFileList">
 						<!-- FileList html bind -->
 					</div>

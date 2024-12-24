@@ -1,0 +1,55 @@
+ <!DOCTYPE html>
+<html lang="en" 
+	  xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layout/innerTabLayout}">
+<th:block layout:fragment="content">
+<head>
+    <title>DML 관리</title>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">
+		        <h4 style="font-weight: bold;"><i class="fa-solid fa-language"></i>&nbsp;DML</h4>
+		    </div>
+		    <div class="col" align="right" style="display:inline-block;">
+				<button type="button" class="btn btn-primary" style="margin-left:2px;" th:onclick="selectBoardList();">생성</button>
+		    </div>
+		</div>
+		<div class="row" style="margin-top:10px; border: groove; border-radius: 10px; padding:10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+			<div class="col-12">
+				<div>
+					<table class="table table-bordered">
+						<colgroup>
+						    <col width="20%"/>
+						    <col width="80%"/>
+						</colgroup>
+						<tr>
+							<th>ID</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>Path</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>Parameter</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th colspan="2">SQL</th>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<textarea class="form-control" name="content" cols="50" rows="14">1234</textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</th:block>
+</html>

@@ -26,21 +26,6 @@ public class CommonController {
 	private CommonService commonservice;
 	
 	/*
-	 * 1. 등록된 상단 메뉴&화면 목록 조회
-	 */
-	@GetMapping("/topMenuList")
-	@ResponseBody
-    public List<Map<String, Object>> topMenuList() throws Exception {  	
-    	return commonservice.topMenuList();
-    }
-	
-	@GetMapping("/topViewList")
-	@ResponseBody
-    public List<Map<String, Object>> topViewList(@RequestParam Map<String, Object> param) throws Exception {
-    	return commonservice.topViewList(param);
-    }
-	
-	/*
 	 * 2. 코드등록
 	 */
 	@GetMapping("/codeForm")

@@ -2,7 +2,6 @@ package com.web.app.user;
 
 import lombok.Getter;
 
-
 @Getter
 public enum UserRole {
     ADMIN("ROLE_ADMIN"),

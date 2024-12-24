@@ -50,7 +50,7 @@
 	<delete id="deleteUser" parameterType="map">
 		delete 
 		  from user_info
-		 where user_id = #{userId}   
+		 where id = #{userId}   
 	</delete>
 
 	<select id="getUserLog" resultType="map">
